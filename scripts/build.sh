@@ -5,6 +5,7 @@ OUTPATH=./bin
 BINNAME=server
 OS=linux
 ARCH=amd64
+WORKTREE=github.com/zekroTJA/vplan2019
 ###################
 
 if [ "$1" != "" ]; then
@@ -40,9 +41,9 @@ echo "Building..."
         -v \
         -o ${OUTPATH}/${BINNAME} \
         -ldflags " \
-            -X github.com/zekroTJA/shinpuru/internal/util.AppVersion=$TAG \
-            -X github.com/zekroTJA/shinpuru/internal/util.AppCommit=$COMMIT \
-            -X github.com/zekroTJA/shinpuru/internal/util.Release=TRUE" \
+            -X ${WORKTREE}/internal/ldflags.AppVersion=$TAG \
+            -X ${WORKTREE}/internal/ldflags.AppCommit=$COMMIT \
+            -X ${WORKTREE}/internal/ldflags.Release=TRUE" \
         ./cmd/server
 )
 
