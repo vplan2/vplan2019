@@ -5,9 +5,11 @@ package webserver
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 )
 
 // Config contains the configuration
@@ -29,6 +31,7 @@ type ConfigTLS struct {
 type Server struct {
 	server *http.Server
 	router *mux.Router
+	store  sessions.Store
 }
 
 var (
@@ -41,7 +44,7 @@ var (
 // StartBlocking starts the web server and block the current thread
 //   server : the initialized instance of an empty Server struct
 //   config : instance of Config; if this is nil, defaultConfig will be used
-func StartBlocking(server *Server, config *Config) error {
+func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store) error {
 	if server == nil {
 		return errServerInstanceNil
 	}
@@ -50,11 +53,13 @@ func StartBlocking(server *Server, config *Config) error {
 		config = defaultConfig
 	}
 
-	server.server = &http.Server{
-		Addr: config.Addr,
-	}
-
 	server.router = mux.NewRouter()
+	server.store = sessionStorage
+
+	server.server = &http.Server{
+		Addr:    config.Addr,
+		Handler: server.router,
+	}
 
 	server.initializeHnalders()
 
@@ -67,5 +72,11 @@ func StartBlocking(server *Server, config *Config) error {
 // initializeHandlers contains all setup functions for router
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
-
+	s.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		session, _ := s.store.Get(r, "test")
+		fmt.Println(session.Values["a"])
+		session.Values["a"] = "b"
+		session.Save(r, w)
+		w.Write([]byte("hey"))
+	}).Methods("GET")
 }
