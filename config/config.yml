@@ -1,0 +1,4 @@
+logging:
+  level: 5
+webServer:
+  addr: ":8080"

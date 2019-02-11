@@ -1,0 +1,15 @@
+[submodule "mux"]
+	path = mux
+	url = https://github.com/gorilla/mux
+[submodule "vendor/github.com/gorilla/mux"]
+	path = vendor/github.com/gorilla/mux
+	url = https://github.com/gorilla/mux
+[submodule "vendor/github.com/ghodss/yaml"]
+	path = vendor/github.com/ghodss/yaml
+	url = https://github.com/ghodss/yaml
+[submodule "vendor/gopkg.in/yaml.v2"]
+	path = vendor/gopkg.in/yaml.v2
+	url = https://gopkg.in/yaml.v2
+[submodule "vendor/github.com/op/go-logging"]
+	path = vendor/github.com/op/go-logging
+	url = https://github.com/op/go-logging

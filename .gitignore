@@ -1,0 +1,24 @@
+# you can prefiy your file, you don't want to commit, with private.
+private.*
+
+# binaries
+bin/*
+*.exe
+*.o
+*.a
+*.dll
+*.so
+
+# test file created by 'go test'
+*.test
+
+# vscode configs
+.vscode/*
+
+# temporary files
+*~*
+*.tmp*
+*.temp*
+
+# output of go's coverag profiling
+*.out
