@@ -1,0 +1,42 @@
+# Configuration example for vplan2019 server
+
+# Database configuration
+# (depending on compiled database module, 
+# in this case: sqlite3)
+database:
+  # Database file location
+  # ATTENTION: Path to file must be existent
+  # and will not be automatically created!
+  file: main.db.sqlite3
+
+# Logging configuration
+logging:
+  # Log level
+  # For more information, go see here:
+  # https://github.com/op/go-logging/blob/master/level.go#L20
+  level: 5
+
+# Web server configuration
+webServer:
+  # Address and port the server will be exposed to
+  addr: :443
+  # Login session options
+  sessions:
+    # The default time (in seconds) until a
+    # session expires
+    defaultMaxAge:    3600    # = one hour
+    # The time (in seconds) until a session
+    # expires which was set as 'remind me'
+    # on login
+    rememberMaxAge:   2592000 # = 30 days
+    # The secret which will be used for encrypting
+    # and decrypting stored session values
+    # ATTENTION: On chaning this, all current sessions
+    # will become invalid and will expire!
+    encryptionSecret: fbOVIIk_BuZ_GWhdP4nYU7dzFDc427Ph3teRLlsqUtNmFqstgECDaOlhZNm2bqaZ
+  # TLS configuration
+  tls:
+    # Location of the cert file
+    certFile: /etc/cert/example.net.cert
+    # Location of the key file
+    keyFile:  /etc/cert/example.net.key
