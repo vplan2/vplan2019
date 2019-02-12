@@ -15,8 +15,9 @@ import (
 // Config contains the configuration
 // for the web server
 type Config struct {
-	Addr string     `json:"addr"`
-	TLS  *ConfigTLS `json:"tls"`
+	Addr     string          `json:"addr"`
+	Sessions *ConfigSessions `json:"sessions"`
+	TLS      *ConfigTLS      `json:"tls"`
 }
 
 // ConfigTLS contains the cert file path
@@ -24,6 +25,14 @@ type Config struct {
 type ConfigTLS struct {
 	CertFile string `json:"certFile"`
 	KeyFile  string `json:"keyFile"`
+}
+
+// ConfigSessions contains the configuration
+// for the session management
+type ConfigSessions struct {
+	DefaultMaxAge    int    `json:"defaultMaxAge"`
+	RememberMaxAge   int    `json:"rememberMaxAge"`
+	EncryptionSecret string `json:"encryptionSecret"`
 }
 
 // Server contains the instance of the
@@ -38,7 +47,7 @@ var (
 	// Errors
 	errServerInstanceNil = errors.New("web server instance must be initialized")
 	// Vars
-	defaultConfig = &Config{":80", nil}
+	defaultConfig = &Config{":80", new(ConfigSessions), nil}
 )
 
 // StartBlocking starts the web server and block the current thread
@@ -72,7 +81,7 @@ func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store
 // initializeHandlers contains all setup functions for router
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
-	s.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	s.router.HandleFunc("/{test}", func(w http.ResponseWriter, r *http.Request) {
 		session, _ := s.store.Get(r, "test")
 		fmt.Println(session.Values["a"])
 		session.Values["a"] = "b"

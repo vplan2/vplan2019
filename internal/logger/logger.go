@@ -7,13 +7,20 @@ import (
 	"github.com/op/go-logging"
 )
 
-var log = logging.MustGetLogger("main")
+const mainLoggerName = "main"
+
+var log = logging.MustGetLogger(mainLoggerName)
 
 // Setup sets configuration for logger
 func Setup(format string, level int) {
 	formatter := logging.MustStringFormatter(format)
 	logging.SetFormatter(formatter)
-	logging.SetLevel(logging.Level(level), "main")
+	logging.SetLevel(logging.Level(level), mainLoggerName)
+}
+
+// SetLogLevel sets the log level for the current logger
+func SetLogLevel(logLevel int) {
+	logging.SetLevel(logging.Level(logLevel), mainLoggerName)
 }
 
 func Debug(args ...interface{}) {

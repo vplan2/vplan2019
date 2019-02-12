@@ -15,6 +15,7 @@ import (
 type Config struct {
 	Logging   *Logging          `json:"logging"`
 	WebServer *webserver.Config `json:"webServer"`
+	Database  map[string]string `json:"database"`
 }
 
 // Logging contains the configuration for logging
@@ -50,19 +51,22 @@ func Open(file string, unmarshalFunc UnmarshalFunc) (*Config, error) {
 
 // Create writes the passed config object content (or an empty config, if passed config is nil)
 // to a new or existing file by using the passed MarshalIndentFunc.
-//   file        : the fil name and path of the file to write to
-//   config      : config object to write (if nil, an empty config will be used)
-//   prefix      : prefix which will be directly passed to the MarhsalIndentFunc
-//   indent      : indent which will be directly passed to the MarhsalIndentFunc
-//   marshalFunc : function which will be used to parse the config object content
-//                 to the formatted data which will be written to the created file
-func Create(file string, config *Config, prefix, indent string, marshalFunc MarshalIndentFunc) error {
+//   file          : the fil name and path of the file to write to
+//   config        : config object to write (if nil, an empty config will be used)
+//   dbConfigModel : map instance to use for database configuration
+//   prefix        : prefix which will be directly passed to the MarhsalIndentFunc
+//   indent        : indent which will be directly passed to the MarhsalIndentFunc
+//   marshalFunc   : function which will be used to parse the config object content
+//                   to the formatted data which will be written to the created file
+func Create(file string, config *Config, dbConfigModel map[string]string, prefix, indent string, marshalFunc MarshalIndentFunc) error {
 	if config == nil {
 		config = &Config{
 			Logging: new(Logging),
 			WebServer: &webserver.Config{
-				TLS: new(webserver.ConfigTLS),
+				Sessions: new(webserver.ConfigSessions),
+				TLS:      new(webserver.ConfigTLS),
 			},
+			Database: dbConfigModel,
 		}
 	}
 

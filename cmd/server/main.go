@@ -5,9 +5,9 @@ import (
 	"os"
 
 	"github.com/ghodss/yaml"
-	"github.com/gorilla/sessions"
 
 	"github.com/zekroTJA/vplan2019/internal/config"
+	"github.com/zekroTJA/vplan2019/internal/database/drivers"
 	"github.com/zekroTJA/vplan2019/internal/logger"
 	"github.com/zekroTJA/vplan2019/internal/webserver"
 )
@@ -18,6 +18,14 @@ var (
 
 func main() {
 	flag.Parse()
+
+	database := new(drivers.SQLite)
+
+	//////////////////
+	// LOGGER SETUP //
+	//////////////////
+
+	logger.Setup(`%{color}▶  %{level:.4s} %{id:03x}%{color:reset} %{message}`, 5)
 
 	////////////////////
 	// CONFIG PARSING //
@@ -35,7 +43,7 @@ func main() {
 	cfg, err := config.Open(*flagConfig, unmarshalFunc)
 	// If it was a file not found error, try to create a new config file
 	if os.IsNotExist(err) {
-		err = config.Create(*flagConfig, nil, "", "  ", marshalFunc)
+		err = config.Create(*flagConfig, nil, database.GetConfigModel(), "", "  ", marshalFunc)
 		if err != nil {
 			logger.Fatal("Failed creating config: ", err)
 		}
@@ -46,16 +54,21 @@ func main() {
 	if err != nil {
 		logger.Fatal("Failed parsing config: ", err)
 	}
+	// Set log level from config
+	logger.SetLogLevel(cfg.Logging.Level)
 
-	//////////////////
-	// LOGGER SETUP //
-	//////////////////
+	////////////////////
+	// DATABASE SETUP //
+	////////////////////
 
-	logger.Setup(`%{color}▶  %{level:.4s} %{id:03x}%{color:reset} %{message}`, cfg.Logging.Level)
+	err = database.Connect(cfg.Database)
+	if err != nil {
+		logger.Fatal("Failed creating database connection: ", err)
+	}
 
-	/////////////////////
-	// WEB SERVER SETUP//
-	/////////////////////
+	//////////////////////
+	// WEB SERVER SETUP //
+	//////////////////////
 
 	// output web server starting info and warn if web server was
 	// started in non TLS mode
@@ -64,7 +77,11 @@ func main() {
 		logger.Warning("ATTENTION: THE WEB SERVER IS NOT RUNNING IN TLS MODE")
 	}
 	// Set session storage module
-	store := sessions.NewCookieStore([]byte("omegalul"))
+	store, err := database.GetSessionStoreDriver(
+		cfg.WebServer.Sessions.DefaultMaxAge, []byte(cfg.WebServer.Sessions.EncryptionSecret))
+	if err != nil {
+		logger.Fatal("Failed getting session driver: ", err)
+	}
 	// Create server instance
 	server := new(webserver.Server)
 	// Initiate and run the web server, which blocks the main thread.

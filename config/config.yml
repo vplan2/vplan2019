@@ -1,4 +1,10 @@
+database:
+  file:               main.db.sqlite3
 logging:
-  level: 5
+  level:              5
 webServer:
-  addr: ":8080"
+  addr:               :8080
+  sessions:
+    defaultMaxAge:    3600
+    encryptionSecret: badKeyButGoodEnoughForTesting
+    rememberMaxAge:   3600
