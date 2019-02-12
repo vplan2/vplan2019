@@ -22,3 +22,7 @@ bin/*
 
 # output of go's coverag profiling
 *.out
+
+# database files
+*.db
+*.sqlite3
