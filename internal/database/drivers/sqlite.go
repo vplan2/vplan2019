@@ -1,3 +1,6 @@
+// Package drivers contains database driver structs for
+// accessing various database types
+//   Authors: Ringo Hoffmann
 package drivers
 
 import (
@@ -14,6 +17,8 @@ type SQLite struct {
 	db  *sql.DB
 }
 
+// Connect opens a sqlite3 database file or creates
+// it if it does not exist depending on the passed options
 func (s *SQLite) Connect(options map[string]string) error {
 	var err error
 
@@ -24,8 +29,9 @@ func (s *SQLite) Connect(options map[string]string) error {
 	return err
 }
 
+// Close closes the sqlite3 database file
 func (s *SQLite) Close() {
-
+	s.db.Close()
 }
 
 func (s *SQLite) GetConfigModel() map[string]string {

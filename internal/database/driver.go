@@ -1,3 +1,6 @@
+// Package database contains general utilities and the database
+// Driver interface for managing database connections
+//   Authors: Ringo Hoffmann
 package database
 
 import (
