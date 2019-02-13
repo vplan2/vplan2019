@@ -11,5 +11,4 @@ jobs:
           name:    build-test
           command: bash ./scripts/circleci.sh
       - store_artifacts:
-          path:         ./bin/server
-          destination:  server_linux
+          path: ./bin
