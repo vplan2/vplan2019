@@ -12,4 +12,4 @@ jobs:
           command: bash ./scripts/circleci.sh
       - store_artifacts:
           path:         ./bin/server
-          destination:  server
+          destination:  server_linux
