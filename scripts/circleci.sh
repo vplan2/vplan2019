@@ -2,4 +2,5 @@
 
 git submodule init
 git submodule update
-go build ./cmd/server
+
+go build -v -o ./bin/server ./cmd/server

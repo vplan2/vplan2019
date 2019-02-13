@@ -8,5 +8,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name:     build-test
-          command:  bash ./scripts/circleci.sh
+          name:    build-test
+          command: bash ./scripts/circleci.sh
+      - store_artifacts:
+          path:         ./bin/server
+          destination:  server
