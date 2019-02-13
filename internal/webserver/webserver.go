@@ -5,16 +5,19 @@ package webserver
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 )
 
 // Config contains the configuration
 // for the web server
 type Config struct {
-	Addr string     `json:"addr"`
-	TLS  *ConfigTLS `json:"tls"`
+	Addr     string          `json:"addr"`
+	Sessions *ConfigSessions `json:"sessions"`
+	TLS      *ConfigTLS      `json:"tls"`
 }
 
 // ConfigTLS contains the cert file path
@@ -24,24 +27,33 @@ type ConfigTLS struct {
 	KeyFile  string `json:"keyFile"`
 }
 
+// ConfigSessions contains the configuration
+// for the session management
+type ConfigSessions struct {
+	DefaultMaxAge    int    `json:"defaultMaxAge"`
+	RememberMaxAge   int    `json:"rememberMaxAge"`
+	EncryptionSecret string `json:"encryptionSecret"`
+}
+
 // Server contains the instance of the
 // http server and the mux router
 type Server struct {
 	server *http.Server
 	router *mux.Router
+	store  sessions.Store
 }
 
 var (
 	// Errors
 	errServerInstanceNil = errors.New("web server instance must be initialized")
 	// Vars
-	defaultConfig = &Config{":80", nil}
+	defaultConfig = &Config{":80", new(ConfigSessions), nil}
 )
 
 // StartBlocking starts the web server and block the current thread
 //   server : the initialized instance of an empty Server struct
 //   config : instance of Config; if this is nil, defaultConfig will be used
-func StartBlocking(server *Server, config *Config) error {
+func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store) error {
 	if server == nil {
 		return errServerInstanceNil
 	}
@@ -50,11 +62,13 @@ func StartBlocking(server *Server, config *Config) error {
 		config = defaultConfig
 	}
 
-	server.server = &http.Server{
-		Addr: config.Addr,
-	}
-
 	server.router = mux.NewRouter()
+	server.store = sessionStorage
+
+	server.server = &http.Server{
+		Addr:    config.Addr,
+		Handler: server.router,
+	}
 
 	server.initializeHnalders()
 
@@ -67,5 +81,11 @@ func StartBlocking(server *Server, config *Config) error {
 // initializeHandlers contains all setup functions for router
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
-
+	s.router.HandleFunc("/{test}", func(w http.ResponseWriter, r *http.Request) {
+		session, _ := s.store.Get(r, "test")
+		fmt.Println(session.Values["a"])
+		session.Values["a"] = "b"
+		session.Save(r, w)
+		w.Write([]byte("hey"))
+	}).Methods("GET")
 }
