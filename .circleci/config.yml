@@ -1,0 +1,15 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.11
+    working_directory: /go/src/github.com/zekroTJA/vplan2019
+    steps:
+      - checkout
+      - run:
+          name:    build-test
+          command: bash ./scripts/circleci.sh
+      - store_artifacts:
+          path:         ./bin/server
+          destination:  server

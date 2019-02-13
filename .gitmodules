@@ -13,3 +13,15 @@
 [submodule "vendor/github.com/op/go-logging"]
 	path = vendor/github.com/op/go-logging
 	url = https://github.com/op/go-logging
+[submodule "vendor/github.com/gorilla/sessions"]
+	path = vendor/github.com/gorilla/sessions
+	url = https://github.com/gorilla/sessions
+[submodule "vendor/github.com/gorilla/securecookie"]
+	path = vendor/github.com/gorilla/securecookie
+	url = https://github.com/gorilla/securecookie
+[submodule "vendor/github.com/mattn/go-sqlite3"]
+	path = vendor/github.com/mattn/go-sqlite3
+	url = https://github.com/mattn/go-sqlite3
+[submodule "vendor/github.com/michaeljs1990/sqlitestore"]
+	path = vendor/github.com/michaeljs1990/sqlitestore
+	url = https://github.com/michaeljs1990/sqlitestore
