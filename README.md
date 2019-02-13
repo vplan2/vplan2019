@@ -1,5 +1,14 @@
 # vplan2019
 
+# Build status
+
+Branch | Circle CI
+-------|------------
+**master** | <img src="https://circleci.com/gh/zekroTJA/vplan2019/tree/master.svg?style=svg&circle-token=a2edf261e07464ff53192fa4f299c6eec83e870a"/>
+**dev** | <img src="https://circleci.com/gh/zekroTJA/vplan2019/tree/dev.svg?style=svg&circle-token=a2edf261e07464ff53192fa4f299c6eec83e870a"/>
+dev-mosscap | <img src="https://circleci.com/gh/zekroTJA/vplan2019/tree/dev-mosscap.svg?style=svg&circle-token=a2edf261e07464ff53192fa4f299c6eec83e870a"/>
+dev-zekro | <img src="https://circleci.com/gh/zekroTJA/vplan2019/tree/dev-zekro.svg?style=svg&circle-token=a2edf261e07464ff53192fa4f299c6eec83e870a"/>
+
 # Regeln
 
 ### Kommentare
