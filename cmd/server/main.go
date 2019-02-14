@@ -56,7 +56,7 @@ func main() {
 			logger.Fatal("Failed creating config: ", err)
 		}
 
-		logger.Infof("Created new empty config at '%s'. Enter your preferenced values and restart.", *flagConfig)
+		logger.Info("Created new empty config at '%s'. Enter your preferenced values and restart.", *flagConfig)
 		return
 	}
 	// If config laoding set an other error, throw and exit
@@ -81,7 +81,7 @@ func main() {
 
 	// output web server starting info and warn if web server was
 	// started in non TLS mode
-	logger.Infof("Starting web server on %s...", cfg.WebServer.Addr)
+	logger.Info("Starting web server on %s...", cfg.WebServer.Addr)
 	if cfg.WebServer.TLS == nil {
 		logger.Warning("ATTENTION: THE WEB SERVER IS NOT RUNNING IN TLS MODE")
 	}
