@@ -16,9 +16,9 @@ git submodule update
 
 BUILDS=( \
     'linux;arm' \
-    'linux;amd64' \
+    # 'linux;amd64' \  <- actually no needs to be tested atm
     'windows;amd64' \
-    'darwin;amd64' \
+    # 'darwin;amd64' \ <- actually no needs to be tested atm
 )
 
 for BUILD in ${BUILDS[*]}; do
