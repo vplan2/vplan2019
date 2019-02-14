@@ -72,7 +72,16 @@ func main() {
 
 	err = database.Connect(cfg.Providers.Database)
 	if err != nil {
-		logger.Fatal("Failed creating database connection: ", err)
+		logger.Fatal("Failed connecting to database: ", err)
+	}
+
+	///////////////////
+	// AUTH PROVIDER //
+	///////////////////
+
+	err = authProvider.Connect(cfg.Providers.Authorization)
+	if err != nil {
+		logger.Fatal("Failed connecting to auth provider: ", err)
 	}
 
 	//////////////////////
@@ -96,5 +105,5 @@ func main() {
 	// Initiate and run the web server, which blocks the main thread.
 	// If it fails, thow error and exit.
 	logger.Fatal("Failed opening webserver: ",
-		webserver.StartBlocking(server, cfg.WebServer, store))
+		webserver.StartBlocking(server, cfg.WebServer, store, authProvider))
 }

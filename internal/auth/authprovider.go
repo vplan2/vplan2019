@@ -4,8 +4,6 @@
 //   Authors: Ringo Hoffmann
 package auth
 
-import "github.com/zekroTJA/vplan2019/internal/config"
-
 // Response is an object which contains the Ident,
 // which is a user unique string used for session
 // and user data association, and an additional
@@ -20,13 +18,13 @@ type Response struct {
 type Provider interface {
 	// Connect to the authentication service with
 	// the passed options
-	Connect(options config.Model) error
+	Connect(options map[string]string) error
 	// Close connection
 	Close()
 
 	// Get map which defines the key-value config
 	// model structure
-	GetConfigModel() config.Model
+	GetConfigModel() map[string]string
 	// Get authentication response by passed
 	// username and password credentials.
 	// If authentication failes, an error must

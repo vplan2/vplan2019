@@ -4,9 +4,11 @@
 package webserver
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
+
+	"github.com/zekroTJA/vplan2019/internal/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -38,32 +40,33 @@ type ConfigSessions struct {
 // Server contains the instance of the
 // http server and the mux router
 type Server struct {
-	server *http.Server
-	router *mux.Router
-	store  sessions.Store
+	server       *http.Server
+	router       *mux.Router
+	store        sessions.Store
+	authProvider auth.Provider
 }
 
 var (
 	// Errors
 	errServerInstanceNil = errors.New("web server instance must be initialized")
-	// Vars
-	defaultConfig = &Config{":80", new(ConfigSessions), nil}
+	errConfigNil         = errors.New("web server config is nil")
 )
 
 // StartBlocking starts the web server and block the current thread
 //   server : the initialized instance of an empty Server struct
 //   config : instance of Config; if this is nil, defaultConfig will be used
-func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store) error {
+func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store, authProvider auth.Provider) error {
 	if server == nil {
 		return errServerInstanceNil
 	}
 
 	if config == nil {
-		config = defaultConfig
+		return errConfigNil
 	}
 
 	server.router = mux.NewRouter()
 	server.store = sessionStorage
+	server.authProvider = authProvider
 
 	server.server = &http.Server{
 		Addr:    config.Addr,
@@ -81,11 +84,33 @@ func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store
 // initializeHandlers contains all setup functions for router
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
-	s.router.HandleFunc("/{test}", func(w http.ResponseWriter, r *http.Request) {
-		session, _ := s.store.Get(r, "test")
-		fmt.Println(session.Values["a"])
-		session.Values["a"] = "b"
-		session.Save(r, w)
-		w.Write([]byte("hey"))
-	}).Methods("GET")
+	// Frontent
+	s.router.HandleFunc("/", s.handlerMainPage).Methods("GET")
+
+	// API
+	s.router.HandleFunc("/api/authenticate/{username}", s.handlerAPIAuthenticate).Methods("POST")
+
+	// Serve static files from './web/static'
+	s.router.PathPrefix("/static").Handler(
+		http.StripPrefix("/static", http.FileServer(http.Dir("./web/static/"))))
+}
+
+func jsonResponse(w http.ResponseWriter, code int, data interface{}) error {
+	var bData []byte
+	var err error
+
+	w.Header().Add("Content-Type", "application/json")
+
+	if data != nil {
+		bData, err = json.MarshalIndent(data, "", "  ")
+	}
+
+	if err != nil {
+		return err
+	}
+
+	w.WriteHeader(code)
+	_, err = w.Write(bData)
+
+	return err
 }

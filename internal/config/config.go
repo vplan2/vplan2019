@@ -18,17 +18,12 @@ type Config struct {
 	Providers *ProviderModels   `json:"providers"`
 }
 
-// Model is a map[string]string for defining
-// dynamic and generic config models for
-// some serives and drivers
-type Model map[string]string
-
 // ProviderModels contains the defined
 // modesl which will be used in the main
 // config file
 type ProviderModels struct {
-	Database      Model `json:"database"`
-	Authorization Model `json:"authorization"`
+	Database      map[string]string `json:"database"`
+	Authorization map[string]string `json:"authorization"`
 }
 
 // Logging contains the configuration for logging

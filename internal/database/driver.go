@@ -7,7 +7,6 @@ import (
 	"errors"
 
 	"github.com/gorilla/sessions"
-	"github.com/zekroTJA/vplan2019/internal/config"
 )
 
 // ErrConfig describes the type of error returned if the config
@@ -18,13 +17,13 @@ var ErrConfig = errors.New("failed parsing config for database")
 type Driver interface {
 	// Connect to the database or open database file
 	// with the passed options
-	Connect(options config.Model) error
+	Connect(options map[string]string) error
 	// Close database connection or file
 	Close()
 
 	// Get map which defines the key-value config
 	// model structure
-	GetConfigModel() config.Model
+	GetConfigModel() map[string]string
 	// Get session store driver
 	GetSessionStoreDriver(secrets ...[]byte) (sessions.Store, error)
 }

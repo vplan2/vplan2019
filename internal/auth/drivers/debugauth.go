@@ -6,18 +6,17 @@ import (
 	"fmt"
 
 	"github.com/zekroTJA/vplan2019/internal/auth"
-	"github.com/zekroTJA/vplan2019/internal/config"
 )
 
 // DebugAuthProvider is an auth provider, which
 // is only purposed to use in debugging and testing
 type DebugAuthProvider struct {
-	cfg   config.Model
+	cfg   map[string]string
 	creds map[string]string
 }
 
 // Connect _
-func (d *DebugAuthProvider) Connect(options config.Model) error {
+func (d *DebugAuthProvider) Connect(options map[string]string) error {
 	d.cfg = options
 	d.creds = map[string]string{
 		"test": "passwd",
@@ -29,7 +28,7 @@ func (d *DebugAuthProvider) Connect(options config.Model) error {
 func (d *DebugAuthProvider) Close() {}
 
 // GetConfigModel _
-func (d *DebugAuthProvider) GetConfigModel() config.Model {
+func (d *DebugAuthProvider) GetConfigModel() map[string]string {
 	return make(map[string]string)
 }
 
