@@ -11,7 +11,7 @@ fi
 
 COMMIT=$(git rev-parse HEAD)
 
-dep init
+dep ensure
 
 BUILDS=( \
     'linux;arm' \
