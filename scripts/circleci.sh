@@ -11,8 +11,7 @@ fi
 
 COMMIT=$(git rev-parse HEAD)
 
-git submodule init
-git submodule update
+dep init
 
 BUILDS=( \
     'linux;arm' \
