@@ -8,18 +8,19 @@ import (
 
 	"github.com/gorilla/sessions"
 	"github.com/michaeljs1990/sqlitestore"
+	"github.com/zekroTJA/vplan2019/internal/config"
 )
 
 // SQLite contains database functions
 // for SQLite database
 type SQLite struct {
-	cfg map[string]string
+	cfg config.Model
 	db  *sql.DB
 }
 
 // Connect opens a sqlite3 database file or creates
 // it if it does not exist depending on the passed options
-func (s *SQLite) Connect(options map[string]string) error {
+func (s *SQLite) Connect(options config.Model) error {
 	var err error
 
 	s.cfg = options
@@ -36,7 +37,7 @@ func (s *SQLite) Close() {
 
 // GetConfigModel returns a map with preset config
 // keys and values
-func (s *SQLite) GetConfigModel() map[string]string {
+func (s *SQLite) GetConfigModel() config.Model {
 	return map[string]string{
 		"file": "main.db.sqlite3",
 	}

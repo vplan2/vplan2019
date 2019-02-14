@@ -15,12 +15,25 @@ import (
 type Config struct {
 	Logging   *Logging          `json:"logging"`
 	WebServer *webserver.Config `json:"webServer"`
-	Database  map[string]string `json:"database"`
+	Providers *ProviderModels   `json:"providers"`
+}
+
+// Model is a map[string]string for defining
+// dynamic and generic config models for
+// some serives and drivers
+type Model map[string]string
+
+// ProviderModels contains the defined
+// modesl which will be used in the main
+// config file
+type ProviderModels struct {
+	Database      Model `json:"database"`
+	Authorization Model `json:"authorization"`
 }
 
 // Logging contains the configuration for logging
 type Logging struct {
-	Level int `json:"level,def:4"`
+	Level int `json:"level"`
 }
 
 // UnmarshalFunc is a function which can be used to parse
@@ -51,28 +64,28 @@ func Open(file string, unmarshalFunc UnmarshalFunc) (*Config, error) {
 
 // Create writes the passed config object content (or an empty config, if passed config is nil)
 // to a new or existing file by using the passed MarshalIndentFunc.
-//   file          : the fil name and path of the file to write to
-//   config        : config object to write (if nil, an empty config will be used)
-//   dbConfigModel : map instance to use for database configuration
-//   prefix        : prefix which will be directly passed to the MarhsalIndentFunc
-//   indent        : indent which will be directly passed to the MarhsalIndentFunc
-//   marshalFunc   : function which will be used to parse the config object content
+//   file           : the fil name and path of the file to write to
+//   config         : config object to write (if nil, an empty config will be used)
+//   providerModels : object of provider models containing config models for various providers
+//   prefix         : prefix which will be directly passed to the MarhsalIndentFunc
+//   indent         : indent which will be directly passed to the MarhsalIndentFunc
+//   marshalFunc    : function which will be used to parse the config object content
 //                   to the formatted data which will be written to the created file
-func Create(file string, config *Config, dbConfigModel map[string]string, prefix, indent string, marshalFunc MarshalIndentFunc) error {
+func Create(file string, config *Config, providerModels *ProviderModels, prefix, indent string, marshalFunc MarshalIndentFunc) error {
 	if config == nil {
 		config = &Config{
 			Logging: &Logging{
 				Level: 4,
 			},
 			WebServer: &webserver.Config{
-				Addr: "127.0.0.1:443",
+				Addr: ":443",
 				Sessions: &webserver.ConfigSessions{
 					DefaultMaxAge:  3600,
 					RememberMaxAge: 3600 * 24 * 30,
 				},
 				TLS: new(webserver.ConfigTLS),
 			},
-			Database: dbConfigModel,
+			Providers: providerModels,
 		}
 	}
 

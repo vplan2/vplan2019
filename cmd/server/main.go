@@ -7,9 +7,11 @@ import (
 	"github.com/ghodss/yaml"
 
 	"github.com/zekroTJA/vplan2019/internal/config"
-	"github.com/zekroTJA/vplan2019/internal/database/drivers"
 	"github.com/zekroTJA/vplan2019/internal/logger"
 	"github.com/zekroTJA/vplan2019/internal/webserver"
+
+	authDrivers "github.com/zekroTJA/vplan2019/internal/auth/drivers"
+	dbDrivers "github.com/zekroTJA/vplan2019/internal/database/drivers"
 )
 
 var (
@@ -19,7 +21,8 @@ var (
 func main() {
 	flag.Parse()
 
-	database := new(drivers.SQLite)
+	database := new(dbDrivers.SQLite)
+	authProvider := new(authDrivers.DebugAuthProvider)
 
 	//////////////////
 	// LOGGER SETUP //
@@ -43,10 +46,16 @@ func main() {
 	cfg, err := config.Open(*flagConfig, unmarshalFunc)
 	// If it was a file not found error, try to create a new config file
 	if os.IsNotExist(err) {
-		err = config.Create(*flagConfig, nil, database.GetConfigModel(), "", "  ", marshalFunc)
+		providerModels := &config.ProviderModels{
+			Database:      database.GetConfigModel(),
+			Authorization: authProvider.GetConfigModel(),
+		}
+
+		err = config.Create(*flagConfig, nil, providerModels, "", "  ", marshalFunc)
 		if err != nil {
 			logger.Fatal("Failed creating config: ", err)
 		}
+
 		logger.Infof("Created new empty config at '%s'. Enter your preferenced values and restart.", *flagConfig)
 		return
 	}
@@ -61,7 +70,7 @@ func main() {
 	// DATABASE SETUP //
 	////////////////////
 
-	err = database.Connect(cfg.Database)
+	err = database.Connect(cfg.Providers.Database)
 	if err != nil {
 		logger.Fatal("Failed creating database connection: ", err)
 	}
