@@ -34,12 +34,16 @@ func (s *SQLite) Close() {
 	s.db.Close()
 }
 
+// GetConfigModel returns a map with preset config
+// keys and values
 func (s *SQLite) GetConfigModel() map[string]string {
 	return map[string]string{
-		"file": "",
+		"file": "main.db.sqlite3",
 	}
 }
 
+// GetSessionStoreDriver returns a new instance of the session
+// store driver, which should be used for saving encrypted session data
 func (s *SQLite) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
 	return sqlitestore.NewSqliteStore(s.cfg["file"], "sessions", "/", maxAge, secrets...)
 }

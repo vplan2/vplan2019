@@ -20,7 +20,7 @@ type Config struct {
 
 // Logging contains the configuration for logging
 type Logging struct {
-	Level int `json:"level"`
+	Level int `json:"level,def:4"`
 }
 
 // UnmarshalFunc is a function which can be used to parse
@@ -61,10 +61,16 @@ func Open(file string, unmarshalFunc UnmarshalFunc) (*Config, error) {
 func Create(file string, config *Config, dbConfigModel map[string]string, prefix, indent string, marshalFunc MarshalIndentFunc) error {
 	if config == nil {
 		config = &Config{
-			Logging: new(Logging),
+			Logging: &Logging{
+				Level: 4,
+			},
 			WebServer: &webserver.Config{
-				Sessions: new(webserver.ConfigSessions),
-				TLS:      new(webserver.ConfigTLS),
+				Addr: "127.0.0.1:443",
+				Sessions: &webserver.ConfigSessions{
+					DefaultMaxAge:  3600,
+					RememberMaxAge: 3600 * 24 * 30,
+				},
+				TLS: new(webserver.ConfigTLS),
 			},
 			Database: dbConfigModel,
 		}
