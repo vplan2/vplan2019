@@ -1,3 +1,6 @@
+// Package drivers (auth/drivers) contains various general
+// drivers for accessing authentication services
+//   Authors: Ringo Hoffmann
 package drivers
 
 import (

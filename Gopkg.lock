@@ -66,6 +66,22 @@
   version = "v1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:cb4e23f5c10c1a316322afbd1ed54e7ad436b812c66b209dc67f1cb66efbf4c4"
+  name = "github.com/zekroTJA/timedmap"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "701f391050d188884fb73fe55bedfced2de24310"
+
+[[projects]]
+  branch = "master"
+  digest = "1:9fdc2b55e8e0fafe4b41884091e51e77344f7dc511c5acedcfd98200003bff90"
+  name = "golang.org/x/time"
+  packages = ["rate"]
+  pruneopts = "UT"
+  revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
+
+[[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -82,6 +98,8 @@
     "github.com/gorilla/sessions",
     "github.com/michaeljs1990/sqlitestore",
     "github.com/op/go-logging",
+    "github.com/zekroTJA/timedmap",
+    "golang.org/x/time/rate",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,5 +1,5 @@
-// Package drivers contains database driver structs for
-// accessing various database types
+// Package drivers (database/drivers) contains database
+// driver structs for accessing various database types
 //   Authors: Ringo Hoffmann
 package drivers
 

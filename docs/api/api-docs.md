@@ -26,7 +26,7 @@ If you specify the authentication as `session` by parameter using the `Authentic
 
 ### Authenticate
 
-> POST /api/authenticate/:username
+> POST /api/authenticate/:USERNAME
 
 #### Parameters
 
@@ -37,8 +37,9 @@ If you specify the authentication as `session` by parameter using the `Authentic
 
 #### Response
 
-> Status: 200 OK
-
+```
+Status: 200 OK
+```
 ```json
 // Only if 'session' value was 0
 {

@@ -1,5 +1,6 @@
 // Package ldflags contains variables set on
 // compiling the binary
+//   Authors: Ringo Hoffmann
 package ldflags
 
 var (
