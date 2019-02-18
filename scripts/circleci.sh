@@ -14,8 +14,8 @@ COMMIT=$(git rev-parse HEAD)
 dep ensure
 
 BUILDS=( \
-    'linux;arm' \
-    # 'linux;amd64' \  <- actually no needs to be tested atm
+    # 'linux;arm' \ <- actually no needs to be tested atm
+    'linux;amd64' \
     'windows;amd64' \
     # 'darwin;amd64' \ <- actually no needs to be tested atm
 )

@@ -81,6 +81,11 @@ func main() {
 		logger.Fatal("Failed connecting to database: ", err)
 	}
 
+	err = database.Setup()
+	if err != nil {
+		logger.Fatal("Failed setting up database: ", err)
+	}
+
 	///////////////////
 	// AUTH PROVIDER //
 	///////////////////
