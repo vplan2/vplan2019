@@ -8,6 +8,8 @@ var (
 	AppVersion = ""
 	// AppCommit is the last commit hash
 	AppCommit = ""
+	// GoVersion is the version of the go compiler
+	GoVersion = ""
 	// Release is "TRUE" if this is a release build
 	Release = ""
 )

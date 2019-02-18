@@ -15,12 +15,19 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+var (
+	// ErrUnauthorized is returned on unauthorized access
+	ErrUnauthorized = errors.New("unauthorized")
+)
+
 // Config contains the configuration
 // for the web server
 type Config struct {
 	Addr     string          `json:"addr"`
 	Sessions *ConfigSessions `json:"sessions"`
 	TLS      *ConfigTLS      `json:"tls"`
+
+	StaticFiles string `json:",omitempty"`
 }
 
 // ConfigTLS contains the cert file path
@@ -114,7 +121,7 @@ func (s *Server) initializeHnalders() {
 
 	// Serve static files from './web/static'
 	s.router.PathPrefix("/static").Handler(
-		http.StripPrefix("/static", http.FileServer(http.Dir("./web/static/"))))
+		http.StripPrefix("/static", http.FileServer(http.Dir(s.config.StaticFiles+"/web/static"))))
 }
 
 // jsonResponse sends a response containing the response code
@@ -148,4 +155,29 @@ func jsonResponse(w http.ResponseWriter, code int, data interface{}) error {
 func (s *Server) parseJSONBody(body io.ReadCloser, v interface{}) error {
 	dec := json.NewDecoder(body)
 	return dec.Decode(v)
+}
+
+// checkAuth checks if the current request is authorized by
+// a valid session token or by a passed API access token
+func (s *Server) checkAuth(w http.ResponseWriter, r *http.Request, authToken string) (string, error) {
+	session, err := s.store.Get(r, "main")
+	if err != nil {
+		return "", err
+	}
+
+	if session.IsNew {
+		return "", ErrUnauthorized
+	}
+
+	_ident, ok := session.Values["ident"]
+	if !ok || _ident == "" {
+		return "", ErrUnauthorized
+	}
+
+	ident, ok := _ident.(string)
+	if !ok {
+		return "", errors.New("failed parsing ident to string")
+	}
+
+	return ident, nil
 }

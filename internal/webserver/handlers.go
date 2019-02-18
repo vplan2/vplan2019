@@ -27,7 +27,7 @@ type authRequestData struct {
 
 func (s *Server) handlerMainPage(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index.html")
-	_, err := t.ParseFiles("./web/views/index.html")
+	_, err := t.ParseFiles(s.config.StaticFiles + "/web/views/index.html")
 	if err != nil {
 		logger.Error("failed parsing HTML template: ", err)
 		w.WriteHeader(http.StatusInternalServerError)

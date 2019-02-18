@@ -2,7 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
+	"strings"
+
+	"github.com/zekroTJA/vplan2019/internal/ldflags"
 
 	"github.com/ghodss/yaml"
 
@@ -15,11 +19,13 @@ import (
 )
 
 var (
-	flagConfig = flag.String("c", "config.yml", "location of the config file")
+	flagConfig     = flag.String("c", "config.yml", "location of the config file")
+	flagWebStatics = flag.String("web", "./", "location of the static web files ('web' folder)")
+	flagVersion    = flag.Bool("v", false, "display version and build information")
 )
 
 func main() {
-	flag.Parse()
+	flags()
 
 	database := new(dbDrivers.SQLite)
 	authProvider := new(authDrivers.DebugAuthProvider)
@@ -100,10 +106,25 @@ func main() {
 	if err != nil {
 		logger.Fatal("Failed getting session driver: ", err)
 	}
+	// Set locations of web statics from flag
+	cfg.WebServer.StaticFiles = *flagWebStatics
 	// Create server instance
 	server := new(webserver.Server)
 	// Initiate and run the web server, which blocks the main thread.
 	// If it fails, thow error and exit.
 	logger.Fatal("Failed opening webserver: ",
 		webserver.StartBlocking(server, cfg.WebServer, store, authProvider))
+}
+
+func flags() {
+	flag.Parse()
+	if *flagVersion {
+		fmt.Printf("vplan2019 server application\n"+
+			"© 2019 Richard Heidenreich & Ringo Hoffmann\n"+
+			"version:    %s\n"+
+			"commit:     %s\n"+
+			"built with: %s\n",
+			ldflags.AppVersion, ldflags.AppCommit, strings.Replace(ldflags.GoVersion, "_", " ", -1))
+		os.Exit(0)
+	}
 }
