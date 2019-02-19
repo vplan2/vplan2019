@@ -21,10 +21,18 @@ type authRequestData struct {
 	Session  int    `json:"session"`
 }
 
+// authTokenResposeData contains token string
+// and expire time for token request response
+type authTokenResposeData struct {
+	Token  string `json:"token"`
+	Expire int64  `json:"expire"`
+}
+
 //////////////
 // FRONTEND //
 //////////////
 
+// Handler for root page
 func (s *Server) handlerMainPage(w http.ResponseWriter, r *http.Request) {
 	t := template.New("index.html")
 	_, err := t.ParseFiles(s.config.StaticFiles + "/web/views/index.html")
@@ -49,6 +57,7 @@ func (s *Server) handlerMainPage(w http.ResponseWriter, r *http.Request) {
 // API //
 /////////
 
+// POST /api/authenticate/:USERNAME
 func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) {
 	if !s.limiter.Check("authenticate", w, r) {
 		return
@@ -91,23 +100,42 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	} else {
-
+		token, expire, err := s.tokenManager.Set(authData.Ident)
+		if err != nil {
+			jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))
+		} else {
+			jsonResponse(w, http.StatusOK, authTokenResposeData{
+				Token:  token,
+				Expire: expire.Unix(),
+			})
+		}
+		return
 	}
 
 	jsonResponse(w, http.StatusOK, nil)
 }
 
+// POST /api/test
+// Just for testing purposes
 func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
 	if !s.limiter.Check("test", w, r) {
 		return
 	}
 
-	session, err := s.store.Get(r, "main")
-	fmt.Println(err)
-	fmt.Println(session.Values)
+	token := r.Header.Get("Authentication")
+	// session, err := s.store.Get(r, "main")
+	// fmt.Println(err)
+	// fmt.Println(session.Values)
+
+	// fmt.Println(s.db.SetUserAPIToken("testUser", "testToken", time.Now().Add(10*time.Minute)))
+	// fmt.Println(s.db.DeleteUserAPIToken("testUser"))
+
+	fmt.Println(s.tokenManager.Check(token))
 }
 
-// ERROR HANDLERS
+////////////////////
+// ERROR HANDLERS //
+////////////////////
 
 func (s *Server) handlerAPIRateLimitError(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, http.StatusTooManyRequests, apiError(http.StatusTooManyRequests, ""))

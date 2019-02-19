@@ -1,6 +1,8 @@
 GO		= go
 DEP		= dep
 GIT     = git
+GOLINT  = golint
+GREP    = grep
 
 PACKAGE	= github.com/zekroTJA/vplan2019
 GOPATH	= $(CURDIR)/.gopath
@@ -19,7 +21,7 @@ TAG		= $(shell $(GIT) describe --tags)
 COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
-.PHONY: _make deps cleanup _finish run
+.PHONY: _make deps cleanup _finish run lint
 
 _make: $(WDIR) $(BIN) cleanup _finish
 
@@ -54,3 +56,6 @@ _finish:
 run:
 	@echo [ INFO ] Debug running...
 	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/config.yml ${ARGS})
+
+lint:
+	$(GOLINT) ./... | $(GREP) -v vendor

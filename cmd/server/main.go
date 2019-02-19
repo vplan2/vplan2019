@@ -118,7 +118,7 @@ func main() {
 	// Initiate and run the web server, which blocks the main thread.
 	// If it fails, thow error and exit.
 	logger.Fatal("Failed opening webserver: ",
-		webserver.StartBlocking(server, cfg.WebServer, store, authProvider))
+		webserver.StartBlocking(server, cfg.WebServer, database, store, authProvider))
 }
 
 func flags() {

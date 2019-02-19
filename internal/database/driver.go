@@ -29,8 +29,13 @@ type Driver interface {
 	// model structure
 	GetConfigModel() map[string]string
 	// Get session store driver
-	GetSessionStoreDriver(secrets ...[]byte) (sessions.Store, error)
+	GetSessionStoreDriver(mayAge int, secrets ...[]byte) (sessions.Store, error)
 
+	// GetAPIToken returns the passing ident to the fount token.
+	// If no matching token was found, an empty stirng should be
+	// returned with an nil error.
+	// Only return an error when the database access failed.
+	GetAPIToken(token string) (indent string, expire time.Time, err error)
 	// GetUserAPIToken returns the user API token, if existent
 	// If there is no token existent, this should only return an
 	// empty string and only an error if the db reuqest failes

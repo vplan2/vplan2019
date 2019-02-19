@@ -37,10 +37,10 @@ func (s *SQLite) Close() {
 
 // Setup creates tables if they do not exist yet
 func (s *SQLite) Setup() error {
-	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `api.token` (" +
+	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `apitoken` (" +
 		"`ident` text NOT NULL DEFAULT ''," +
 		"`token` text NOT NULL DEFAULT ''," +
-		"`expire` int NOT NULL DEFAULT 0 );")
+		"`expire` text NOT NULL DEFAULT '' );")
 	if err != nil {
 		return err
 	}
@@ -48,22 +48,55 @@ func (s *SQLite) Setup() error {
 	return nil
 }
 
+// GetAPIToken returns the matching indent and expire time to a found token.
+// If the token could not be matched, this returns an empty string without
+// and error. Errors are only returned if the database request failes.
+func (s *SQLite) GetAPIToken(token string) (string, time.Time, error) {
+	var ident string
+	var expire string
+
+	row := s.db.QueryRow("SELECT ident, expire FROM apitoken WHERE token = ?", token)
+	err := row.Scan(&ident, &expire)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+		}
+		return "", time.Time{}, err
+	}
+
+	if ident == "" {
+		return ident, time.Time{}, nil
+	}
+
+	tExpire, err := time.Parse("2006-01-02 15:04:05.999999-07:00", expire)
+
+	return ident, tExpire, err
+}
+
 // GetUserAPIToken gets the users API token with the time, the token expires,
 // if existent. Else, the returned string will be empty. If the query failes,
 // an error will be returned
 func (s *SQLite) GetUserAPIToken(ident string) (string, time.Time, error) {
 	var token string
-	var expire time.Time
+	var expire string
 
-	row := s.db.QueryRow("SELECT token, expire FROM api.token WHERE ident = ?", ident)
+	row := s.db.QueryRow("SELECT token, expire FROM apitoken WHERE ident = ?", ident)
 	err := row.Scan(&token, &expire)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+		}
+		return "", time.Time{}, err
+	}
 
-	return token, expire, err
+	tExpire, err := time.Parse("2006-01-02 15:04:05.999999-07:00", expire)
+
+	return token, tExpire, err
 }
 
 // SetUserAPIToken sets the API token an the expire time of it for a user
 func (s *SQLite) SetUserAPIToken(ident, token string, expire time.Time) error {
-	res, err := s.db.Exec("UPDATE api.token SET token = ?, expire = ? WHERE ident = ?",
+	res, err := s.db.Exec("UPDATE apitoken SET token = ?, expire = ? WHERE ident = ?",
 		token, expire, ident)
 	if err != nil {
 		return err
@@ -71,7 +104,7 @@ func (s *SQLite) SetUserAPIToken(ident, token string, expire time.Time) error {
 	if ar, err := res.RowsAffected(); err != nil {
 		return err
 	} else if ar < 1 {
-		_, err = s.db.Exec("INSERT INTO api.token (ident, token, expire) VALUES (?, ?, ?)",
+		_, err = s.db.Exec("INSERT INTO apitoken (ident, token, expire) VALUES (?, ?, ?)",
 			ident, token, expire)
 	}
 	return err
@@ -79,7 +112,7 @@ func (s *SQLite) SetUserAPIToken(ident, token string, expire time.Time) error {
 
 // DeleteUserAPIToken removes a users token from the database
 func (s *SQLite) DeleteUserAPIToken(ident string) error {
-	_, err := s.db.Exec("DELETE FROM api.token WHERE ident = ?", ident)
+	_, err := s.db.Exec("DELETE FROM apitoken WHERE ident = ?", ident)
 	return err
 }
 
@@ -94,5 +127,5 @@ func (s *SQLite) GetConfigModel() map[string]string {
 // GetSessionStoreDriver returns a new instance of the session
 // store driver, which should be used for saving encrypted session data
 func (s *SQLite) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
-	return sqlitestore.NewSqliteStore(s.cfg["file"], "api.sessions", "/", maxAge, secrets...)
+	return sqlitestore.NewSqliteStore(s.cfg["file"], "apisessions", "/", maxAge, secrets...)
 }

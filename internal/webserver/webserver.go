@@ -8,11 +8,18 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"time"
+
+	"github.com/zekroTJA/vplan2019/internal/database"
 
 	"github.com/zekroTJA/vplan2019/internal/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+)
+
+const (
+	tokenLifetime = 30 * 24 * time.Hour
 )
 
 var (
@@ -49,6 +56,8 @@ type ConfigSessions struct {
 // http server and the mux router
 type Server struct {
 	config       *Config
+	db           database.Driver
+	tokenManager *auth.TokenManager
 	server       *http.Server
 	router       *mux.Router
 	store        sessions.Store
@@ -65,7 +74,7 @@ var (
 // StartBlocking starts the web server and block the current thread
 //   server : the initialized instance of an empty Server struct
 //   config : instance of Config; if this is nil, defaultConfig will be used
-func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store, authProvider auth.Provider) error {
+func StartBlocking(server *Server, config *Config, db database.Driver, sessionStorage sessions.Store, authProvider auth.Provider) error {
 	if server == nil {
 		return errServerInstanceNil
 	}
@@ -74,10 +83,12 @@ func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store
 		return errConfigNil
 	}
 
+	server.db = db
 	server.config = config
 	server.router = mux.NewRouter()
 	server.store = sessionStorage
 	server.authProvider = authProvider
+	server.tokenManager = auth.NewTokenManager(server.db, tokenLifetime)
 
 	server.limiter = NewRateLimiter(&LimiterOpts{10, 10}, server.handlerAPIRateLimitError)
 
@@ -102,7 +113,7 @@ func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store
 //   limiterRate  : ammount of tokens regenerated per seconds
 //   limiterBurst : initial and total size of the token bucket
 //   ...methods   : allowed HTTP methods
-func (s *Server) addHandler(path string, ident string, handler func(w http.ResponseWriter, r *http.Request), limiterRate, limiterBurst int, methods ...string) {
+func (s *Server) addHandler(path string, ident string, handler func(w http.ResponseWriter, r *http.Request), limiterRate float64, limiterBurst int, methods ...string) {
 	s.router.HandleFunc(path, handler).Methods(methods...)
 	s.limiter.Register(ident, limiterRate, limiterBurst)
 }
