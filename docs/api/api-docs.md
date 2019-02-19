@@ -43,7 +43,7 @@ An error response from the API contains the status code as header and an error d
 
 ### Rate Limits
 
-Rate limits are applied on a per-route basis, which means, that different API routs will count different rate limits. That also means, if you are curerntly rate-mimited on one endpoint, you can also use the other endpoints at this time in their specific rate limitations.
+Rate limits are applied on a per-route basis, which means, that different API routs will count different rate limits. That also means, if you are curerntly rate-limited on one endpoint, you can also use the other endpoints at this time in their specific rate limitations.
 
 If you exeed a rate limit, you will get an error response as following:
 
@@ -86,7 +86,7 @@ If `session` value is `0`
 ```json
 {
     "token": "OTY2NDExMzE0MTU1MDU4NDA2OTMyOTEwMzkwMA==",
-    "valid": 1553176069
+    "expire": 1553176069
 }
 ```
 
