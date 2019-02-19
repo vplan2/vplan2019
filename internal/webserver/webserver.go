@@ -130,7 +130,7 @@ func (s *Server) initializeHnalders() {
 
 	// API
 	s.addHandler("/api/authenticate/{username}", "authenticate",
-		s.handlerAPIAuthenticate, 1, 3, "POST")
+		s.handlerAPIAuthenticate, 0.2, 3, "POST")
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
 
 	// Serve static files from './web/static'
