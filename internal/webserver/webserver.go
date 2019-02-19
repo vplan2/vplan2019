@@ -56,8 +56,9 @@ type ConfigSessions struct {
 // http server and the mux router
 type Server struct {
 	config       *Config
-	db           database.Driver
 	tokenManager *auth.TokenManager
+	reqAuth      *auth.RequestAuthManager
+	db           database.Driver
 	server       *http.Server
 	router       *mux.Router
 	store        sessions.Store
@@ -88,7 +89,9 @@ func StartBlocking(server *Server, config *Config, db database.Driver, sessionSt
 	server.router = mux.NewRouter()
 	server.store = sessionStorage
 	server.authProvider = authProvider
-	server.tokenManager = auth.NewTokenManager(server.db, tokenLifetime)
+	server.tokenManager = auth.NewTokenManager(db, tokenLifetime)
+	server.reqAuth = auth.NewRequestAuthManager(db, server.tokenManager, sessionStorage,
+		server.handlerAPIUnauthorizedError, server.handlerAPIInternalError)
 
 	server.limiter = NewRateLimiter(&LimiterOpts{10, 10}, server.handlerAPIRateLimitError)
 

@@ -121,8 +121,6 @@ func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
 	if !s.limiter.Check("test", w, r) {
 		return
 	}
-
-	token := r.Header.Get("Authentication")
 	// session, err := s.store.Get(r, "main")
 	// fmt.Println(err)
 	// fmt.Println(session.Values)
@@ -130,12 +128,20 @@ func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println(s.db.SetUserAPIToken("testUser", "testToken", time.Now().Add(10*time.Minute)))
 	// fmt.Println(s.db.DeleteUserAPIToken("testUser"))
 
-	fmt.Println(s.tokenManager.Check(token))
+	fmt.Println(s.reqAuth.Check(w, r))
 }
 
 ////////////////////
 // ERROR HANDLERS //
 ////////////////////
+
+func (s *Server) handlerAPIInternalError(w http.ResponseWriter, r *http.Request, err error) {
+	jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))
+}
+
+func (s *Server) handlerAPIUnauthorizedError(w http.ResponseWriter, r *http.Request) {
+	jsonResponse(w, http.StatusUnauthorized, apiError(http.StatusUnauthorized, ""))
+}
 
 func (s *Server) handlerAPIRateLimitError(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, http.StatusTooManyRequests, apiError(http.StatusTooManyRequests, ""))
