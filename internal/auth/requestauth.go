@@ -8,6 +8,8 @@ import (
 	"github.com/zekroTJA/vplan2019/internal/database"
 )
 
+// RequestAuthManager contains functionalities to check if
+// a request is authorized by checking multiple methods
 type RequestAuthManager struct {
 	tokenManager    *TokenManager
 	sessionStore    sessions.Store
@@ -15,6 +17,12 @@ type RequestAuthManager struct {
 	errorHandler    func(w http.ResponseWriter, r *http.Request, err error)
 }
 
+// NewRequestAuthManager creates a new instance of RequestAuthManager
+//   db                     : database driver instance
+//   tokenManager           : TokenManager instance which should be used
+//   sessionStorageInstance : SessionStorage instance which should be used
+//   disallowHandler        : handler which will be executed if a request was unauthorized
+//   errorHandler           : handler which will be called if an unexpected error occures
 func NewRequestAuthManager(db database.Driver, tokenManager *TokenManager, sessionStorageInstance sessions.Store,
 	disallowHandler func(w http.ResponseWriter, r *http.Request), errorHandler func(w http.ResponseWriter, r *http.Request, err error)) *RequestAuthManager {
 
@@ -34,7 +42,20 @@ func NewRequestAuthManager(db database.Driver, tokenManager *TokenManager, sessi
 	}
 }
 
+// Check returns the ident of the user, if the request was authorized.
+// First, this function will look for the 'Authorization' header containing a
+// token value, which will be checked against the database entries.
+// If there was no matching token found, the function will check for a valid
+// session cookie to authorize.
+// If both methods are failing, an empty string will be returned without an error
+// and the disallowHandler will be called.
+// If an unexpected error occures at any point, the function will also return an
+// empty string and will call the errorHandler passing the error object.
 func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) string {
+
+	//-------------------------------------
+	// CHECKING AUTHORIZATION HEADER TOKEN
+
 	token := r.Header.Get("Authorization")
 
 	if token != "" {
@@ -48,6 +69,9 @@ func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) str
 			return ident
 		}
 	}
+
+	//----------------------
+	// CHECK SESSION COOKIE
 
 	session, err := ram.sessionStore.Get(r, "main")
 	if err != nil {

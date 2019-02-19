@@ -51,6 +51,10 @@ func (t *TokenManager) Check(token string) (string, error) {
 	return ident, nil
 }
 
+// Set creates a new random token with a random number plus a current
+// unix timestamp encoded witn base64 to a string. This token
+// will be returned with the time of expiration. The token will be
+// sha256-hashed and then saved in the database.
 func (t *TokenManager) Set(ident string) (string, time.Time, error) {
 	rInt, err := rand.Int(rand.Reader, big.NewInt(9999999999))
 	if err != nil {
@@ -70,10 +74,16 @@ func (t *TokenManager) Set(ident string) (string, time.Time, error) {
 	return token, expire, nil
 }
 
+// Delete removes a token entry from the database of
+// the passed user ident.
+// This only returns an error, if the database access
+// failes and not if there was no token registered before.
 func (t *TokenManager) Delete(ident string) error {
 	return t.db.DeleteUserAPIToken(ident)
 }
 
+// strSHA256SumToken creates a sha256-hashed
+// hexadecimal string from the source string
 func strSHA256SumToken(token string) string {
 	bSum := sha256.Sum256([]byte(token))
 	return fmt.Sprintf("%x", bSum)
