@@ -48,7 +48,7 @@ Rate limits are applied on a per-route basis, which means, that different API ro
 If you exeed a rate limit, you will get an error response as following:
 
 ```
-< HTTP/1.1 429 TOO MANY REQUESTS
+< HTTP/1.1 429 Too many requests
 < Content-Type: application/json
 ```
 ```json
