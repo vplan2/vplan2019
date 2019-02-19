@@ -11,14 +11,13 @@ fi
 
 COMMIT=$(git rev-parse HEAD)
 
-git submodule init
-git submodule update
+dep ensure
 
 BUILDS=( \
-    'linux;arm' \
+    # 'linux;arm' \ <- actually no needs to be tested atm
     'linux;amd64' \
     'windows;amd64' \
-    'darwin;amd64' \
+    # 'darwin;amd64' \ <- actually no needs to be tested atm
 )
 
 for BUILD in ${BUILDS[*]}; do

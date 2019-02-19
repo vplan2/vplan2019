@@ -4,12 +4,27 @@
 package webserver
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
+	"io"
 	"net/http"
+	"time"
+
+	"github.com/zekroTJA/vplan2019/internal/database"
+
+	"github.com/zekroTJA/vplan2019/internal/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+)
+
+const (
+	tokenLifetime = 30 * 24 * time.Hour
+)
+
+var (
+	// ErrUnauthorized is returned on unauthorized access
+	ErrUnauthorized = errors.New("unauthorized")
 )
 
 // Config contains the configuration
@@ -18,6 +33,8 @@ type Config struct {
 	Addr     string          `json:"addr"`
 	Sessions *ConfigSessions `json:"sessions"`
 	TLS      *ConfigTLS      `json:"tls"`
+
+	StaticFiles string `json:",omitempty"`
 }
 
 // ConfigTLS contains the cert file path
@@ -38,32 +55,45 @@ type ConfigSessions struct {
 // Server contains the instance of the
 // http server and the mux router
 type Server struct {
-	server *http.Server
-	router *mux.Router
-	store  sessions.Store
+	config       *Config
+	tokenManager *auth.TokenManager
+	reqAuth      *auth.RequestAuthManager
+	db           database.Driver
+	server       *http.Server
+	router       *mux.Router
+	store        sessions.Store
+	authProvider auth.Provider
+	limiter      *RateLimiter
 }
 
 var (
 	// Errors
 	errServerInstanceNil = errors.New("web server instance must be initialized")
-	// Vars
-	defaultConfig = &Config{":80", new(ConfigSessions), nil}
+	errConfigNil         = errors.New("web server config is nil")
 )
 
 // StartBlocking starts the web server and block the current thread
 //   server : the initialized instance of an empty Server struct
 //   config : instance of Config; if this is nil, defaultConfig will be used
-func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store) error {
+func StartBlocking(server *Server, config *Config, db database.Driver, sessionStorage sessions.Store, authProvider auth.Provider) error {
 	if server == nil {
 		return errServerInstanceNil
 	}
 
 	if config == nil {
-		config = defaultConfig
+		return errConfigNil
 	}
 
+	server.db = db
+	server.config = config
 	server.router = mux.NewRouter()
 	server.store = sessionStorage
+	server.authProvider = authProvider
+	server.tokenManager = auth.NewTokenManager(db, tokenLifetime)
+	server.reqAuth = auth.NewRequestAuthManager(db, server.tokenManager, sessionStorage,
+		server.handlerAPIUnauthorizedError, server.handlerAPIInternalError)
+
+	server.limiter = NewRateLimiter(&LimiterOpts{10, 10}, server.handlerAPIRateLimitError)
 
 	server.server = &http.Server{
 		Addr:    config.Addr,
@@ -78,14 +108,90 @@ func StartBlocking(server *Server, config *Config, sessionStorage sessions.Store
 	return server.server.ListenAndServeTLS(config.TLS.CertFile, config.TLS.KeyFile)
 }
 
+// addHandler is a help function for adding handlers to the router
+// and for registering the entry for the rate limiter in one function
+//   path         : url path of the route
+//   ident        : the endpoint ident string for the rate limiter
+//   handler      : the handler function of the request
+//   limiterRate  : ammount of tokens regenerated per seconds
+//   limiterBurst : initial and total size of the token bucket
+//   ...methods   : allowed HTTP methods
+func (s *Server) addHandler(path string, ident string, handler func(w http.ResponseWriter, r *http.Request), limiterRate float64, limiterBurst int, methods ...string) {
+	s.router.HandleFunc(path, handler).Methods(methods...)
+	s.limiter.Register(ident, limiterRate, limiterBurst)
+}
+
 // initializeHandlers contains all setup functions for router
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
-	s.router.HandleFunc("/{test}", func(w http.ResponseWriter, r *http.Request) {
-		session, _ := s.store.Get(r, "test")
-		fmt.Println(session.Values["a"])
-		session.Values["a"] = "b"
-		session.Save(r, w)
-		w.Write([]byte("hey"))
-	}).Methods("GET")
+
+	// FRONTEND
+	s.router.HandleFunc("/", s.handlerMainPage).Methods("GET")
+
+	// API
+	s.addHandler("/api/authenticate/{username}", "authenticate",
+		s.handlerAPIAuthenticate, 0.2, 3, "POST")
+	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
+
+	// Serve static files from './web/static'
+	s.router.PathPrefix("/static").Handler(
+		http.StripPrefix("/static", http.FileServer(http.Dir(s.config.StaticFiles+"/web/static"))))
+}
+
+// jsonResponse sends a response containing the response code
+// and the data content transformed as JSON data
+//   w    : response rwiter
+//   code : HTTP status code
+//   data : content data
+func jsonResponse(w http.ResponseWriter, code int, data interface{}) error {
+	var bData []byte
+	var err error
+
+	w.Header().Add("Content-Type", "application/json")
+
+	if data != nil {
+		bData, err = json.MarshalIndent(data, "", "  ")
+	}
+
+	if err != nil {
+		return err
+	}
+
+	w.WriteHeader(code)
+	_, err = w.Write(bData)
+
+	return err
+}
+
+// parseJSONBody parses a JSON body to a struct pointer
+//   body : Read closer of the request body
+//   v    : pointer to the data object
+func (s *Server) parseJSONBody(body io.ReadCloser, v interface{}) error {
+	dec := json.NewDecoder(body)
+	return dec.Decode(v)
+}
+
+// checkAuth checks if the current request is authorized by
+// a valid session token or by a passed API access token
+func (s *Server) checkAuth(w http.ResponseWriter, r *http.Request, authToken string) (string, error) {
+	session, err := s.store.Get(r, "main")
+	if err != nil {
+		return "", err
+	}
+
+	if session.IsNew {
+		return "", ErrUnauthorized
+	}
+
+	_ident, ok := session.Values["ident"]
+	if !ok || _ident == "" {
+		return "", ErrUnauthorized
+	}
+
+	ident, ok := _ident.(string)
+	if !ok {
+		return "", errors.New("failed parsing ident to string")
+	}
+
+	return ident, nil
 }

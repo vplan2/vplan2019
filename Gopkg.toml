@@ -1,0 +1,31 @@
+[prune]
+  go-tests = true
+  unused-packages = true
+
+[[constraint]]
+  name = "github.com/ghodss/yaml"
+  version = "1.0.0"
+
+[[constraint]]
+  name = "github.com/gorilla/mux"
+  version = "1.7.0"
+
+[[constraint]]
+  name = "github.com/gorilla/sessions"
+  version = "1.1.3"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/michaeljs1990/sqlitestore"
+
+[[constraint]]
+  name = "github.com/op/go-logging"
+  version = "1.0.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/zekroTJA/timedmap"
+
+[[constraint]]
+  branch = "master"
+  name = "golang.org/x/time"

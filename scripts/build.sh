@@ -2,7 +2,7 @@
 
 ##### CONFIGS ######
 OUTPATH=./bin
-BINNAME=server
+BINNAME=vplan2019_server
 OS=linux
 ARCH=amd64
 WORKTREE=github.com/zekroTJA/vplan2019
@@ -25,6 +25,8 @@ if [ "$TAG" == "" ]; then
     TAG="untagged"
 fi
 
+GOVERS=$(go version | sed -e 's/ /_/g')
+
 if [ ! -d $BUILDPATH ]; then
     mkdir -p $BUILDPATH
 fi
@@ -43,6 +45,7 @@ echo "Building..."
         -ldflags " \
             -X ${WORKTREE}/internal/ldflags.AppVersion=$TAG \
             -X ${WORKTREE}/internal/ldflags.AppCommit=$COMMIT \
+            -X ${WORKTREE}/internal/ldflags.GoVersion=$GOVERS \
             -X ${WORKTREE}/internal/ldflags.Release=TRUE" \
         ./cmd/server
 )
