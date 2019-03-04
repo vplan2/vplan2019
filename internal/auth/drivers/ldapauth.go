@@ -4,6 +4,8 @@
 package drivers
 
 import (
+	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/jtblin/go-ldap-client"
@@ -32,25 +34,31 @@ func (d *LDAPAuthProvider) Connect(options map[string]string) error {
 	}
 
 	d.client = &ldap.LDAPClient{
-		Base:   options["base"],
-		Host:   options["host"],
-		Port:   iPort,
-		UseSSL: bSSL,
+		Base:        options["base"],
+		Host:        options["host"],
+		Port:        iPort,
+		UseSSL:      bSSL,
+		UserFilter:  "(uid=%s)",
+		GroupFilter: "(memberUid=%s)",
 	}
 
-	if err = d.client.Connect(); err != nil {
-		return err
-	}
-	defer d.client.Close()
+	fmt.Println(d.client)
+
+	// if err = d.client.Connect(); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }
 
 // Close _
-func (d *LDAPAuthProvider) Close() {}
+func (d *LDAPAuthProvider) Close() {
+	d.client.Close()
+}
 
 // GetConfigModel _
 func (d *LDAPAuthProvider) GetConfigModel() map[string]string {
+	// TODO: LDAP Result Code 200 "Network Error": tls: either ServerName or InsecureSkipVerify must be specified in the tls.Config
 	return map[string]string{
 		"base":   "dc=example,dc=com",
 		"host":   "ldap.example.com",
@@ -61,5 +69,16 @@ func (d *LDAPAuthProvider) GetConfigModel() map[string]string {
 
 // Authenticate _
 func (d *LDAPAuthProvider) Authenticate(username, password string) (*auth.Response, error) {
+	ok, data, err := d.client.Authenticate(username, password)
+	fmt.Println(ok, data, err)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, errors.New("unauthorized")
+	}
+
+	fmt.Println(data)
+
 	return nil, nil
 }
