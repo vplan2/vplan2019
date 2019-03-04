@@ -1,7 +1,9 @@
-database:
-  file: ""
 logging:
   level: 4
+providers:
+  authorization: {}
+  database:
+    file: main.db.sqlite3
 webServer:
   addr: :443
   sessions:

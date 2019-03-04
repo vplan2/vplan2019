@@ -21,16 +21,18 @@ TAG		= $(shell $(GIT) describe --tags)
 COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
-.PHONY: _make deps cleanup _finish run lint
+.PHONY: _make deps cleanup _finish run lint offline
 
-_make: $(WDIR) $(BIN) cleanup _finish
+_make: $(WDIR) deps $(BIN) cleanup _finish
+
+offline: $(WDIR) $(BIN) cleanup _finish
 
 $(WDIR):
 	@echo [ INFO ] creating working directory '$@'...
 	mkdir -p $@
 	cp -R $(CURDIR)/* $@/
 
-$(BIN): deps
+$(BIN):
 	@echo [ INFO ] building binary '$(BIN)'...
 	(env GOPATH=$(GOPATH) ${ARGS} $(GO) build -v -o $@ -ldflags "\
 		-X $(PACKAGE)/internal/ldflags.AppVersion=$(TAG) \

@@ -67,11 +67,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:cb4e23f5c10c1a316322afbd1ed54e7ad436b812c66b209dc67f1cb66efbf4c4"
+  digest = "1:c2e7ff2572bbe0c1982f2c9bfc1c6def863b5bf43b84012bd627382fa287c7bd"
   name = "github.com/zekroTJA/timedmap"
   packages = ["."]
   pruneopts = "UT"
-  revision = "701f391050d188884fb73fe55bedfced2de24310"
+  revision = "8fefa6c9e7e6afedd5e19fe9973ceaa4e00322e0"
 
 [[projects]]
   branch = "master"

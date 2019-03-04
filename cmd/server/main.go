@@ -125,7 +125,7 @@ func flags() {
 	flag.Parse()
 	if *flagVersion {
 		fmt.Printf("vplan2019 server application\n"+
-			"© 2019 Richard Heidenreich & Ringo Hoffmann\n"+
+			"© 2019 Richard Heidenreich, Ringo Hoffmann & Justin Trommler\n"+
 			"version:    %s\n"+
 			"commit:     %s\n"+
 			"built with: %s\n",
