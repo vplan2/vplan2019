@@ -29,6 +29,7 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/time"
+  
 [[constraint]]
   name = "github.com/Go-SQL-Driver/MySQL"
   version = "1.4.1"
