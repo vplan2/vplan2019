@@ -4,6 +4,8 @@
 package drivers
 
 import (
+	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -35,11 +37,6 @@ func (d *LDAPAuthProvider) Connect(options map[string]string) error {
 	d.cfg = options
 	d.opts = new(LDAPOptions)
 
-	// iPort, err := strconv.Atoi(options["port"])
-	// if err != nil {
-	// 	return err
-	// }
-
 	d.opts.BaseDN = options["base"]
 	d.opts.Host = options["host"]
 	d.opts.Port = options["port"]
@@ -53,19 +50,6 @@ func (d *LDAPAuthProvider) Connect(options map[string]string) error {
 	if err != nil {
 		return err
 	}
-
-	// d.client = &ldap.LDAPClient{
-	// 	Base:        options["base"],
-	// 	Host:        options["host"],
-	// 	Port:        iPort,
-	// 	UseSSL:      bSSL,
-	// 	UserFilter:  "(uid=%s)",
-	// 	GroupFilter: "(memberUid=%s)",
-	// }
-
-	// if err = d.client.Connect(); err != nil {
-	// 	return err
-	// }
 
 	return nil
 }
@@ -88,17 +72,6 @@ func (d *LDAPAuthProvider) GetConfigModel() map[string]string {
 
 // Authenticate _
 func (d *LDAPAuthProvider) Authenticate(username, group, password string) (*auth.Response, error) {
-	// ok, data, err := d.client.Authenticate(username, password)
-	// fmt.Println(ok, data, err)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// if !ok {
-	// 	return nil, errors.New("unauthorized")
-	// }
-
-	// fmt.Println(data)
-
 	dnArr := []string{"cn=" + username}
 	if group != "" {
 		dnArr = append(dnArr, "ou="+group)
@@ -107,10 +80,45 @@ func (d *LDAPAuthProvider) Authenticate(username, group, password string) (*auth
 	dn := strings.Join(dnArr, ",")
 
 	err := d.conn.Bind(dn, password)
-	if err != nil {
-		logger.Debug("LDAP auth error: ", err)
+	if ldap.IsErrorWithCode(err, ldap.ErrorNetwork) {
+		if err = d.Connect(d.cfg); err != nil {
+			return nil, err
+		}
+	} else if err != nil {
+		logger.Debug("LDAP auth error: %s", err.Error())
 		return nil, err
 	}
 
-	return nil, nil
+	searchRequest := ldap.NewSearchRequest(
+		d.opts.BaseDN,
+		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
+		fmt.Sprintf("(cn=%s)", username),
+		[]string{"givenName", "ou", "mail", "cn"},
+		nil,
+	)
+
+	res, err := d.conn.Search(searchRequest)
+	if err != nil {
+		logger.Debug("LDAP search error: %s", err.Error())
+		return nil, err
+	}
+
+	if len(res.Entries) == 0 {
+		logger.Debug("LDAP search error: search results are empty")
+		return nil, errors.New("search results emptys")
+	}
+
+	userRes := res.Entries[0]
+
+	ctx := make(map[string][]string)
+	for _, a := range userRes.Attributes {
+		ctx[a.Name] = a.Values
+	}
+
+	reqRes := &auth.Response{
+		Ident: userRes.DN,
+		Ctx:   ctx,
+	}
+
+	return reqRes, nil
 }

@@ -20,13 +20,19 @@ import (
 // POST /api/authenticate/:USERNAME
 type authRequestData struct {
 	Password string `json:"password"`
-	Group    string `json:group`
+	Group    string `json:"group"`
 	Session  int    `json:"session"`
+}
+
+type authResponseData struct {
+	Ident string      `json:"ident"`
+	Ctx   interface{} `json:"ctx"`
 }
 
 // authTokenResposeData contains token string
 // and expire time for token request response
 type authTokenResposeData struct {
+	*authResponseData
 	Token  string `json:"token"`
 	Expire int64  `json:"expire"`
 }
@@ -91,6 +97,17 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// Just to ensure we do not run into an runtime error
+	// later on using this object
+	if authData == nil {
+		authData = new(auth.Response)
+	}
+
+	respData := &authResponseData{
+		Ident: authData.Ident,
+		Ctx:   authData.Ctx,
+	}
+
 	if data.Session > 0 {
 		session, err := s.store.Get(r, "main")
 		session.Values["ident"] = authData.Ident
@@ -103,23 +120,20 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	} else {
-		if authData == nil {
-			authData = new(auth.Response)
-		}
-
 		token, expire, err := s.tokenManager.Set(authData.Ident)
 		if err != nil {
 			jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))
 		} else {
 			jsonResponse(w, http.StatusOK, authTokenResposeData{
-				Token:  token,
-				Expire: expire.Unix(),
+				Token:            token,
+				Expire:           expire.Unix(),
+				authResponseData: respData,
 			})
 		}
 		return
 	}
 
-	jsonResponse(w, http.StatusOK, nil)
+	jsonResponse(w, http.StatusOK, respData)
 }
 
 // POST /api/test

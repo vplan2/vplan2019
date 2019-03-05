@@ -86,8 +86,17 @@ If `session` value is `0`
 ```
 ```json
 {
-    "token": "OTY2NDExMzE0MTU1MDU4NDA2OTMyOTEwMzkwMA==",
-    "expire": 1553176069
+  "ident": "cn=mustermax,ou=user,dc=zekro,dc=de",
+  "ctx": {
+    "cn": [
+      "mustermax"
+    ],
+    "ou": [
+      "user"
+    ]
+  },
+  "token": "Nzc2Nzk2Mzc4MDE1NTE3Nzk4MDk5NjA0OTQ2MDA=",
+  "expire": 1554371809
 }
 ```
 
@@ -97,6 +106,18 @@ If `session` value is larger than `0`
 < HTTP/1.1 200 OK
 < Content-Type: application/json
 < Set-Cookie: main=MTU1MDU4NDEzNnxCQXdBQVRNPXwUbN6LLxTTxJ-eXp2SjGxnBg4o6E-IMFTUz1m2daa0aQ==; Path=/; Expires=Tue, 19 Feb 2019 14:48:56 GMT; Max-Age=3600
-< Date: Tue, 19 Feb 2019 13:48:56 GMT
-< Content-Length: 0
+```
+
+```json
+{
+  "ident": "cn=mustermax,ou=user,dc=zekro,dc=de",
+  "ctx": {
+    "cn": [
+      "mustermax"
+    ],
+    "ou": [
+      "user"
+    ]
+  }
+}
 ```
