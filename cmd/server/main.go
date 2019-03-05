@@ -20,7 +20,7 @@ import (
 
 var (
 	flagConfig     = flag.String("c", "config.yml", "location of the config file")
-	flagWebStatics = flag.String("web", "./", "location of the static web files ('web' folder)")
+	flagWebStatics = flag.String("web", "./web", "location of the static web files")
 	flagVersion    = flag.Bool("v", false, "display version and build information")
 )
 
