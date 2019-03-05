@@ -17,6 +17,8 @@ import (
 	"github.com/zekroTJA/vplan2019/internal/auth"
 )
 
+// LDAPOptions contains configration
+// for the LDAPAuthProvider
 type LDAPOptions struct {
 	BaseDN    string
 	Host      string
@@ -27,15 +29,16 @@ type LDAPOptions struct {
 	KeyFile   string
 }
 
-// DebugAuthProvider is an auth provider, which
-// is only purposed to use in debugging and testing
+// LDAPAuthProvider is the provider used to
+// authenticate against an LDAP server
 type LDAPAuthProvider struct {
 	cfg  map[string]string
 	opts *LDAPOptions
 	conn *ldap.Conn
 }
 
-// Connect _
+// Connect initiates a connection to the LDAP server
+// using the passed options
 func (d *LDAPAuthProvider) Connect(options map[string]string) error {
 	var err error
 	d.cfg = options
@@ -76,14 +79,14 @@ func (d *LDAPAuthProvider) Connect(options map[string]string) error {
 	return nil
 }
 
-// Close _
+// Close closes an open LDAP connecion
 func (d *LDAPAuthProvider) Close() {
 	d.conn.Close()
 }
 
-// GetConfigModel _
+// GetConfigModel returns the default config model of the
+// LDAPAuthProvider used in the config file on generation
 func (d *LDAPAuthProvider) GetConfigModel() map[string]string {
-	// TODO: LDAP Result Code 200 "Network Error": tls: either ServerName or InsecureSkipVerify must be specified in the tls.Config
 	return map[string]string{
 		"base":       "dc=example,dc=com",
 		"host":       "ldap.example.com",
@@ -95,7 +98,10 @@ func (d *LDAPAuthProvider) GetConfigModel() map[string]string {
 	}
 }
 
-// Authenticate _
+// Authenticate tries to authenticate a user by username and password
+// against the LDAP server. If the authentication succeeds, a search
+// reuqtest will be executed on the authenticated and the data will
+// attributes will be returned
 func (d *LDAPAuthProvider) Authenticate(username, group, password string) (*auth.Response, error) {
 	dnArr := []string{"cn=" + username}
 	if group != "" {

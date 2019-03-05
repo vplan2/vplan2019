@@ -9,6 +9,8 @@ import (
 )
 
 const (
+	// MainSessionName describes the name of the cookie
+	// of login sessions used for general authorization
 	MainSessionName = "session_main"
 )
 
