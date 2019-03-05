@@ -121,3 +121,23 @@ If `session` value is larger than `0`
   }
 }
 ```
+
+---
+
+## Endpoints
+
+### Authenticate
+
+> POST /api/logout
+
+#### Parameters
+
+*No parameters required.*
+
+#### Response
+
+> This endpoint does not respond with any body information. Also, it does not check if you already have set a session cookie. It will just set the session cookie as deleted and expired, so the cookie will be deleted on session ending.
+
+```
+< HTTP/1.1 200 OK
+```

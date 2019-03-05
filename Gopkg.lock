@@ -10,6 +10,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:ec6f9bf5e274c833c911923c9193867f3f18788c461f76f05f62bb1510e0ae65"
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "72cd26f257d44c1114970e19afddcd812016007e"
+  version = "v1.4.1"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -67,6 +75,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:0e619674d8b0093f87768441dc1a073df7c2f25d058c862813f5bc9528fb0d09"
+  name = "github.com/srinathgs/mysqlstore"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4f803440ed5b694a6499ba6310dc14245910fc3e"
+
+[[projects]]
+  branch = "master"
   digest = "1:c2e7ff2572bbe0c1982f2c9bfc1c6def863b5bf43b84012bd627382fa287c7bd"
   name = "github.com/zekroTJA/timedmap"
   packages = ["."]
@@ -80,6 +96,14 @@
   packages = ["rate"]
   pruneopts = "UT"
   revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
+
+[[projects]]
+  digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
+  name = "google.golang.org/appengine"
+  packages = ["cloudsql"]
+  pruneopts = "UT"
+  revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
+  version = "v1.4.0"
 
 [[projects]]
   digest = "1:af07c44dc04418be522bfd4e21ca9130d58169ea084e3a883e23772003a381c4"
@@ -114,6 +138,7 @@
     "github.com/gorilla/sessions",
     "github.com/michaeljs1990/sqlitestore",
     "github.com/op/go-logging",
+    "github.com/srinathgs/mysqlstore",
     "github.com/zekroTJA/timedmap",
     "golang.org/x/time/rate",
     "gopkg.in/ldap.v2",
