@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/zekroTJA/vplan2019/internal/auth"
+
 	"github.com/gorilla/mux"
 
 	"github.com/zekroTJA/vplan2019/internal/logger"
@@ -18,6 +20,7 @@ import (
 // POST /api/authenticate/:USERNAME
 type authRequestData struct {
 	Password string `json:"password"`
+	Group    string `json:group`
 	Session  int    `json:"session"`
 }
 
@@ -82,7 +85,7 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	authData, err := s.authProvider.Authenticate(uname, passwd)
+	authData, err := s.authProvider.Authenticate(uname, data.Group, passwd)
 	if err != nil {
 		jsonResponse(w, http.StatusUnauthorized, apiError(http.StatusUnauthorized, ""))
 		return
@@ -100,6 +103,10 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 	} else {
+		if authData == nil {
+			authData = new(auth.Response)
+		}
+
 		token, expire, err := s.tokenManager.Set(authData.Ident)
 		if err != nil {
 			jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))

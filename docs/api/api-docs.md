@@ -73,6 +73,7 @@ If you exeed a rate limit, you will get an error response as following:
 | Name | Type | Description |
 |------|------|-------------|
 | `password` | `string` | The password of the user |
+| *`group`* | `string` | If the server requires a group to authenticate, you can specify this here |
 | *`session`* | `int` | Specify if the login shoulb be treated as session creation which sets the authentication credentials as cookie. If this value is set `> 0`, you will not get an API key as response.<br/>`1` - basic session (valid for 1 hour)<br/>`2` - remembered session (valid for 30 days) |
 
 #### Response

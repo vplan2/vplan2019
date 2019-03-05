@@ -36,7 +36,7 @@ func (d *DebugAuthProvider) GetConfigModel() map[string]string {
 }
 
 // Authenticate _
-func (d *DebugAuthProvider) Authenticate(username, password string) (*auth.Response, error) {
+func (d *DebugAuthProvider) Authenticate(username, group, password string) (*auth.Response, error) {
 	if pw, ok := d.creds[username]; ok && pw == password {
 		ident := fmt.Sprintf("%x", sha256.Sum256([]byte(username+password)))
 		return &auth.Response{
