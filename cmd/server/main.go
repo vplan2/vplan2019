@@ -28,7 +28,7 @@ func main() {
 	flags()
 
 	database := new(dbDrivers.MySql)
-	authProvider := new(authDrivers.DebugAuthProvider)
+	authProvider := new(authDrivers.LDAPAuthProvider)
 
 	//////////////////
 	// LOGGER SETUP //

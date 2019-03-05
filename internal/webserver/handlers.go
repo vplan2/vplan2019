@@ -85,7 +85,6 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 	if data.Session > 0 {
 		var session *sessions.Session
 		session, _ = s.store.Get(r, auth.MainSessionName)
-		fmt.Println("is new on creation: ", session.IsNew)
 		session.Values["ident"] = authData.Ident
 		if data.Session > 1 {
 			session.Options.MaxAge = s.config.Sessions.RememberMaxAge

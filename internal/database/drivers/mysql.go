@@ -42,9 +42,9 @@ func (s *MySql) Close() {
 // Setup creates tables if they do not exist yet
 func (s *MySql) Setup() error {
 	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `apitoken` (" +
-		"`ident` text NOT NULL DEFAULT ''," +
-		"`token` text NOT NULL DEFAULT ''," +
-		"`expire` text NOT NULL DEFAULT '' );")
+		"`ident` text NOT NULL," +
+		"`token` text NOT NULL," +
+		"`expire` text NOT NULL );")
 	if err != nil {
 		return err
 	}
