@@ -5,16 +5,18 @@ package drivers
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/gorilla/sessions"
-	"github.com/srinathgs/mysqlstore"
+	"github.com/zekroTJA/mysqlstore"
 )
 
 // MySql contains database functions
 // for MySql database
 type MySql struct {
 	cfg map[string]string
+	dsn string
 	db  *sql.DB
 }
 
@@ -24,8 +26,10 @@ func (s *MySql) Connect(options map[string]string) error {
 	var err error
 
 	s.cfg = options
-	dsn := "file:" + s.cfg["file"]
-	s.db, err = sql.Open("MySql3", dsn)
+	s.dsn = fmt.Sprintf("%s:%s@tcp(%s)/%s",
+		options["user"], options["password"], options["host"], options["database"])
+
+	s.db, err = sql.Open("mysql", s.dsn)
 
 	return err
 }
@@ -120,13 +124,15 @@ func (s *MySql) DeleteUserAPIToken(ident string) error {
 // keys and values
 func (s *MySql) GetConfigModel() map[string]string {
 	return map[string]string{
-		"file": "main.db.MySql3",
+		"host":     "localhost",
+		"user":     "vplan2",
+		"password": "",
+		"database": "vplan2",
 	}
 }
 
 // GetSessionStoreDriver returns a new instance of the session
 // store driver, which should be used for saving encrypted session data
 func (s *MySql) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
-	// return mysqlstore.NewMySqlStore(s.cfg["file"], "apisessions", "/", maxAge, secrets...)
-	return mysqlstore.NewMySQLStore()
+	return mysqlstore.NewMySQLStoreFromConnection(s.db, "apisessions", "/", maxAge, secrets...)
 }

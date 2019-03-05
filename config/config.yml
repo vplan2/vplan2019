@@ -2,15 +2,19 @@ logging:
   level: 5
 providers:
   authorization:
-    base: dc=zekro,dc=de
-    host: zekro.de
-    port: "3893"
+    base:       dc=zekro,dc=de
+    host:       zekro.de
+    port:       "3893"
     attributes: "cn, ou, givename, ln"
-    usessl: "false"
+    usessl:     "false"
   database:
-    file: main.db.sqlite3
+    file:       main.db.sqlite3
+    database:   vplan2
+    host:       zekro.de
+    password:   acPOzHA8xmGq8Bah
+    user:       vplan2
 webServer:
-  addr: :8080
+  addr:         :8080
   sessions:
     defaultMaxAge: 3600
     encryptionSecret: "test123"

@@ -75,11 +75,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0e619674d8b0093f87768441dc1a073df7c2f25d058c862813f5bc9528fb0d09"
-  name = "github.com/srinathgs/mysqlstore"
+  digest = "1:231597473ede7b3825214a70b1233c86ba72570de25f19ee48493fb51207475d"
+  name = "github.com/zekroTJA/mysqlstore"
   packages = ["."]
   pruneopts = "UT"
-  revision = "4f803440ed5b694a6499ba6310dc14245910fc3e"
+  revision = "7bef0b25b35bed122e7b709b9e71f3eab3a1cb43"
 
 [[projects]]
   branch = "master"
@@ -138,7 +138,7 @@
     "github.com/gorilla/sessions",
     "github.com/michaeljs1990/sqlitestore",
     "github.com/op/go-logging",
-    "github.com/srinathgs/mysqlstore",
+    "github.com/zekroTJA/mysqlstore",
     "github.com/zekroTJA/timedmap",
     "golang.org/x/time/rate",
     "gopkg.in/ldap.v2",

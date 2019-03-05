@@ -3,6 +3,8 @@ package auth
 import (
 	"net/http"
 
+	"github.com/zekroTJA/vplan2019/internal/logger"
+
 	"github.com/gorilla/sessions"
 
 	"github.com/zekroTJA/vplan2019/internal/database"
@@ -81,6 +83,7 @@ func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) str
 
 	session, err := ram.sessionStore.Get(r, MainSessionName)
 	if err != nil {
+		logger.Debug("session login error: %s", err.Error())
 		ram.disallowHandler(w, r)
 		return ""
 	}

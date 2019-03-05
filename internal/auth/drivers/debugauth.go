@@ -22,7 +22,7 @@ type DebugAuthProvider struct {
 func (d *DebugAuthProvider) Connect(options map[string]string) error {
 	d.cfg = options
 	d.creds = map[string]string{
-		"test": "passwd",
+		"mustermax": "password",
 	}
 	return nil
 }

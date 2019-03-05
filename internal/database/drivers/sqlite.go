@@ -127,5 +127,5 @@ func (s *SQLite) GetConfigModel() map[string]string {
 // GetSessionStoreDriver returns a new instance of the session
 // store driver, which should be used for saving encrypted session data
 func (s *SQLite) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
-	return sqlitestore.NewSqliteStore(s.cfg["file"], "apisessions", "/", maxAge, secrets...)
+	return sqlitestore.NewSqliteStoreFromConnection(s.db, "apisessions", "/", maxAge, secrets...)
 }

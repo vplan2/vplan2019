@@ -27,8 +27,8 @@ var (
 func main() {
 	flags()
 
-	database := new(dbDrivers.SQLite)
-	authProvider := new(authDrivers.LDAPAuthProvider)
+	database := new(dbDrivers.MySql)
+	authProvider := new(authDrivers.DebugAuthProvider)
 
 	//////////////////
 	// LOGGER SETUP //

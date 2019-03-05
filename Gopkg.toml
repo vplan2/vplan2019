@@ -32,7 +32,3 @@
 [[constraint]]
   name = "github.com/Go-SQL-Driver/MySQL"
   version = "1.4.1"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/srinathgs/mysqlstore"
