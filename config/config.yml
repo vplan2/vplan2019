@@ -5,6 +5,7 @@ providers:
     base: dc=zekro,dc=de
     host: zekro.de
     port: "3893"
+    attributes: "cn, ou, giveName"
     usessl: "false"
   database:
     file: main.db.sqlite3

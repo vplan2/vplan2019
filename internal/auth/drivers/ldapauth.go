@@ -4,6 +4,7 @@
 package drivers
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"strconv"
@@ -17,10 +18,13 @@ import (
 )
 
 type LDAPOptions struct {
-	BaseDN string
-	Host   string
-	Port   string
-	UseSSL bool
+	BaseDN    string
+	Host      string
+	Port      string
+	Attrbutes []string
+	UseSSL    bool
+	CertFile  string
+	KeyFile   string
 }
 
 // DebugAuthProvider is an auth provider, which
@@ -40,13 +44,31 @@ func (d *LDAPAuthProvider) Connect(options map[string]string) error {
 	d.opts.BaseDN = options["base"]
 	d.opts.Host = options["host"]
 	d.opts.Port = options["port"]
+	d.opts.CertFile = options["certfile"]
+	d.opts.KeyFile = options["keyfile"]
+	d.opts.Attrbutes = strings.Split(options["attributes"], ",")
+
+	for i, a := range d.opts.Attrbutes {
+		d.opts.Attrbutes[i] = strings.Trim(a, " \t")
+	}
 
 	d.opts.UseSSL, err = strconv.ParseBool(options["usessl"])
 	if err != nil {
 		return err
 	}
 
-	d.conn, err = ldap.Dial("tcp", d.opts.Host+":"+d.opts.Port)
+	if d.opts.UseSSL {
+		cert, err := tls.LoadX509KeyPair(d.opts.CertFile, d.opts.KeyFile)
+		if err != nil {
+			return err
+		}
+
+		d.conn, err = ldap.DialTLS("tcp", d.opts.Host+":"+d.opts.Port, &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		})
+	} else {
+		d.conn, err = ldap.Dial("tcp", d.opts.Host+":"+d.opts.Port)
+	}
 	if err != nil {
 		return err
 	}
@@ -63,10 +85,13 @@ func (d *LDAPAuthProvider) Close() {
 func (d *LDAPAuthProvider) GetConfigModel() map[string]string {
 	// TODO: LDAP Result Code 200 "Network Error": tls: either ServerName or InsecureSkipVerify must be specified in the tls.Config
 	return map[string]string{
-		"base":   "dc=example,dc=com",
-		"host":   "ldap.example.com",
-		"port":   "389",
-		"usessl": "false",
+		"base":       "dc=example,dc=com",
+		"host":       "ldap.example.com",
+		"port":       "389",
+		"attributes": "cn, ou, giveName",
+		"usessl":     "false",
+		"certfile":   "",
+		"keyfile":    "",
 	}
 }
 
@@ -93,7 +118,7 @@ func (d *LDAPAuthProvider) Authenticate(username, group, password string) (*auth
 		d.opts.BaseDN,
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
 		fmt.Sprintf("(cn=%s)", username),
-		[]string{"givenName", "ou", "mail", "cn"},
+		d.opts.Attrbutes,
 		nil,
 	)
 
