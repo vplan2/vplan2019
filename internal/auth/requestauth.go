@@ -8,6 +8,10 @@ import (
 	"github.com/zekroTJA/vplan2019/internal/database"
 )
 
+const (
+	MainSessionName = "session_main"
+)
+
 // RequestAuthManager contains functionalities to check if
 // a request is authorized by checking multiple methods
 type RequestAuthManager struct {
@@ -73,9 +77,9 @@ func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) str
 	//----------------------
 	// CHECK SESSION COOKIE
 
-	session, err := ram.sessionStore.Get(r, "main")
+	session, err := ram.sessionStore.Get(r, MainSessionName)
 	if err != nil {
-		ram.errorHandler(w, r, err)
+		ram.disallowHandler(w, r)
 		return ""
 	}
 

@@ -125,11 +125,20 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
 
+	// ---------------------------
 	// API
+
+	// POST /api/authenticate/:USERNAME
 	s.addHandler("/api/authenticate/{username}", "authenticate",
 		s.handlerAPIAuthenticate, 0.2, 3, "POST")
+
+	// POST /apoi/logout
+	s.addHandler("/api/logout", "logout", s.handlerAPILogout, 1, 3, "POST")
+
+	// POST /api/test
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
 
+	// ---------------------------
 	// STATIC FRONTEND FILES
 	s.router.Handle("/", http.FileServer(http.Dir(s.config.StaticFiles)))
 }
