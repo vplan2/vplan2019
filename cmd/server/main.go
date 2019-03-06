@@ -27,7 +27,7 @@ var (
 func main() {
 	flags()
 
-	database := new(dbDrivers.MySql)
+	database := new(dbDrivers.MySQL)
 	authProvider := new(authDrivers.LDAPAuthProvider)
 
 	//////////////////

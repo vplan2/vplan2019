@@ -132,8 +132,11 @@ func (s *Server) initializeHnalders() {
 	s.addHandler("/api/authenticate/{username}", "authenticate",
 		s.handlerAPIAuthenticate, 0.2, 3, "POST")
 
-	// POST /apoi/logout
+	// POST /api/logout
 	s.addHandler("/api/logout", "logout", s.handlerAPILogout, 1, 3, "POST")
+
+	// GET /api/vplan
+	s.addHandler("/api/vplan", "getVPlan", s.handlerAPIGetVPlan, 0.2, 3, "GET")
 
 	// POST /api/test
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")

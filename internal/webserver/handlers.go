@@ -1,14 +1,13 @@
 package webserver
 
 import (
-	"fmt"
 	"net/http"
-
-	"github.com/gorilla/sessions"
-
-	"github.com/zekroTJA/vplan2019/internal/auth"
+	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+	"github.com/zekroTJA/vplan2019/internal/auth"
+	"github.com/zekroTJA/vplan2019/internal/logger"
 )
 
 /////////////////
@@ -23,6 +22,8 @@ type authRequestData struct {
 	Session  int    `json:"session"`
 }
 
+// authResponseData contains the response data for
+// POST /api/authenticate/:USERNAME
 type authResponseData struct {
 	Ident string      `json:"ident"`
 	Ctx   interface{} `json:"ctx"`
@@ -32,8 +33,8 @@ type authResponseData struct {
 // and expire time for token request response
 type authTokenResposeData struct {
 	*authResponseData
-	Token  string `json:"token"`
-	Expire int64  `json:"expire"`
+	Token  string    `json:"token"`
+	Expire time.Time `json:"expire"`
 }
 
 /////////
@@ -53,19 +54,19 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	data := new(authRequestData)
-	if err := s.parseJSONBody(r.Body, data); err != nil {
+	reqData := new(authRequestData)
+	if err := s.parseJSONBody(r.Body, reqData); err != nil {
 		jsonResponse(w, http.StatusBadRequest, apiError(http.StatusBadRequest, err.Error()))
 		return
 	}
 
-	passwd := data.Password
+	passwd := reqData.Password
 	if passwd == "" {
 		jsonResponse(w, http.StatusBadRequest, apiError(http.StatusBadRequest, ""))
 		return
 	}
 
-	authData, err := s.authProvider.Authenticate(uname, data.Group, passwd)
+	authData, err := s.authProvider.Authenticate(uname, reqData.Group, passwd)
 	if err != nil {
 		jsonResponse(w, http.StatusUnauthorized, apiError(http.StatusUnauthorized, ""))
 		return
@@ -82,11 +83,11 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		Ctx:   authData.Ctx,
 	}
 
-	if data.Session > 0 {
+	if reqData.Session > 0 {
 		var session *sessions.Session
 		session, _ = s.store.Get(r, auth.MainSessionName)
 		session.Values["ident"] = authData.Ident
-		if data.Session > 1 {
+		if reqData.Session > 1 {
 			session.Options.MaxAge = s.config.Sessions.RememberMaxAge
 		}
 		err := session.Save(r, w)
@@ -101,7 +102,7 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		} else {
 			jsonResponse(w, http.StatusOK, authTokenResposeData{
 				Token:            token,
-				Expire:           expire.Unix(),
+				Expire:           expire,
 				authResponseData: respData,
 			})
 		}
@@ -121,6 +122,47 @@ func (s *Server) handlerAPILogout(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, http.StatusOK, nil)
 }
 
+// GET /api/vplan
+func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
+	if !s.limiter.Check("getVPlan", w, r) {
+		return
+	}
+
+	ident := s.reqAuth.Check(w, r)
+	if ident == "" {
+		return
+	}
+
+	reqQuery := r.URL.Query()
+
+	class := reqQuery.Get("class")
+	_time := reqQuery.Get("time")
+
+	var t time.Time
+	var err error
+	if _time == "" {
+		t = time.Now()
+	} else {
+		t, err = time.Parse(time.RFC3339, _time)
+		if err != nil {
+			jsonResponse(w, http.StatusBadRequest,
+				apiError(http.StatusBadRequest, "time format is not RFC3339"))
+			return
+		}
+	}
+
+	vplans, err := s.db.GetVPlans(class, t)
+	if err != nil {
+		jsonResponse(w, http.StatusInternalServerError,
+			apiError(http.StatusInternalServerError, err.Error()))
+		return
+	}
+
+	jsonResponse(w, http.StatusOK, map[string]interface{}{
+		"data": vplans,
+	})
+}
+
 // POST /api/test
 // Just for testing purposes
 func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
@@ -128,7 +170,12 @@ func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(s.reqAuth.Check(w, r))
+	ident := s.reqAuth.Check(w, r)
+	if ident == "" {
+		return
+	}
+
+	logger.Debug("auth test: %s", ident)
 }
 
 ////////////////////
