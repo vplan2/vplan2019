@@ -3,9 +3,17 @@ package auth
 import (
 	"net/http"
 
+	"github.com/zekroTJA/vplan2019/internal/logger"
+
 	"github.com/gorilla/sessions"
 
 	"github.com/zekroTJA/vplan2019/internal/database"
+)
+
+const (
+	// MainSessionName describes the name of the cookie
+	// of login sessions used for general authorization
+	MainSessionName = "session_main"
 )
 
 // RequestAuthManager contains functionalities to check if
@@ -73,9 +81,10 @@ func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) str
 	//----------------------
 	// CHECK SESSION COOKIE
 
-	session, err := ram.sessionStore.Get(r, "main")
+	session, err := ram.sessionStore.Get(r, MainSessionName)
 	if err != nil {
-		ram.errorHandler(w, r, err)
+		logger.Debug("session login error: %s", err.Error())
+		ram.disallowHandler(w, r)
 		return ""
 	}
 

@@ -125,17 +125,25 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
 
-	// FRONTEND
-	s.router.HandleFunc("/", s.handlerMainPage).Methods("GET")
-
+	// ---------------------------
 	// API
+
+	// POST /api/authenticate/:USERNAME
 	s.addHandler("/api/authenticate/{username}", "authenticate",
 		s.handlerAPIAuthenticate, 0.2, 3, "POST")
+
+	// POST /api/logout
+	s.addHandler("/api/logout", "logout", s.handlerAPILogout, 1, 3, "POST")
+
+	// GET /api/vplan
+	s.addHandler("/api/vplan", "getVPlan", s.handlerAPIGetVPlan, 0.2, 3, "GET")
+
+	// POST /api/test
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
 
-	// Serve static files from './web/static'
-	s.router.PathPrefix("/static").Handler(
-		http.StripPrefix("/static", http.FileServer(http.Dir(s.config.StaticFiles+"/web/static"))))
+	// ---------------------------
+	// STATIC FRONTEND FILES
+	s.router.Handle("/", http.FileServer(http.Dir(s.config.StaticFiles)))
 }
 
 // jsonResponse sends a response containing the response code

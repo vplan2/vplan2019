@@ -38,9 +38,10 @@ func (s *SQLite) Close() {
 // Setup creates tables if they do not exist yet
 func (s *SQLite) Setup() error {
 	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `apitoken` (" +
+		"`id` INTEGER PRIMARY KEY AUTOINCREMENT," +
 		"`ident` text NOT NULL DEFAULT ''," +
 		"`token` text NOT NULL DEFAULT ''," +
-		"`expire` text NOT NULL DEFAULT '' );")
+		"`expire` timestamp NOT NULL DEFAULT '' );")
 	if err != nil {
 		return err
 	}
@@ -48,12 +49,9 @@ func (s *SQLite) Setup() error {
 	return nil
 }
 
-// GetAPIToken returns the matching indent and expire time to a found token.
-// If the token could not be matched, this returns an empty string without
-// and error. Errors are only returned if the database request failes.
 func (s *SQLite) GetAPIToken(token string) (string, time.Time, error) {
 	var ident string
-	var expire string
+	var expire []uint8
 
 	row := s.db.QueryRow("SELECT ident, expire FROM apitoken WHERE token = ?", token)
 	err := row.Scan(&ident, &expire)
@@ -68,7 +66,7 @@ func (s *SQLite) GetAPIToken(token string) (string, time.Time, error) {
 		return ident, time.Time{}, nil
 	}
 
-	tExpire, err := time.Parse("2006-01-02 15:04:05.999999-07:00", expire)
+	tExpire, err := time.Parse(timeFormat, string(expire))
 
 	return ident, tExpire, err
 }
@@ -78,7 +76,7 @@ func (s *SQLite) GetAPIToken(token string) (string, time.Time, error) {
 // an error will be returned
 func (s *SQLite) GetUserAPIToken(ident string) (string, time.Time, error) {
 	var token string
-	var expire string
+	var expire int64
 
 	row := s.db.QueryRow("SELECT token, expire FROM apitoken WHERE ident = ?", ident)
 	err := row.Scan(&token, &expire)
@@ -89,7 +87,7 @@ func (s *SQLite) GetUserAPIToken(ident string) (string, time.Time, error) {
 		return "", time.Time{}, err
 	}
 
-	tExpire, err := time.Parse("2006-01-02 15:04:05.999999-07:00", expire)
+	tExpire, err := time.Parse(timeFormat, string(expire))
 
 	return token, tExpire, err
 }
@@ -127,5 +125,5 @@ func (s *SQLite) GetConfigModel() map[string]string {
 // GetSessionStoreDriver returns a new instance of the session
 // store driver, which should be used for saving encrypted session data
 func (s *SQLite) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
-	return sqlitestore.NewSqliteStore(s.cfg["file"], "apisessions", "/", maxAge, secrets...)
+	return sqlitestore.NewSqliteStoreFromConnection(s.db, "apisessions", "/", maxAge, secrets...)
 }

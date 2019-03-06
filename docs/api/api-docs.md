@@ -60,6 +60,11 @@ If you exeed a rate limit, you will get an error response as following:
 }
 ```
 
+### Data Formats
+
+**Timestamps**  
+All time formats of request data and response data must be formatted and interpreted as [RFC 3339](https://tools.ietf.org/html/rfc3339) formatted timestamp.
+
 ---
 
 ## Endpoints
@@ -73,6 +78,7 @@ If you exeed a rate limit, you will get an error response as following:
 | Name | Type | Description |
 |------|------|-------------|
 | `password` | `string` | The password of the user |
+| *`group`* | `string` | If the server requires a group to authenticate, you can specify this here |
 | *`session`* | `int` | Specify if the login shoulb be treated as session creation which sets the authentication credentials as cookie. If this value is set `> 0`, you will not get an API key as response.<br/>`1` - basic session (valid for 1 hour)<br/>`2` - remembered session (valid for 30 days) |
 
 #### Response
@@ -85,8 +91,17 @@ If `session` value is `0`
 ```
 ```json
 {
-    "token": "OTY2NDExMzE0MTU1MDU4NDA2OTMyOTEwMzkwMA==",
-    "expire": 1553176069
+  "ident": "cn=mustermax,ou=user,dc=zekro,dc=de",
+  "ctx": {
+    "cn": [
+      "mustermax"
+    ],
+    "ou": [
+      "user"
+    ]
+  },
+  "token": "Nzc2Nzk2Mzc4MDE1NTE3Nzk4MDk5NjA0OTQ2MDA=",
+  "expire": "2019-04-05T15:09:57.9536976+02:00"
 }
 ```
 
@@ -96,6 +111,112 @@ If `session` value is larger than `0`
 < HTTP/1.1 200 OK
 < Content-Type: application/json
 < Set-Cookie: main=MTU1MDU4NDEzNnxCQXdBQVRNPXwUbN6LLxTTxJ-eXp2SjGxnBg4o6E-IMFTUz1m2daa0aQ==; Path=/; Expires=Tue, 19 Feb 2019 14:48:56 GMT; Max-Age=3600
-< Date: Tue, 19 Feb 2019 13:48:56 GMT
-< Content-Length: 0
+```
+
+```json
+{
+  "ident": "cn=mustermax,ou=user,dc=zekro,dc=de",
+  "ctx": {
+    "cn": [
+      "mustermax"
+    ],
+    "ou": [
+      "user"
+    ]
+  }
+}
+```
+
+### Logout
+
+> POST /api/logout
+
+#### Parameters
+
+*No parameters required.*
+
+#### Response
+
+> This endpoint does not respond with any body information. Also, it does not check if you already have set a session cookie. It will just set the session cookie as deleted and expired, so the cookie will be deleted on session ending.
+
+```
+< HTTP/1.1 200 OK
+```
+
+### Get VPlans
+
+> GET /api/vplan
+
+#### Parameters
+> Parameters must be passed by *(URL encoded)* URL parameters.
+
+| Name | Type | Description |
+|------|------|-------------|
+| *`time`* | `string` | [RFC 3339](https://tools.ietf.org/html/rfc3339) encoded timestamp after which VPlans are requested |
+| *`class`* | `string` | Name of the class of which the VPlan entries will be filtered |
+
+#### Response
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+```
+```json
+{
+  "data": [
+    {
+      "id": 1397,
+      "date_edit": "2019-01-18T09:17:47Z",
+      "date_for": "2019-03-08T00:00:00Z",
+      "block": "X",
+      "header": "",
+      "footer": "",
+      "entries": [
+        {
+          "id": 26352,
+          "vplan_id": 1397,
+          "class": "UL17X",
+          "time": "7./8.",
+          "messures": "LF8 in 034 vom 17.01.",
+          "responsible": "Hr. A"
+        }
+      ]
+    },
+    {
+      "id": 1408,
+      "date_edit": "2019-02-15T10:09:12Z",
+      "date_for": "2019-03-04T00:00:00Z",
+      "block": "F",
+      "header": "Montag, den 04.03.2019\r\nabwesend: Hr. W",
+      "footer": "IO16F Projekt",
+      "entries": [
+        {
+          "id": 26776,
+          "vplan_id": 1408,
+          "class": "TZ17F",
+          "time": "1./2. ",
+          "messures": "Gr. W Ausfall ETCS",
+          "responsible": "Hr. W"
+        },
+        {
+          "id": 26778,
+          "vplan_id": 1408,
+          "class": "WQ16F",
+          "time": "3./4.",
+          "messures": "ganze Klasse RDSE in H1",
+          "responsible": "Hr. J"
+        }
+      ]
+    },
+    {
+      "id": 1410,
+      "date_edit": "2019-02-26T10:47:13Z",
+      "date_for": "2019-03-05T00:00:00Z",
+      "block": "B",
+      "header": "Dienstag, den 05.03. 2019\r\nabwesend: ",
+      "footer": "",
+      "entries": null
+    }
+  ]
+}
 ```

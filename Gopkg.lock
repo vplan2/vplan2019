@@ -10,6 +10,14 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:ec6f9bf5e274c833c911923c9193867f3f18788c461f76f05f62bb1510e0ae65"
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "72cd26f257d44c1114970e19afddcd812016007e"
+  version = "v1.4.1"
+
+[[projects]]
   digest = "1:c79fb010be38a59d657c48c6ba1d003a8aa651fa56b579d959d74573b7dff8e1"
   name = "github.com/gorilla/context"
   packages = ["."]
@@ -67,6 +75,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:231597473ede7b3825214a70b1233c86ba72570de25f19ee48493fb51207475d"
+  name = "github.com/zekroTJA/mysqlstore"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7bef0b25b35bed122e7b709b9e71f3eab3a1cb43"
+
+[[projects]]
+  branch = "master"
   digest = "1:c2e7ff2572bbe0c1982f2c9bfc1c6def863b5bf43b84012bd627382fa287c7bd"
   name = "github.com/zekroTJA/timedmap"
   packages = ["."]
@@ -80,6 +96,30 @@
   packages = ["rate"]
   pruneopts = "UT"
   revision = "85acf8d2951cb2a3bde7632f9ff273ef0379bcbd"
+
+[[projects]]
+  digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
+  name = "google.golang.org/appengine"
+  packages = ["cloudsql"]
+  pruneopts = "UT"
+  revision = "e9657d882bb81064595ca3b56cbe2546bbabf7b1"
+  version = "v1.4.0"
+
+[[projects]]
+  digest = "1:af07c44dc04418be522bfd4e21ca9130d58169ea084e3a883e23772003a381c4"
+  name = "gopkg.in/asn1-ber.v1"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "f715ec2f112d1e4195b827ad68cf44017a3ef2b1"
+  version = "v1.3"
+
+[[projects]]
+  digest = "1:93aaeb913621a3a53aaa78592c00f46d63e3bb0ea76e2d9b07327b50959a5778"
+  name = "gopkg.in/ldap.v2"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "bb7a9ca6e4fbc2129e3db588a34bc970ffe811a9"
+  version = "v2.5.1"
 
 [[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
@@ -98,8 +138,10 @@
     "github.com/gorilla/sessions",
     "github.com/michaeljs1990/sqlitestore",
     "github.com/op/go-logging",
+    "github.com/zekroTJA/mysqlstore",
     "github.com/zekroTJA/timedmap",
     "golang.org/x/time/rate",
+    "gopkg.in/ldap.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

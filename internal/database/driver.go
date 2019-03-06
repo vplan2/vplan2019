@@ -14,6 +14,27 @@ import (
 // interface could not be parsed to the database scheme specified
 var ErrConfig = errors.New("failed parsing config for database")
 
+type Timestamp []uint8
+
+type VPlan struct {
+	ID       int           `json:"id"`
+	DateEdit time.Time     `json:"date_edit"`
+	DateFor  time.Time     `json:"date_for"`
+	Block    string        `json:"block"`
+	Header   string        `json:"header"`
+	Footer   string        `json:"footer"`
+	Entries  []*VPlanEntry `json:"entries"`
+}
+
+type VPlanEntry struct {
+	ID         int    `json:"id"`
+	VPlanID    int    `json:"vplan_id"`
+	Class      string `json:"class"`
+	Time       string `json:"time"`
+	Messures   string `json:"messures"`
+	Resposible string `json:"responsible"`
+}
+
 // Driver is the general interface for database drivers
 type Driver interface {
 	// Connect to the database or open database file
@@ -47,4 +68,6 @@ type Driver interface {
 	// If the user has no token to delete, you should not return
 	// an error.
 	DeleteUserAPIToken(ident string) error
+
+	GetVPlans(class string, timestamp time.Time) ([]*VPlan, error)
 }

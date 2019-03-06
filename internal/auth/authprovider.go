@@ -29,5 +29,5 @@ type Provider interface {
 	// username and password credentials.
 	// If authentication failes, an error must
 	// be returned with an empty response object.
-	Authenticate(username, password string) (*Response, error)
+	Authenticate(username, group, password string) (*Response, error)
 }
