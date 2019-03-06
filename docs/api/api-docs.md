@@ -60,6 +60,11 @@ If you exeed a rate limit, you will get an error response as following:
 }
 ```
 
+### Data Formats
+
+**Timestamps**  
+All time formats of request data and response data must be formatted and interpreted as [RFC 3339](https://tools.ietf.org/html/rfc3339) formatted timestamp.
+
 ---
 
 ## Endpoints
