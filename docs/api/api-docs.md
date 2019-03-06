@@ -96,7 +96,7 @@ If `session` value is `0`
     ]
   },
   "token": "Nzc2Nzk2Mzc4MDE1NTE3Nzk4MDk5NjA0OTQ2MDA=",
-  "expire": 1554371809
+  "expire": "2019-04-05T15:09:57.9536976+02:002"
 }
 ```
 

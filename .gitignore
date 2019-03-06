@@ -26,3 +26,5 @@ bin/*
 # database files
 *.db
 *.sqlite3
+
+release/*

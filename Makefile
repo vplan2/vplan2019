@@ -21,7 +21,7 @@ TAG		= $(shell $(GIT) describe --tags)
 COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
-.PHONY: _make deps cleanup _finish run lint offline
+.PHONY: _make deps cleanup _finish run lint offline release
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -40,6 +40,12 @@ $(BIN):
 		-X $(PACKAGE)/internal/ldflags.GoVersion=$(GOVERS) \
 		-X $(PACKAGE)/internal/ldflags.Release=TRUE" \
 		$(WDIR)/cmd/server)
+
+release: $(WDIR) $(BIN) cleanup
+	@echo [ INFO ] Creating release...
+	mkdir $(CURDIR)/release
+	mv -f $(BIN) $(CURDIR)/release
+	cp -f -R $(CURDIR)/web $(CURDIR)/release/web
 
 deps:
 	@echo [ INFO ] getting dependencies...	

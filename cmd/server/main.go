@@ -49,6 +49,7 @@ func main() {
 		return yaml.Marshal(v)
 	}
 	// try to laod existing config
+	logger.Info("loading config...")
 	cfg, err := config.Open(*flagConfig, unmarshalFunc)
 	// If it was a file not found error, try to create a new config file
 	if os.IsNotExist(err) {
@@ -76,6 +77,7 @@ func main() {
 	// DATABASE SETUP //
 	////////////////////
 
+	logger.Info("connecting to database...")
 	err = database.Connect(cfg.Providers.Database)
 	if err != nil {
 		logger.Fatal("Failed connecting to database: ", err)
@@ -90,6 +92,7 @@ func main() {
 	// AUTH PROVIDER //
 	///////////////////
 
+	logger.Info("connecting to auth provider...")
 	err = authProvider.Connect(cfg.Providers.Authorization)
 	if err != nil {
 		logger.Fatal("Failed connecting to auth provider: ", err)
@@ -101,7 +104,7 @@ func main() {
 
 	// output web server starting info and warn if web server was
 	// started in non TLS mode
-	logger.Info("Starting web server on %s...", cfg.WebServer.Addr)
+	logger.Info("starting web server on %s...", cfg.WebServer.Addr)
 	if cfg.WebServer.TLS == nil {
 		logger.Warning("ATTENTION: THE WEB SERVER IS NOT RUNNING IN TLS MODE")
 	}
