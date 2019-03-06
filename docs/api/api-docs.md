@@ -96,7 +96,7 @@ If `session` value is `0`
     ]
   },
   "token": "Nzc2Nzk2Mzc4MDE1NTE3Nzk4MDk5NjA0OTQ2MDA=",
-  "expire": "2019-04-05T15:09:57.9536976+02:002"
+  "expire": "2019-04-05T15:09:57.9536976+02:00"
 }
 ```
 
@@ -122,11 +122,7 @@ If `session` value is larger than `0`
 }
 ```
 
----
-
-## Endpoints
-
-### Authenticate
+### Logout
 
 > POST /api/logout
 
@@ -140,4 +136,82 @@ If `session` value is larger than `0`
 
 ```
 < HTTP/1.1 200 OK
+```
+
+### Get VPlans
+
+> GET /api/vplan
+
+#### Parameters
+> Parameters must be passed by *(URL encoded)* URL parameters.
+
+| Name | Type | Description |
+|------|------|-------------|
+| *`time`* | `string` | [RFC 3339](https://tools.ietf.org/html/rfc3339) encoded timestamp after which VPlans are requested |
+| *`class`* | `string` | Name of the class of which the VPlan entries will be filtered |
+
+#### Response
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+```
+```json
+{
+  "data": [
+    {
+      "id": 1397,
+      "date_edit": "2019-01-18T09:17:47Z",
+      "date_for": "2019-03-08T00:00:00Z",
+      "block": "X",
+      "header": "",
+      "footer": "",
+      "entries": [
+        {
+          "id": 26352,
+          "vplan_id": 1397,
+          "class": "UL17X",
+          "time": "7./8.",
+          "messures": "LF8 in 034 vom 17.01.",
+          "responsible": "Hr. A"
+        }
+      ]
+    },
+    {
+      "id": 1408,
+      "date_edit": "2019-02-15T10:09:12Z",
+      "date_for": "2019-03-04T00:00:00Z",
+      "block": "F",
+      "header": "Montag, den 04.03.2019\r\nabwesend: Hr. W",
+      "footer": "IO16F Projekt",
+      "entries": [
+        {
+          "id": 26776,
+          "vplan_id": 1408,
+          "class": "TZ17F",
+          "time": "1./2. ",
+          "messures": "Gr. W Ausfall ETCS",
+          "responsible": "Hr. W"
+        },
+        {
+          "id": 26778,
+          "vplan_id": 1408,
+          "class": "WQ16F",
+          "time": "3./4.",
+          "messures": "ganze Klasse RDSE in H1",
+          "responsible": "Hr. J"
+        }
+      ]
+    },
+    {
+      "id": 1410,
+      "date_edit": "2019-02-26T10:47:13Z",
+      "date_for": "2019-03-05T00:00:00Z",
+      "block": "B",
+      "header": "Dienstag, den 05.03. 2019\r\nabwesend: ",
+      "footer": "",
+      "entries": null
+    }
+  ]
+}
 ```
