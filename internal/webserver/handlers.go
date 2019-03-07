@@ -46,7 +46,7 @@ type authTokenResposeData struct {
 
 func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
 	file := mux.Vars(r)["file"]
-	if _, err := s.reqAuth.Authenticate(r); err != nil {
+	if _, err := s.reqAuth.Authorize(r); err != nil {
 		http.ServeFile(w, r, s.config.StaticFiles+"/login.html")
 	} else {
 		fmt.Println(file)
