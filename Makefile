@@ -41,7 +41,7 @@ $(BIN):
 		-X $(PACKAGE)/internal/ldflags.Release=TRUE" \
 		$(WDIR)/cmd/server)
 
-release: $(WDIR) $(BIN) cleanup
+release: $(WDIR) $(BIN) deps cleanup
 	@echo [ INFO ] Creating release...
 	mkdir $(CURDIR)/release
 	mv -f $(BIN) $(CURDIR)/release
