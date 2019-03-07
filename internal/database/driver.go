@@ -11,7 +11,9 @@ import (
 )
 
 const (
+	// LoginTypeWebInterface describes a web interface login
 	LoginTypeWebInterface LoginType = iota
+	// LoginTypeToken describes an API token generation
 	LoginTypeToken
 )
 
@@ -19,9 +21,15 @@ const (
 // interface could not be parsed to the database scheme specified
 var ErrConfig = errors.New("failed parsing config for database")
 
+// Timestamp is the standard timestamp type
+// returned from the MySQL database
 type Timestamp []uint8
+
+// LoginType is the type of login
 type LoginType int8
 
+// VPlan contains the information of
+// a VPlan database structure
 type VPlan struct {
 	ID       int           `json:"id"`
 	DateEdit time.Time     `json:"date_edit"`
@@ -32,6 +40,8 @@ type VPlan struct {
 	Entries  []*VPlanEntry `json:"entries"`
 }
 
+// VPlanEntry contains the information of
+// a VPlan entry database structure
 type VPlanEntry struct {
 	ID         int    `json:"id"`
 	VPlanID    int    `json:"vplan_id"`
@@ -41,6 +51,8 @@ type VPlanEntry struct {
 	Resposible string `json:"responsible"`
 }
 
+// Login contains the data of a login
+// log database structure
 type Login struct {
 	Ident     string    `json:"ident"`
 	Timestamp time.Time `json:"timestamp"`

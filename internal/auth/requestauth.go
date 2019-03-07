@@ -18,6 +18,8 @@ const (
 )
 
 var (
+	// ErrUnauthorized defines an error when an authorization
+	// failed because of wrong credentials
 	ErrUnauthorized = errors.New("unauthorized")
 )
 
@@ -55,7 +57,13 @@ func NewRequestAuthManager(db database.Driver, tokenManager *TokenManager, sessi
 	}
 }
 
-func (ram *RequestAuthManager) Authenticate(r *http.Request) (string, error) {
+// Authorize checks the request for an 'Authorization' header passing
+// an API token to authenticate against the server. If there was no token
+// passed or if the token was invalid, the request will be checked for a
+// valid session cookie containing a token which will be used to authenticate
+// against the server. If the authorization succeeds, the Ident will be
+// returned. Else, an error will be passed with an empty Indent string.
+func (ram *RequestAuthManager) Authorize(r *http.Request) (string, error) {
 	//-------------------------------------
 	// CHECKING AUTHORIZATION HEADER TOKEN
 
@@ -93,17 +101,11 @@ func (ram *RequestAuthManager) Authenticate(r *http.Request) (string, error) {
 	return ident, nil
 }
 
-// Check returns the ident of the user, if the request was authorized.
-// First, this function will look for the 'Authorization' header containing a
-// token value, which will be checked against the database entries.
-// If there was no matching token found, the function will check for a valid
-// session cookie to authorize.
-// If both methods are failing, an empty string will be returned without an error
-// and the disallowHandler will be called.
-// If an unexpected error occures at any point, the function will also return an
-// empty string and will call the errorHandler passing the error object.
+// Check authorizes the request by executing the 'Authorize' function returning
+// the users Ident. If the authorization failes, an empty string will be returned
+// and an error message will be respondet to the client.
 func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) string {
-	ident, err := ram.Authenticate(r)
+	ident, err := ram.Authorize(r)
 
 	if err == ErrUnauthorized {
 		logger.Debug("session login error: %s", err.Error())

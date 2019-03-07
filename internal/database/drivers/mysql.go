@@ -230,13 +230,15 @@ func (s *MySQL) DeleteUserAPIToken(ident string) error {
 ///////////////////
 
 // InsertLogin inserts logiin infrmation to login table
-func (m *MySQL) InsertLogin(loginType database.LoginType, ident, useragent, ipaddress string) error {
-	_, err := m.stmts.insertLogin.Exec(ident, loginType, useragent, ipaddress)
+func (s *MySQL) InsertLogin(loginType database.LoginType, ident, useragent, ipaddress string) error {
+	_, err := s.stmts.insertLogin.Exec(ident, loginType, useragent, ipaddress)
 	return err
 }
 
-func (m *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.Login, error) {
-	rows, err := m.stmts.getLogins.Query(ident, afterTimestamp)
+// GetLogins returns a list of entries from the login log filtered by Ident of a user and
+// after the time passed
+func (s *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.Login, error) {
+	rows, err := s.stmts.getLogins.Query(ident, afterTimestamp)
 	if err != nil {
 		return nil, err
 	}
