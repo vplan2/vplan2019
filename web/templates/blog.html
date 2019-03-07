@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% import "post_macros.html" as post_macros %}
+{% block title %}{{ page.title }}{% endblock title %}
+{% block links %}
+	<link type="text/css" rel="stylesheet" href="{{ get_url(path="vplan.css") | safe }}"/>
+{% endblock links %}
+{% block content %}
+{% include "navigation.html" %}
+	<main class="container" itemscope itemtype="http://schema.org/BlogPosting">
+		<header class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+			<h1 itemprop="headline">{{ page.title }}</h1>
+			<span class="muted">{{ post_macros::meta(page=page) }}</span>
+		</header>
+		<div itemprop="articleBody">
+		{{ page.content | safe }}
+		</div>
+		<footer>{% if page.author %}
+			<p class="muted">Published by {{ page.author }}</p>{% endif %}
+		</footer>
+	</main>
+{% include "footer.html" %}
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+{% import "post_macros.html" as post_macros %}
+{% block style %}
+	<style type="text/css">
+@media all and (min-width: 800px) {
+	header:-moz-any(.title) {
+		background-position: left 0;
+		background-repeat: no-repeat;
+		background-size: 2em;
+		margin-inline-start: -2.3em;
+		padding-inline-start: 2.3em;
+		background-image: url("images/icons/Info.svg");
+		background-image: url("chrome://global/skin/icons/info.svg");
+		fill: currentColor;
+		-moz-context-properties: fill;
+	}
+	header:-moz-any(.title.blocked) {
+		background-image: url("chrome://global/skin/icons/blocked.svg");
+		fill: currentColor;
+		-moz-context-properties: fill;
+	}
+	header:-moz-any(.title.crashed) {
+		background-image: url("chrome://browser/skin/tab-crashed.svg");
+	}
+}
+	</style>
+{% endblock style %}
+{% block content %}
+	<main class="container">
+		<header class="head title crashed">
+			<h1>Welcome to Zola!</h1>
+		</header>
+		<p>
+			You're seeing this page because we couldn't find a template to render.
+		</p>
+		<p>
+			To modify this page, create a <b>index.html</b> file in the templates directory or
+			<a href="https://www.getzola.org/documentation/themes/installing-and-using-themes/" target="_blank">install a theme</a>.
+			<br>
+			You can find what variables are available in this template in the <a href="https:&#x2F;&#x2F;www.getzola.org&#x2F;documentation&#x2F;templates&#x2F;pages-sections&#x2F;#section-variables" target="_blank">documentation</a>.
+		</p>
+		<footer class="foot">
+			<a href="https://www.getzola.org/documentation/getting-started/cli-usage/" target="_blank">Get started with Zola</a>
+		</footer>
+	</main>
+{% endblock content %}
