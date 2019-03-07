@@ -10,11 +10,17 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+const (
+	LoginTypeWebInterface LoginType = iota
+	LoginTypeToken
+)
+
 // ErrConfig describes the type of error returned if the config
 // interface could not be parsed to the database scheme specified
 var ErrConfig = errors.New("failed parsing config for database")
 
 type Timestamp []uint8
+type LoginType int8
 
 type VPlan struct {
 	ID       int           `json:"id"`
@@ -35,8 +41,21 @@ type VPlanEntry struct {
 	Resposible string `json:"responsible"`
 }
 
+type Login struct {
+	Ident     string    `json:"ident"`
+	Timestamp time.Time `json:"timestamp"`
+	Type      LoginType `json:"type"`
+	Useragent string    `json:"useragent"`
+	IPAddress string    `json:"ipaddress"`
+}
+
 // Driver is the general interface for database drivers
 type Driver interface {
+
+	////////////////////////
+	// SETUP AND TEARDOWN //
+	////////////////////////
+
 	// Connect to the database or open database file
 	// with the passed options
 	Connect(options map[string]string) error
@@ -46,11 +65,19 @@ type Driver interface {
 	// creating them if necessary, validating data ...
 	Setup() error
 
+	//////////////
+	// SETTINGS //
+	//////////////
+
 	// Get map which defines the key-value config
 	// model structure
 	GetConfigModel() map[string]string
 	// Get session store driver
 	GetSessionStoreDriver(mayAge int, secrets ...[]byte) (sessions.Store, error)
+
+	////////////////
+	// API TOKENS //
+	////////////////
 
 	// GetAPIToken returns the passing ident to the fount token.
 	// If no matching token was found, an empty stirng should be
@@ -69,5 +96,25 @@ type Driver interface {
 	// an error.
 	DeleteUserAPIToken(ident string) error
 
+	///////////////////
+	// LOGIN LOGGING //
+	///////////////////
+
+	// InsertLogin inserts logiin infrmation to login table
+	InsertLogin(loginType LoginType, ident, useragent, ipaddress string) error
+
+	GetLogins(ident string, afterTimestamp time.Time) ([]*Login, error)
+
+	////////////
+	// VPLANS //
+	////////////
+
+	// GetVPlans collects VPlans and VPlanEntries filtered by the
+	// passed Timestamp (all after time) and Class name.
 	GetVPlans(class string, timestamp time.Time) ([]*VPlan, error)
+
+	//////////////////
+	// USER SETTNGS //
+	//////////////////
+
 }

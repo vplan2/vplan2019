@@ -41,7 +41,7 @@ $(BIN):
 		-X $(PACKAGE)/internal/ldflags.Release=TRUE" \
 		$(WDIR)/cmd/server)
 
-release: $(WDIR) $(BIN) cleanup
+release: $(WDIR) deps $(BIN) cleanup
 	@echo [ INFO ] Creating release...
 	mkdir $(CURDIR)/release
 	mv -f $(BIN) $(CURDIR)/release
@@ -50,7 +50,7 @@ release: $(WDIR) $(BIN) cleanup
 deps:
 	@echo [ INFO ] getting dependencies...	
 	cd $(WDIR) && \
-		$(DEP) ensure -v
+		(env GOPATH=$(GOPATH) $(DEP) ensure -v )
 
 cleanup:
 	@echo [ INFO ] cleaning up...

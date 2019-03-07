@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/zekroTJA/vplan2019/internal/database"
+
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/zekroTJA/vplan2019/internal/auth"
@@ -48,9 +50,12 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 	}
 
 	urlParams := mux.Vars(r)
-	uname, ok := urlParams["username"]
-	if !ok {
-		jsonResponse(w, http.StatusBadRequest, apiError(http.StatusBadRequest, ""))
+	uname := urlParams["username"]
+
+	ipaddress := r.RemoteAddr
+	useragent := r.Header.Get("User-Agent")
+	if useragent == "" {
+		jsonResponse(w, http.StatusBadRequest, apiError(http.StatusBadRequest, "User-Agent header must be set"))
 		return
 	}
 
@@ -100,6 +105,7 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		if err != nil {
 			jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))
 		} else {
+			s.db.InsertLogin(database.LoginTypeToken, authData.Ident, useragent, ipaddress)
 			jsonResponse(w, http.StatusOK, authTokenResposeData{
 				Token:            token,
 				Expire:           expire,
@@ -109,6 +115,7 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	s.db.InsertLogin(database.LoginTypeWebInterface, authData.Ident, useragent, ipaddress)
 	jsonResponse(w, http.StatusOK, respData)
 }
 
@@ -120,6 +127,34 @@ func (s *Server) handlerAPILogout(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Set-Cookie", auth.MainSessionName+"=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT")
 	jsonResponse(w, http.StatusOK, nil)
+}
+
+// GET /api/logins
+func (s *Server) handlerAPIGetLogins(w http.ResponseWriter, r *http.Request) {
+	if !s.limiter.Check("getLogins", w, r) {
+		return
+	}
+
+	ident := s.reqAuth.Check(w, r)
+	if ident == "" {
+		return
+	}
+
+	_t := r.URL.Query().Get("time")
+	t, ok := parseTimeRFC3339(w, _t, false)
+	if !ok {
+		return
+	}
+
+	logins, err := s.db.GetLogins(ident, t)
+	if err != nil {
+		jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))
+		return
+	}
+
+	jsonResponse(w, http.StatusOK, map[string]interface{}{
+		"data": logins,
+	})
 }
 
 // GET /api/vplan
@@ -136,17 +171,14 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 	reqQuery := r.URL.Query()
 
 	class := reqQuery.Get("class")
-	_time := reqQuery.Get("time")
+	_t := reqQuery.Get("time")
 
 	var t time.Time
-	var err error
-	if _time == "" {
+	var ok bool
+	if _t == "" {
 		t = time.Now()
 	} else {
-		t, err = time.Parse(time.RFC3339, _time)
-		if err != nil {
-			jsonResponse(w, http.StatusBadRequest,
-				apiError(http.StatusBadRequest, "time format is not RFC3339"))
+		if t, ok = parseTimeRFC3339(w, _t, true); !ok {
 			return
 		}
 	}
@@ -176,6 +208,25 @@ func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logger.Debug("auth test: %s", ident)
+}
+
+//////////////////
+// HELPER FUNCS //
+//////////////////
+
+func parseTimeRFC3339(w http.ResponseWriter, rawString string, mustNotBeEmpty bool) (time.Time, bool) {
+	if rawString == "" && !mustNotBeEmpty {
+		return time.Time{}, true
+	}
+
+	t, err := time.Parse(time.RFC3339, rawString)
+	if err != nil {
+		jsonResponse(w, http.StatusBadRequest,
+			apiError(http.StatusBadRequest, "time format is not RFC3339"))
+		return time.Time{}, false
+	}
+
+	return t, true
 }
 
 ////////////////////

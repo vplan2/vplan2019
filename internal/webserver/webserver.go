@@ -135,6 +135,9 @@ func (s *Server) initializeHnalders() {
 	// POST /api/logout
 	s.addHandler("/api/logout", "logout", s.handlerAPILogout, 1, 3, "POST")
 
+	// GET /api/logins
+	s.addHandler("/api/logins", "getLogins", s.handlerAPIGetLogins, 1, 3, "GET")
+
 	// GET /api/vplan
 	s.addHandler("/api/vplan", "getVPlan", s.handlerAPIGetVPlan, 0.2, 3, "GET")
 
