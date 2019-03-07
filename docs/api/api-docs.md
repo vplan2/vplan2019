@@ -69,6 +69,23 @@ All time formats of request data and response data must be formatted and interpr
 
 ## Endpoints
 
+- [Authenticate](#authenticate)  
+  `POST /api/authenticate/:USERNAME`
+- [Logout](#logout)  
+  `POST /api/logout`
+- [Get Logins](#get-logins)  
+  `GET /api/logins`
+
+- [Get VPlans](#get-vplans)  
+  `GET /api/vplan`
+
+- [Get User Settings](#get-user-settings)  
+  `GET /api/settings`
+- [Set User Settings](#set-user-settings)  
+  `POST /api/settings`
+
+---
+
 ### Authenticate
 
 > POST /api/authenticate/:USERNAME
@@ -271,4 +288,47 @@ Response contains a `type` value of the logins which must be interpreted as foll
     }
   ]
 }
+```
+
+### Get User Settings
+
+> GET /api/settings
+
+#### Parameters
+> Parameters must be passed by *(URL encoded)* URL parameters.
+
+#### Response
+
+> Unset values are default type values, e.g. `""` for strings or `0` for integers.
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+```
+```json
+{
+  "ident": "cn=mustermax,dc=example,dc=de",
+  "class": "ITF17C",
+  "theme": "dark",
+  "edited": "2019-03-07T16:22:19Z"
+}
+```
+
+### Set User Settings
+
+> POST /api/settings
+
+#### Parameters
+
+> Only passed arguments will be updated in the user settings. If you want to set the value to the default initialization value of the value type, use the defined reset value.
+
+| Name | Type | Description |
+|------|------|-------------|
+| *`class`* | `string` | Users class name (`reset` to reset value) |
+| *`theme`* | `string` | UI theme (`reset` to reset value) |
+
+#### Response
+
+```
+< HTTP/1.1 200 OK
 ```
