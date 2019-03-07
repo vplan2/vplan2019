@@ -40,6 +40,10 @@ type prepStatements struct {
 	selectVPlans              *sql.Stmt
 	selectVPlanEntries        *sql.Stmt
 	selectVPlanEntriesByClass *sql.Stmt
+
+	getUserSettings    *sql.Stmt
+	setUserSettings    *sql.Stmt
+	insertUserSettings *sql.Stmt
 }
 
 ////////////////////////
@@ -56,7 +60,6 @@ func (s *MySQL) Connect(options map[string]string) error {
 		options["user"], options["password"], options["host"], options["database"])
 
 	s.db, err = sql.Open("mysql", s.dsn)
-	err = s.setupPrepStatements()
 
 	return err
 }
@@ -85,11 +88,19 @@ func (s *MySQL) setupPrepStatements() error {
 
 	s.stmts.selectVPlans = s.prepareStatement(m,
 		"SELECT id, date_edit, date_for, block, header, footer FROM vplan WHERE "+
-			"date_for >= ? AND deleted = 0")
+			"date_for >= ? AND deleted = 0 "+
+			"ORDER BY date_for ASC")
 	s.stmts.selectVPlanEntries = s.prepareStatement(m,
 		"SELECT id, vplan_id, class, time, messures, responsible FROM vplan_details WHERE vplan_id = ? AND deleted = 0")
 	s.stmts.selectVPlanEntriesByClass = s.prepareStatement(m,
 		"SELECT id, vplan_id, class, time, messures, responsible FROM vplan_details WHERE vplan_id = ? AND class = ? AND deleted = 0")
+
+	s.stmts.getUserSettings = s.prepareStatement(m,
+		"SELECT ident, class, theme, edited FROM usersettings WHERE ident = ?")
+	s.stmts.setUserSettings = s.prepareStatement(m,
+		"UPDATE usersettings SET class = ?, theme = ? WHERE ident = ?")
+	s.stmts.insertUserSettings = s.prepareStatement(m,
+		"INSERT INTO usersettings (ident, class, theme) VALUES (?, ?, ?)")
 
 	return m.Concat()
 }
@@ -116,7 +127,7 @@ func (s *MySQL) Setup() error {
 		"`id` int PRIMARY KEY AUTO_INCREMENT," +
 		"`ident` text NOT NULL," +
 		"`class` text NOT NULL," +
-		"`theme` int NOT NULL DEFAULT 0," +
+		"`theme` text NOT NULL," +
 		"`edited` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);")
 	m.Append(err)
 
@@ -130,7 +141,11 @@ func (s *MySQL) Setup() error {
 		"`ipaddress` text NOT NULL );")
 	m.Append(err)
 
-	return m.Concat()
+	if err := m.Concat(); err != nil {
+		return err
+	}
+
+	return s.setupPrepStatements()
 }
 
 //////////////
@@ -178,7 +193,7 @@ func (s *MySQL) GetAPIToken(token string) (string, time.Time, error) {
 		return ident, time.Time{}, nil
 	}
 
-	tExpire, err := time.Parse(timeFormat, string(expire))
+	tExpire, err := expire.ToTime(timeFormat)
 
 	return ident, tExpire, err
 }
@@ -188,7 +203,7 @@ func (s *MySQL) GetAPIToken(token string) (string, time.Time, error) {
 // an error will be returned
 func (s *MySQL) GetUserAPIToken(ident string) (string, time.Time, error) {
 	var token string
-	var expire int64
+	var expire database.Timestamp
 
 	row := s.stmts.selectAPITokenByIdent.QueryRow(ident)
 	err := row.Scan(&token, &expire)
@@ -199,7 +214,7 @@ func (s *MySQL) GetUserAPIToken(ident string) (string, time.Time, error) {
 		return "", time.Time{}, err
 	}
 
-	tExpire, err := time.Parse(timeFormat, string(expire))
+	tExpire, err := expire.ToTime(timeFormat)
 
 	return token, tExpire, err
 }
@@ -229,13 +244,15 @@ func (s *MySQL) DeleteUserAPIToken(ident string) error {
 ///////////////////
 
 // InsertLogin inserts logiin infrmation to login table
-func (m *MySQL) InsertLogin(loginType database.LoginType, ident, useragent, ipaddress string) error {
-	_, err := m.stmts.insertLogin.Exec(ident, loginType, useragent, ipaddress)
+func (s *MySQL) InsertLogin(loginType database.LoginType, ident, useragent, ipaddress string) error {
+	_, err := s.stmts.insertLogin.Exec(ident, loginType, useragent, ipaddress)
 	return err
 }
 
-func (m *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.Login, error) {
-	rows, err := m.stmts.getLogins.Query(ident, afterTimestamp)
+// GetLogins returns a list of entries from the login log filtered by Ident of a user and
+// after the time passed
+func (s *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.Login, error) {
+	rows, err := s.stmts.getLogins.Query(ident, afterTimestamp)
 	if err != nil {
 		return nil, err
 	}
@@ -243,16 +260,16 @@ func (m *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.L
 	mErr := multierror.NewMultiError(nil)
 	logins := make([]*database.Login, 0)
 	for rows.Next() {
-		var timetsamp database.Timestamp
+		var timeStamp database.Timestamp
 		login := new(database.Login)
 
-		err = rows.Scan(&login.Ident, &timetsamp, &login.Type, &login.Useragent, &login.IPAddress)
+		err = rows.Scan(&login.Ident, &timeStamp, &login.Type, &login.Useragent, &login.IPAddress)
 		mErr.Append(err)
 		if err != nil {
 			continue
 		}
 
-		login.Timestamp, err = time.Parse(timeFormat, string(timetsamp))
+		login.Timestamp, err = timeStamp.ToTime(timeFormat)
 		mErr.Append(err)
 		if err != nil {
 			continue
@@ -285,8 +302,8 @@ func (s *MySQL) GetVPlans(class string, timestamp time.Time) ([]*database.VPlan,
 		err = rows.Scan(&vplan.ID, &dateEdit, &dateFor, &vplan.Block, &vplan.Header, &vplan.Footer)
 		mErr.Append(err)
 		if err == nil {
-			vplan.DateEdit, _ = time.Parse(timeFormat, string(dateEdit))
-			vplan.DateFor, _ = time.Parse(timeFormat, string(dateFor))
+			vplan.DateEdit, _ = dateEdit.ToTime(timeFormat)
+			vplan.DateFor, _ = dateFor.ToTime(timeFormat)
 			vplans = append(vplans, vplan)
 		}
 	}
@@ -318,3 +335,60 @@ func (s *MySQL) GetVPlans(class string, timestamp time.Time) ([]*database.VPlan,
 //////////////////
 // USER SETTNGS //
 //////////////////
+
+// GetUserSettings returns the personal settings of a user. If there is no setting,
+// an empty struct will be returned with 'false' as second return value. If there
+// was a setting found, the second return value will be 'true'.
+func (s *MySQL) GetUserSettings(ident string) (*database.UserSetting, bool, error) {
+	settings := new(database.UserSetting)
+	var edited database.Timestamp
+	var err error
+
+	err = s.stmts.getUserSettings.QueryRow(ident).Scan(
+		&settings.Ident, &settings.Class, &settings.Theme, &edited)
+	if err == sql.ErrNoRows {
+		return settings, false, nil
+	}
+	if err != nil {
+		return nil, false, err
+	}
+
+	settings.Edited, err = edited.ToTime(timeFormat)
+	if err != nil {
+		return nil, false, err
+	}
+
+	return settings, true, nil
+}
+
+// SetUserSetting sets or inserts the personal user settings of a user.
+// Only changed values in the settings object will be updated in the database.
+// If a value should be reset (default init value, e.g. '' for strings), set the
+// settings value to "reset" or -1.
+func (s *MySQL) SetUserSetting(ident string, updateSetting *database.UserSetting) error {
+	settings, exists, err := s.GetUserSettings(ident)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		_, err = s.stmts.insertUserSettings.Exec(ident, updateSetting.Class, updateSetting.Theme)
+		return err
+	}
+
+	if updateSetting.Class == "reset" {
+		settings.Theme = ""
+	} else if updateSetting.Class != "" {
+		settings.Class = updateSetting.Class
+	}
+
+	if updateSetting.Theme == "reset" {
+		settings.Theme = ""
+	} else if updateSetting.Theme != "" {
+		settings.Theme = updateSetting.Theme
+	}
+
+	_, err = s.stmts.setUserSettings.Exec(settings.Class, settings.Theme, ident)
+
+	return err
+}

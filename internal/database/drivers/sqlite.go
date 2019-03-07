@@ -49,6 +49,8 @@ func (s *SQLite) Setup() error {
 	return nil
 }
 
+// GetAPIToken returns the Ident and expiration time of an API token
+// from the database
 func (s *SQLite) GetAPIToken(token string) (string, time.Time, error) {
 	var ident string
 	var expire []uint8

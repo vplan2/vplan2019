@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -37,6 +38,20 @@ type authTokenResposeData struct {
 	*authResponseData
 	Token  string    `json:"token"`
 	Expire time.Time `json:"expire"`
+}
+
+////////////////////
+// FRONTEND ROOTS //
+////////////////////
+
+func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
+	file := mux.Vars(r)["file"]
+	if _, err := s.reqAuth.Authorize(r); err != nil {
+		http.ServeFile(w, r, s.config.StaticFiles+"/login.html")
+	} else {
+		fmt.Println(file)
+		http.ServeFile(w, r, s.config.StaticFiles+"/"+file)
+	}
 }
 
 /////////
@@ -193,6 +208,56 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, http.StatusOK, map[string]interface{}{
 		"data": vplans,
 	})
+}
+
+// GET /api/settings
+func (s *Server) handleAPIGetUserSettings(w http.ResponseWriter, r *http.Request) {
+	if !s.limiter.Check("getUserSettings", w, r) {
+		return
+	}
+
+	ident := s.reqAuth.Check(w, r)
+	if ident == "" {
+		return
+	}
+
+	settings, _, err := s.db.GetUserSettings(ident)
+	if err != nil {
+		jsonResponse(w, http.StatusInternalServerError,
+			apiError(http.StatusInternalServerError, err.Error()))
+		return
+	}
+
+	jsonResponse(w, http.StatusOK, settings)
+}
+
+// POST /api/settings
+func (s *Server) handleAPISetUserSettings(w http.ResponseWriter, r *http.Request) {
+	if !s.limiter.Check("setUserSettings", w, r) {
+		return
+	}
+
+	ident := s.reqAuth.Check(w, r)
+	if ident == "" {
+		return
+	}
+
+	updateSettings := new(database.UserSetting)
+	err := s.parseJSONBody(r.Body, updateSettings)
+	if err != nil {
+		jsonResponse(w, http.StatusBadRequest,
+			apiError(http.StatusBadRequest, err.Error()))
+		return
+	}
+
+	err = s.db.SetUserSetting(ident, updateSettings)
+	if err != nil {
+		jsonResponse(w, http.StatusInternalServerError,
+			apiError(http.StatusInternalServerError, err.Error()))
+		return
+	}
+
+	jsonResponse(w, http.StatusOK, nil)
 }
 
 // POST /api/test

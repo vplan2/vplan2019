@@ -11,7 +11,9 @@ import (
 )
 
 const (
+	// LoginTypeWebInterface describes a web interface login
 	LoginTypeWebInterface LoginType = iota
+	// LoginTypeToken describes an API token generation
 	LoginTypeToken
 )
 
@@ -19,9 +21,15 @@ const (
 // interface could not be parsed to the database scheme specified
 var ErrConfig = errors.New("failed parsing config for database")
 
+// Timestamp is the standard timestamp type
+// returned from the MySQL database
 type Timestamp []uint8
+
+// LoginType is the type of login
 type LoginType int8
 
+// VPlan contains the information of
+// a VPlan database structure
 type VPlan struct {
 	ID       int           `json:"id"`
 	DateEdit time.Time     `json:"date_edit"`
@@ -32,6 +40,8 @@ type VPlan struct {
 	Entries  []*VPlanEntry `json:"entries"`
 }
 
+// VPlanEntry contains the information of
+// a VPlan entry database structure
 type VPlanEntry struct {
 	ID         int    `json:"id"`
 	VPlanID    int    `json:"vplan_id"`
@@ -41,12 +51,23 @@ type VPlanEntry struct {
 	Resposible string `json:"responsible"`
 }
 
+// Login contains the data of a login
+// log database structure
 type Login struct {
 	Ident     string    `json:"ident"`
 	Timestamp time.Time `json:"timestamp"`
 	Type      LoginType `json:"type"`
 	Useragent string    `json:"useragent"`
 	IPAddress string    `json:"ipaddress"`
+}
+
+// UserSetting contains the data of a
+// user setting database structure
+type UserSetting struct {
+	Ident  string    `json:"ident"`
+	Class  string    `json:"class"`
+	Theme  string    `json:"theme"`
+	Edited time.Time `json:"edited"`
 }
 
 // Driver is the general interface for database drivers
@@ -117,4 +138,20 @@ type Driver interface {
 	// USER SETTNGS //
 	//////////////////
 
+	// GetUserSettings returns the personal settings of a user. If there is no setting,
+	// an empty struct will be returned with 'false' as second return value. If there
+	// was a setting found, the second return value will be 'true'.
+	GetUserSettings(ident string) (*UserSetting, bool, error)
+	// SetUserSetting sets or inserts the personal user settings of a user.
+	// Only changed values in the settings object will be updated in the database.
+	// If a value should be reset (default init value, e.g. '' for strings), set the
+	// settings value to "reset" or -1.
+	SetUserSetting(ident string, updateSetting *UserSetting) error
+}
+
+// -------------------------------------------
+
+// ToTime parses the timestamp to a time object
+func (t Timestamp) ToTime(format string) (time.Time, error) {
+	return time.Parse(format, string(t))
 }

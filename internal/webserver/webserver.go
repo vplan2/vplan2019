@@ -126,6 +126,12 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 func (s *Server) initializeHnalders() {
 
 	// ---------------------------
+	// FRONTEND
+
+	// GET /:FILENAME
+	s.router.HandleFunc(`/{file:[\w.]*$}`, s.handlerFEMainRoot)
+
+	// ---------------------------
 	// API
 
 	// POST /api/authenticate/:USERNAME
@@ -141,12 +147,19 @@ func (s *Server) initializeHnalders() {
 	// GET /api/vplan
 	s.addHandler("/api/vplan", "getVPlan", s.handlerAPIGetVPlan, 0.2, 3, "GET")
 
+	// GET /api/settings
+	s.addHandler("/api/settings", "getUserSettings", s.handleAPIGetUserSettings, 1, 3, "GET")
+
+	// POST /api/settings
+	s.addHandler("/api/settings", "setUserSettings", s.handleAPISetUserSettings, 0.5, 5, "POST")
+
 	// POST /api/test
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
 
 	// ---------------------------
 	// STATIC FRONTEND FILES
-	s.router.Handle("/", http.FileServer(http.Dir(s.config.StaticFiles)))
+
+	s.router.Handle("/{stuff:.*}", http.FileServer(http.Dir(s.config.StaticFiles+"/static")))
 }
 
 // jsonResponse sends a response containing the response code
