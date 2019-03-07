@@ -34,10 +34,17 @@ type prepStatements struct {
 	insertAPIToken        *sql.Stmt
 	deleteAPIToken        *sql.Stmt
 
+	insertLogin *sql.Stmt
+	getLogins   *sql.Stmt
+
 	selectVPlans              *sql.Stmt
 	selectVPlanEntries        *sql.Stmt
 	selectVPlanEntriesByClass *sql.Stmt
 }
+
+////////////////////////
+// SETUP AND TEARDOWN //
+////////////////////////
 
 // Connect opens a MySql3 database file or creates
 // it if it does not exist depending on the passed options
@@ -70,6 +77,12 @@ func (s *MySQL) setupPrepStatements() error {
 	s.stmts.insertAPIToken = s.prepareStatement(m, "INSERT INTO apitoken (ident, token, expire) VALUES (?, ?, ?)")
 	s.stmts.deleteAPIToken = s.prepareStatement(m, "DELETE FROM apitoken WHERE ident = ?")
 
+	s.stmts.insertLogin = s.prepareStatement(m,
+		"INSERT INTO logins (ident, type, useragent, ipaddress) VALUES (?, ?, ?, ?)")
+	s.stmts.getLogins = s.prepareStatement(m,
+		"SELECT ident, timestamp, type, useragent, ipaddress FROM logins WHERE "+
+			"ident = ? AND timestamp >= ?")
+
 	s.stmts.selectVPlans = s.prepareStatement(m,
 		"SELECT id, date_edit, date_for, block, header, footer FROM vplan WHERE "+
 			"date_for >= ? AND deleted = 0")
@@ -88,17 +101,62 @@ func (s *MySQL) Close() {
 
 // Setup creates tables if they do not exist yet
 func (s *MySQL) Setup() error {
+	m := multierror.NewMultiError(nil)
+
+	// TABLE `apitoken`
 	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `apitoken` (" +
 		"`id` int PRIMARY KEY AUTO_INCREMENT," +
 		"`ident` text NOT NULL," +
 		"`token` text NOT NULL," +
 		"`expire` timestamp NOT NULL );")
-	if err != nil {
-		return err
-	}
+	m.Append(err)
 
-	return nil
+	// TABLE `usersettings`
+	_, err = s.db.Exec("CREATE TABLE IF NOT EXISTS `usersettings` (" +
+		"`id` int PRIMARY KEY AUTO_INCREMENT," +
+		"`ident` text NOT NULL," +
+		"`class` text NOT NULL," +
+		"`theme` int NOT NULL DEFAULT 0," +
+		"`edited` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP);")
+	m.Append(err)
+
+	// TABLE `logins`
+	_, err = s.db.Exec("CREATE TABLE IF NOT EXISTS `logins` (" +
+		"`id` int PRIMARY KEY AUTO_INCREMENT," +
+		"`ident` text NOT NULL," +
+		"`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+		"`type` int NOT NULL DEFAULT 0," +
+		"`useragent` text NOT NULL," +
+		"`ipaddress` text NOT NULL );")
+	m.Append(err)
+
+	return m.Concat()
 }
+
+//////////////
+// SETTINGS //
+//////////////
+
+// GetConfigModel returns a map with preset config
+// keys and values
+func (s *MySQL) GetConfigModel() map[string]string {
+	return map[string]string{
+		"host":     "localhost",
+		"user":     "vplan2",
+		"password": "",
+		"database": "vplan2",
+	}
+}
+
+// GetSessionStoreDriver returns a new instance of the session
+// store driver, which should be used for saving encrypted session data
+func (s *MySQL) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
+	return mysqlstore.NewMySQLStoreFromConnection(s.db, "apisessions", "/", maxAge, secrets...)
+}
+
+////////////////
+// API TOKENS //
+////////////////
 
 // GetAPIToken returns the matching indent and expire time to a found token.
 // If the token could not be matched, this returns an empty string without
@@ -166,22 +224,49 @@ func (s *MySQL) DeleteUserAPIToken(ident string) error {
 	return err
 }
 
-// GetConfigModel returns a map with preset config
-// keys and values
-func (s *MySQL) GetConfigModel() map[string]string {
-	return map[string]string{
-		"host":     "localhost",
-		"user":     "vplan2",
-		"password": "",
-		"database": "vplan2",
-	}
+///////////////////
+// LOGIN LOGGING //
+///////////////////
+
+// InsertLogin inserts logiin infrmation to login table
+func (m *MySQL) InsertLogin(loginType database.LoginType, ident, useragent, ipaddress string) error {
+	_, err := m.stmts.insertLogin.Exec(ident, loginType, useragent, ipaddress)
+	return err
 }
 
-// GetSessionStoreDriver returns a new instance of the session
-// store driver, which should be used for saving encrypted session data
-func (s *MySQL) GetSessionStoreDriver(maxAge int, secrets ...[]byte) (sessions.Store, error) {
-	return mysqlstore.NewMySQLStoreFromConnection(s.db, "apisessions", "/", maxAge, secrets...)
+func (m *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.Login, error) {
+	rows, err := m.stmts.getLogins.Query(ident, afterTimestamp)
+	if err != nil {
+		return nil, err
+	}
+
+	mErr := multierror.NewMultiError(nil)
+	logins := make([]*database.Login, 0)
+	for rows.Next() {
+		var timetsamp database.Timestamp
+		login := new(database.Login)
+
+		err = rows.Scan(&login.Ident, &timetsamp, &login.Type, &login.Useragent, &login.IPAddress)
+		mErr.Append(err)
+		if err != nil {
+			continue
+		}
+
+		login.Timestamp, err = time.Parse(timeFormat, string(timetsamp))
+		mErr.Append(err)
+		if err != nil {
+			continue
+		}
+
+		logins = append(logins, login)
+	}
+
+	return logins, mErr.Concat()
 }
+
+////////////
+// VPLANS //
+////////////
 
 // GetVPlans collects VPlans wich for-dates are after the passed timestamp.
 // Also, a class can be specified for filtering the VPlanEntries.
@@ -229,3 +314,7 @@ func (s *MySQL) GetVPlans(class string, timestamp time.Time) ([]*database.VPlan,
 
 	return vplans, mErr.Concat()
 }
+
+//////////////////
+// USER SETTNGS //
+//////////////////
