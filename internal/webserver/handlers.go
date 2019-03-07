@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -37,6 +38,20 @@ type authTokenResposeData struct {
 	*authResponseData
 	Token  string    `json:"token"`
 	Expire time.Time `json:"expire"`
+}
+
+////////////////////
+// FRONTEND ROOTS //
+////////////////////
+
+func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
+	file := mux.Vars(r)["file"]
+	if _, err := s.reqAuth.Authenticate(r); err != nil {
+		http.ServeFile(w, r, s.config.StaticFiles+"/login.html")
+	} else {
+		fmt.Println(file)
+		http.ServeFile(w, r, s.config.StaticFiles+"/"+file)
+	}
 }
 
 /////////

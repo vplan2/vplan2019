@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/zekroTJA/vplan2019/internal/logger"
@@ -14,6 +15,10 @@ const (
 	// MainSessionName describes the name of the cookie
 	// of login sessions used for general authorization
 	MainSessionName = "session_main"
+)
+
+var (
+	ErrUnauthorized = errors.New("unauthorized")
 )
 
 // RequestAuthManager contains functionalities to check if
@@ -50,6 +55,44 @@ func NewRequestAuthManager(db database.Driver, tokenManager *TokenManager, sessi
 	}
 }
 
+func (ram *RequestAuthManager) Authenticate(r *http.Request) (string, error) {
+	//-------------------------------------
+	// CHECKING AUTHORIZATION HEADER TOKEN
+
+	token := r.Header.Get("Authorization")
+
+	if token != "" {
+		ident, err := ram.tokenManager.Check(token)
+		if err != nil {
+			return "", err
+		}
+
+		if ident != "" {
+			return ident, nil
+		}
+	}
+
+	//----------------------
+	// CHECK SESSION COOKIE
+
+	session, err := ram.sessionStore.Get(r, MainSessionName)
+	if err != nil {
+		return "", err
+	}
+
+	if session.IsNew {
+		return "", ErrUnauthorized
+	}
+
+	ident, ok := session.Values["ident"].(string)
+
+	if !ok || ident == "" {
+		return "", ErrUnauthorized
+	}
+
+	return ident, nil
+}
+
 // Check returns the ident of the user, if the request was authorized.
 // First, this function will look for the 'Authorization' header containing a
 // token value, which will be checked against the database entries.
@@ -60,43 +103,16 @@ func NewRequestAuthManager(db database.Driver, tokenManager *TokenManager, sessi
 // If an unexpected error occures at any point, the function will also return an
 // empty string and will call the errorHandler passing the error object.
 func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) string {
+	ident, err := ram.Authenticate(r)
 
-	//-------------------------------------
-	// CHECKING AUTHORIZATION HEADER TOKEN
-
-	token := r.Header.Get("Authorization")
-
-	if token != "" {
-		ident, err := ram.tokenManager.Check(token)
-		if err != nil {
-			ram.errorHandler(w, r, err)
-			return ""
-		}
-
-		if ident != "" {
-			return ident
-		}
-	}
-
-	//----------------------
-	// CHECK SESSION COOKIE
-
-	session, err := ram.sessionStore.Get(r, MainSessionName)
-	if err != nil {
+	if err == ErrUnauthorized {
 		logger.Debug("session login error: %s", err.Error())
 		ram.disallowHandler(w, r)
 		return ""
 	}
 
-	if session.IsNew {
-		ram.disallowHandler(w, r)
-		return ""
-	}
-
-	ident, ok := session.Values["ident"].(string)
-
-	if !ok || ident == "" {
-		ram.disallowHandler(w, r)
+	if err != nil {
+		ram.errorHandler(w, r, err)
 		return ""
 	}
 

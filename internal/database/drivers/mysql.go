@@ -85,7 +85,8 @@ func (s *MySQL) setupPrepStatements() error {
 
 	s.stmts.selectVPlans = s.prepareStatement(m,
 		"SELECT id, date_edit, date_for, block, header, footer FROM vplan WHERE "+
-			"date_for >= ? AND deleted = 0")
+			"date_for >= ? AND deleted = 0 "+
+			"ORDER BY date_for ASC")
 	s.stmts.selectVPlanEntries = s.prepareStatement(m,
 		"SELECT id, vplan_id, class, time, messures, responsible FROM vplan_details WHERE vplan_id = ? AND deleted = 0")
 	s.stmts.selectVPlanEntriesByClass = s.prepareStatement(m,

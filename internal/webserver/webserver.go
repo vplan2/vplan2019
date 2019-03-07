@@ -125,6 +125,8 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
 
+	s.router.HandleFunc(`/{file:\w*$}`, s.handlerFEMainRoot)
+
 	// ---------------------------
 	// API
 
@@ -146,7 +148,7 @@ func (s *Server) initializeHnalders() {
 
 	// ---------------------------
 	// STATIC FRONTEND FILES
-	s.router.Handle("/", http.FileServer(http.Dir(s.config.StaticFiles)))
+	s.router.Handle("/{stuff:.*}", http.FileServer(http.Dir(s.config.StaticFiles+"/static")))
 }
 
 // jsonResponse sends a response containing the response code
