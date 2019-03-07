@@ -50,7 +50,7 @@ release: $(WDIR) $(BIN) deps cleanup
 deps:
 	@echo [ INFO ] getting dependencies...	
 	cd $(WDIR) && \
-		$(DEP) ensure -v
+		(env GOPATH=$(GOPATH) $(DEP) ensure -v )
 
 cleanup:
 	@echo [ INFO ] cleaning up...
