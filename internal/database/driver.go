@@ -61,6 +61,15 @@ type Login struct {
 	IPAddress string    `json:"ipaddress"`
 }
 
+// UserSetting contains the data of a
+// user setting database structure
+type UserSetting struct {
+	Ident  string    `json:"ident"`
+	Class  string    `json:"class"`
+	Theme  string    `json:"theme"`
+	Edited time.Time `json:"edited"`
+}
+
 // Driver is the general interface for database drivers
 type Driver interface {
 
@@ -129,4 +138,20 @@ type Driver interface {
 	// USER SETTNGS //
 	//////////////////
 
+	// GetUserSettings returns the personal settings of a user. If there is no setting,
+	// an empty struct will be returned with 'false' as second return value. If there
+	// was a setting found, the second return value will be 'true'.
+	GetUserSettings(ident string) (*UserSetting, bool, error)
+	// SetUserSetting sets or inserts the personal user settings of a user.
+	// Only changed values in the settings object will be updated in the database.
+	// If a value should be reset (default init value, e.g. '' for strings), set the
+	// settings value to "reset" or -1.
+	SetUserSetting(ident string, updateSetting *UserSetting) error
+}
+
+// -------------------------------------------
+
+// ToTime parses the timestamp to a time object
+func (t Timestamp) ToTime(format string) (time.Time, error) {
+	return time.Parse(format, string(t))
 }
