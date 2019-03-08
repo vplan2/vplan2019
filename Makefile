@@ -48,11 +48,11 @@ frontend:
 	cd $(CURDIR)/web && \
 		$(ZOLA) build
 
-release: $(WDIR) deps $(BIN) cleanup
+release: $(WDIR) deps frontend $(BIN) cleanup
 	@echo [ INFO ] Creating release...
 	mkdir $(CURDIR)/release
 	mv -f $(BIN) $(CURDIR)/release
-	cp -f -R $(CURDIR)/web $(CURDIR)/release/web
+	cp -f -R $(CURDIR)/web/public $(CURDIR)/release/web
 
 deps:
 	@echo [ INFO ] getting dependencies...	
@@ -70,7 +70,12 @@ _finish:
 
 run:
 	@echo [ INFO ] Debug running...
-	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/config.yml ${ARGS})
+	[ -d $(CURDIR)/web/public ] || { \
+		cp $(CURDIR)/config/frontend.toml $(CURDIR)/web/config.toml && \
+		cd $(CURDIR)/web && \
+		$(ZOLA) build; \
+	}
+	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/config.yml -web $(CURDIR)/web/public ${ARGS})
 
 lint:
 	$(GOLINT) ./... | $(GREP) -v vendor
