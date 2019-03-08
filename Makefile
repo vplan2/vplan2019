@@ -44,7 +44,7 @@ $(BIN):
 
 frontend:
 	@echo [ INFO ] building frontend...
-	cp $(CURDIR)/config/frontend.toml $(CURDIR)/web/config.toml
+	cp $(CURDIR)/config/frontend.release.toml $(CURDIR)/web/config.toml
 	cd $(CURDIR)/web && \
 		$(ZOLA) build
 
