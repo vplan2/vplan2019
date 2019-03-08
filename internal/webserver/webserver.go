@@ -126,12 +126,6 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 func (s *Server) initializeHnalders() {
 
 	// ---------------------------
-	// FRONTEND
-
-	// GET /:FILENAME
-	s.router.HandleFunc(`/{file:$|[\w+\/]+|[\w\/]+.html$}`, s.handlerFEMainRoot)
-
-	// ---------------------------
 	// API
 
 	// POST /api/authenticate/:USERNAME
@@ -155,6 +149,12 @@ func (s *Server) initializeHnalders() {
 
 	// POST /api/test
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
+
+	// ---------------------------
+	// FRONTEND
+
+	// GET /:FILENAME
+	s.router.HandleFunc(`/{file:$|[\w+\/]+|[\w\/]+.html$}`, s.handlerFEMainRoot)
 
 	// ---------------------------
 	// STATIC FRONTEND FILES
