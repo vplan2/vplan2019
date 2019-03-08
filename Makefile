@@ -3,6 +3,7 @@ DEP		= dep
 GIT     = git
 GOLINT  = golint
 GREP    = grep
+ZOLA    = zola
 
 PACKAGE	= github.com/zekroTJA/vplan2019
 GOPATH	= $(CURDIR)/.gopath
@@ -21,7 +22,7 @@ TAG		= $(shell $(GIT) describe --tags)
 COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
-.PHONY: _make deps cleanup _finish run lint offline release
+.PHONY: _make deps cleanup _finish run lint offline release frontend
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -40,6 +41,12 @@ $(BIN):
 		-X $(PACKAGE)/internal/ldflags.GoVersion=$(GOVERS) \
 		-X $(PACKAGE)/internal/ldflags.Release=TRUE" \
 		$(WDIR)/cmd/server)
+
+frontend:
+	@echo [ INFO ] building frontend...
+	cp $(CURDIR)/config/frontend.toml $(CURDIR)/web/config.toml
+	cd $(CURDIR)/web && \
+		$(ZOLA) build
 
 release: $(WDIR) deps $(BIN) cleanup
 	@echo [ INFO ] Creating release...

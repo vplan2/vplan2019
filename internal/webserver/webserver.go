@@ -129,7 +129,7 @@ func (s *Server) initializeHnalders() {
 	// FRONTEND
 
 	// GET /:FILENAME
-	s.router.HandleFunc(`/{file:[\w.]*$}`, s.handlerFEMainRoot)
+	s.router.HandleFunc(`/{file:$|\w+.html}`, s.handlerFEMainRoot)
 
 	// ---------------------------
 	// API
@@ -159,7 +159,7 @@ func (s *Server) initializeHnalders() {
 	// ---------------------------
 	// STATIC FRONTEND FILES
 
-	s.router.Handle("/{stuff:.*}", http.FileServer(http.Dir(s.config.StaticFiles+"/static")))
+	s.router.Handle("/{stuff:.*}", http.FileServer(http.Dir(s.config.StaticFiles+"/public")))
 }
 
 // jsonResponse sends a response containing the response code

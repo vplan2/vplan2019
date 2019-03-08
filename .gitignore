@@ -28,3 +28,4 @@ bin/*
 *.sqlite3
 
 release/*
+web/public/*
