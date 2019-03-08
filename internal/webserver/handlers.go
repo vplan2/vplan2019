@@ -1,7 +1,6 @@
 package webserver
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -49,7 +48,6 @@ func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
 	if _, err := s.reqAuth.Authorize(r); err != nil {
 		http.ServeFile(w, r, s.config.StaticFiles+"/login.html")
 	} else {
-		fmt.Println(file)
 		http.ServeFile(w, r, s.config.StaticFiles+"/"+file)
 	}
 }

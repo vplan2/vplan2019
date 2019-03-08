@@ -299,6 +299,7 @@ func (s *MySQL) GetVPlans(class string, timestamp time.Time) ([]*database.VPlan,
 	var dateEdit, dateFor database.Timestamp
 	for rows.Next() {
 		vplan := new(database.VPlan)
+		vplan.Entries = make([]*database.VPlanEntry, 0)
 		err = rows.Scan(&vplan.ID, &dateEdit, &dateFor, &vplan.Block, &vplan.Header, &vplan.Footer)
 		mErr.Append(err)
 		if err == nil {
