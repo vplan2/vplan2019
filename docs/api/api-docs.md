@@ -16,10 +16,12 @@ The entry point for that will be the [`Authenticate`](#authenticate) endpoint.
 
 For all other endpoints, there are 2 options to authenticate against the API:
 
-**Authentication header**  
+> TODO: I) anpassen wie II)
+
+**I) Authentication header**  
 By sending an `Authentication` header with the raw token string as `value`, which you will get from the [`Authenticate`](#authenticate) endpoint. The `expire` value will say when the token validity will expire (as [UNIX timestamp](https://www.unixtimestamp.com/)).
 
-**Session authentication**  
+**II) Session authentication**  
 If you specify the authentication as `session` by parameter using the [`Authenticate`](#authenticate) endpoint, a cookie will be set which will authenticate you against the API while the cookie is valid.
 
 ### Status and Error Codes
@@ -42,6 +44,8 @@ An error response from the API contains the status code as header and an error d
 ```
 
 ### Rate Limits
+
+> TODO: Komma nach means richtig?
 
 Rate limits are applied on a per-route basis, which means, that different API routs will count different rate limits. That also means, if you are curerntly rate-limited on one endpoint, you can also use the other endpoints at this time in their specific rate limitations.
 
@@ -96,7 +100,7 @@ All time formats of request data and response data must be formatted and interpr
 |------|------|-------------|
 | `password` | `string` | The password of the user |
 | *`group`* | `string` | If the server requires a group to authenticate, you can specify this here |
-| *`session`* | `int` | Specify if the login shoulb be treated as session creation which sets the authentication credentials as cookie. If this value is set `> 0`, you will not get an API key as response.<br/>`1` - basic session (valid for 1 hour)<br/>`2` - remembered session (valid for 30 days) |
+| *`session`* | `int` | Specify if the login should be treated as session creation which sets the authentication credentials as cookie. If this value is set `> 0`, you will not get an API key as response.<br/>`1` - basic session (valid for 1 hour)<br/>`2` - remembered session (valid for 30 days) |
 
 #### Response
 
