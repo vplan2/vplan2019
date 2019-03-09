@@ -114,8 +114,35 @@ func (s *MySQL) Close() {
 func (s *MySQL) Setup() error {
 	m := multierror.NewMultiError(nil)
 
+	// TABLE `vplan`
+	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `vplan` (" +
+		"`id` int(11) NOT NULL," +
+		"`date_edit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
+		"`date_for` datetime NOT NULL," +
+		"`block` char(1) NOT NULL," +
+		"`header` text NOT NULL," +
+		"`footer` text NOT NULL," +
+		"`published` tinyint(1) NOT NULL," +
+		"`deleted` int(1) NOT NULL DEFAULT '0' );")
+	m.Append(err)
+
+	// TABLE `vplan_details`
+	_, err = s.db.Exec("CREATE TABLE IF NOT EXISTS `vplan_details` (" +
+		"`id` int(11) NOT NULL," +
+		"`vplan_id` int(11) NOT NULL," +
+		"`class` varchar(45) NOT NULL," +
+		"`time` varchar(45) NOT NULL," +
+		"`messures` varchar(255) NOT NULL," +
+		"`responsible` varchar(255) NOT NULL," +
+		"`reason` int(1) NOT NULL DEFAULT '1'," +
+		"`geteilt` int(1) NOT NULL," +
+		"`notiz` varchar(45) NOT NULL," +
+		"`deleted` int(1) NOT NULL DEFAULT '0'," +
+		"`selected` int(1) NOT NULL DEFAULT '0' );")
+	m.Append(err)
+
 	// TABLE `apitoken`
-	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `apitoken` (" +
+	_, err = s.db.Exec("CREATE TABLE IF NOT EXISTS `apitoken` (" +
 		"`id` int PRIMARY KEY AUTO_INCREMENT," +
 		"`ident` text NOT NULL," +
 		"`token` text NOT NULL," +

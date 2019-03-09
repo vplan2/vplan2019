@@ -125,6 +125,10 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
 
+	// NOTICE:
+	// Each route over another overwrites the access area of
+	// of the path of the route below.
+
 	// ---------------------------
 	// API
 
@@ -154,11 +158,17 @@ func (s *Server) initializeHnalders() {
 	// FRONTEND
 
 	// GET /:FILENAME
-	s.router.HandleFunc(`/{file:$|[\w+\/]+|[\w\/]+.html$}`, s.handlerFEMainRoot)
+	// Matches the root path ('/'), all pathes not passing a file name
+	// at the end (e.g.: '/vplan') and all paths ending with '.html'
+	// or '.xhtml' (e.g.: 'vplan/index.html').
+	s.router.HandleFunc(`/{file:$|[\w+\/]+|[\w\/]+.x?html$}`, s.handlerFEMainRoot)
 
 	// ---------------------------
 	// STATIC FRONTEND FILES
 
+	// All other pathes will be interpreted as static file accesses.
+	// If there is no coresponding file to the path requested, an
+	// error 404 will be returned.
 	s.router.Handle("/{stuff:.+}", http.FileServer(http.Dir(s.config.StaticFiles)))
 }
 

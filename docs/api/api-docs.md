@@ -334,3 +334,10 @@ Response contains a `type` value of the logins which must be interpreted as foll
 ```
 < HTTP/1.1 200 OK
 ```
+
+---
+
+© 2019 Justin Trommler, Richard Heidenreich, Ringo Hoffmann  
+Covered by MIT Licence.
+
+The API structure and design is inspired by the REST API's of [discordapp.com](https://discordapp.com/developers/docs/intro) and [github.com](https://developer.github.com/v3/).

@@ -1,5 +1,6 @@
 // Package multierror impements handling
-// multiple errors as one error object
+// multiple errors as one error object.
+//   Authors: Ringo Hoffmann.
 package multierror
 
 import (
