@@ -18,11 +18,11 @@ For all other endpoints, there are 2 options to authenticate against the API:
 
 > TODO: I) anpassen wie II)
 
-**I) Authentication header**  
-By sending an `Authentication` header with the raw token string as `value`, which you will get from the [`Authenticate`](#authenticate) endpoint. The `expire` value will say when the token validity will expire (as [UNIX timestamp](https://www.unixtimestamp.com/)).
+**I) Session authentication**  
+If you specify the authentication as `session` by parameter using the [`Authenticate`](#authenticate) endpoint, a cookie will be set which will authenticate you against the API while the cookie is valid. Make sure, that you application is capable to save cookies and send them like described in [RFC 6265, section 5.4](https://tools.ietf.org/html/rfc6265#section-5.4) if you are using this method.
 
-**II) Session authentication**  
-If you specify the authentication as `session` by parameter using the [`Authenticate`](#authenticate) endpoint, a cookie will be set which will authenticate you against the API while the cookie is valid.
+**I) Authentication header**  
+Otherwise, no session cookie will be set. Therefore, an API token will be generated and returned as `token` value in the response body in combination with an expire [timestamp](#data-formats) defined after the `expire` key. In order to authenticate against the API, you must send an `Authorization` header with the token string as value on every following request.
 
 ### Status and Error Codes
 
@@ -45,9 +45,7 @@ An error response from the API contains the status code as header and an error d
 
 ### Rate Limits
 
-> TODO: Komma nach means richtig?
-
-Rate limits are applied on a per-route basis, which means, that different API routs will count different rate limits. That also means, if you are curerntly rate-limited on one endpoint, you can also use the other endpoints at this time in their specific rate limitations.
+Rate limits are applied on a per-route basis, which means that different API routs will count different rate limits. That also means, if you are curerntly rate-limited on one endpoint, you can also use the other endpoints at this time in their specific rate limitations.
 
 If you exeed a rate limit, you will get an error response as following:
 
