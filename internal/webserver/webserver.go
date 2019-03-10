@@ -40,6 +40,7 @@ type Config struct {
 // ConfigTLS contains the cert file path
 // and the key file path for TLS configuration
 type ConfigTLS struct {
+	UseSSL   bool   `json:"usessl"`
 	CertFile string `json:"certFile"`
 	KeyFile  string `json:"keyFile"`
 }
@@ -102,7 +103,7 @@ func StartBlocking(server *Server, config *Config, db database.Driver, sessionSt
 
 	server.initializeHnalders()
 
-	if config.TLS == nil {
+	if config.TLS == nil || !config.TLS.UseSSL {
 		return server.server.ListenAndServe()
 	}
 	return server.server.ListenAndServeTLS(config.TLS.CertFile, config.TLS.KeyFile)
