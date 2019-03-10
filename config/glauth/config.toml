@@ -1,0 +1,27 @@
+[ldap]
+  enabled = true
+  listen = "127.0.0.1:3893"
+  tls = false
+
+[ldaps]
+  enabled = false
+  listen = "127.0.0.1:3894"
+  cert = "certs/server.crt"
+  key = "certs/server.key"
+
+[backend]
+  datastore = "config"
+  baseDN = "dc=local"
+
+[[users]]
+  name = "mustermax"
+  givename = "Max"
+  ln = "Mustermann"
+  unixid = 5001
+  primarygroup = 5501
+  passsha256 = "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8"   # password
+#  sshkeys = [ "ssh-dss AAAAB3..." ]
+
+[[groups]]
+  name = "user"
+  unixid = 5501
