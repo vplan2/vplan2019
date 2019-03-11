@@ -228,6 +228,8 @@ Response contains a `type` value of the logins which must be interpreted as foll
 
 #### Response
 
+> VPlan results are sorted ascending by `date_for` value.
+
 ```
 < HTTP/1.1 200 OK
 < Content-Type: application/json
@@ -304,6 +306,8 @@ Response contains a `type` value of the logins which must be interpreted as foll
 | *`time`* | `string` | [RFC 3339](https://tools.ietf.org/html/rfc3339) encoded timestamp after which newsticker entries are collected |
 
 #### Response
+
+> News Ticker results are sorted descending by `date` value.
 
 ```
 < HTTP/1.1 200 OK

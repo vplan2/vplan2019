@@ -23,7 +23,8 @@ TAG		= $(shell $(GIT) describe --tags)
 COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
-.PHONY: _make deps cleanup _finish run lint offline release frontend cloc
+.PHONY: _make deps cleanup _finish run lint offline release \
+	frontend cloc help
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -63,6 +64,7 @@ deps:
 cleanup:
 	@echo [ INFO ] cleaning up...
 	rm -r -f $(GOPATH)
+	rm -r -f ./release
 
 _finish:
 	@echo ------------------------------------------------------------------------------
@@ -86,3 +88,14 @@ cloc:
 	$(CLOC) \
 		--exclude-dir=vendor,docs,public \
 		--exclude-lang=JSON,Markdown,YAML,XML,TOML ./
+
+help:
+	@echo "Available recipes:"
+	@echo "  offline  : creates binaries witout pulling deps from the internet and using vendor instead"
+	@echo "  frontend : compile frontend files to ./web/public"
+	@echo "  release  : comple backend and frontend files to ./release"
+	@echo "  deps     : pulling dependencies from internet to ./vendor"
+	@echo "  cleanup  : delete ./release and ./.gopath"
+	@echo "  run      : compile frontend file if not existent and go run backend"
+	@echo "  lint     : go lint backend"
+	@echo "  cloc     : count lines of code"
