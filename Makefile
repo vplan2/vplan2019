@@ -4,6 +4,7 @@ GIT     = git
 GOLINT  = golint
 GREP    = grep
 ZOLA    = zola
+CLOC    = cloc
 
 PACKAGE	= github.com/zekroTJA/vplan2019
 GOPATH	= $(CURDIR)/.gopath
@@ -22,7 +23,7 @@ TAG		= $(shell $(GIT) describe --tags)
 COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
-.PHONY: _make deps cleanup _finish run lint offline release frontend
+.PHONY: _make deps cleanup _finish run lint offline release frontend cloc
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -79,3 +80,9 @@ run:
 
 lint:
 	$(GOLINT) ./... | $(GREP) -v vendor
+
+cloc:
+	@echo [ INFO ] counting lines of code...
+	$(CLOC) \
+		--exclude-dir=vendor,docs,public \
+		--exclude-lang=JSON,Markdown,YAML,XML,TOML ./
