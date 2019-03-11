@@ -146,6 +146,9 @@ func (s *Server) initializeHnalders() {
 	// GET /api/vplan
 	s.addHandler("/api/vplan", "getVPlan", s.handlerAPIGetVPlan, 0.2, 3, "GET")
 
+	// GET /api/newsticker
+	s.addHandler("/api/newsticker", "getNewsTicker", s.handlerAPIGetNewsTicker, 0.2, 3, "GET")
+
 	// GET /api/settings
 	s.addHandler("/api/settings", "getUserSettings", s.handleAPIGetUserSettings, 1, 3, "GET")
 

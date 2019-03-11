@@ -41,6 +41,8 @@ type prepStatements struct {
 	selectVPlanEntries        *sql.Stmt
 	selectVPlanEntriesByClass *sql.Stmt
 
+	selectTickerEntries *sql.Stmt
+
 	getUserSettings    *sql.Stmt
 	setUserSettings    *sql.Stmt
 	insertUserSettings *sql.Stmt
@@ -95,6 +97,10 @@ func (s *MySQL) setupPrepStatements() error {
 	s.stmts.selectVPlanEntriesByClass = s.prepareStatement(m,
 		"SELECT id, vplan_id, class, time, messures, responsible FROM vplan_details WHERE vplan_id = ? AND class = ? AND deleted = 0")
 
+	s.stmts.selectTickerEntries = s.prepareStatement(m,
+		"SELECT id, date, headline, short, story FROM content WHERE date >= ? "+
+			"ORDER BY date DESC")
+
 	s.stmts.getUserSettings = s.prepareStatement(m,
 		"SELECT ident, class, theme, edited FROM usersettings WHERE ident = ?")
 	s.stmts.setUserSettings = s.prepareStatement(m,
@@ -123,7 +129,8 @@ func (s *MySQL) Setup() error {
 		"`header` text NOT NULL," +
 		"`footer` text NOT NULL," +
 		"`published` tinyint(1) NOT NULL," +
-		"`deleted` int(1) NOT NULL DEFAULT '0' );")
+		"`deleted` int(1) NOT NULL DEFAULT '0'," +
+		" CONSTRAINT `fk_vplan_details_vplan` FOREIGN KEY (`vplan_id`) REFERENCES `vplan` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION );")
 	m.Append(err)
 
 	// TABLE `vplan_details`
@@ -139,6 +146,18 @@ func (s *MySQL) Setup() error {
 		"`notiz` varchar(45) NOT NULL," +
 		"`deleted` int(1) NOT NULL DEFAULT '0'," +
 		"`selected` int(1) NOT NULL DEFAULT '0' );")
+	m.Append(err)
+
+	// TABLE `content`
+	_, err = s.db.Exec("CREATE TABLE IF NOT EXISTS `content` (" +
+		"`id` int(11) NOT NULL," +
+		"`date` datetime NOT NULL," +
+		"`author_id` int(11) DEFAULT NULL," +
+		"`headline` varchar(255) NOT NULL," +
+		"`short` text NOT NULL," +
+		"`story` text NOT NULL," +
+		"`published` tinyint(1) NOT NULL," +
+		"`container_id` int(11) DEFAULT NULL );")
 	m.Append(err)
 
 	// TABLE `apitoken`
@@ -358,6 +377,39 @@ func (s *MySQL) GetVPlans(class string, timestamp time.Time) ([]*database.VPlan,
 	}
 
 	return vplans, mErr.Concat()
+}
+
+////////////////
+// NEWSTICKER //
+////////////////
+
+// GetNewsTicker collects news ticker entries after the
+// specified timestamp
+func (s *MySQL) GetNewsTicker(timestamp time.Time) ([]*database.TickerEntry, error) {
+	rows, err := s.stmts.selectTickerEntries.Query(timestamp)
+	if err != nil {
+		return nil, err
+	}
+
+	entries := make([]*database.TickerEntry, 0)
+
+	for rows.Next() {
+		entry := new(database.TickerEntry)
+		var date database.Timestamp
+		err = rows.Scan(&entry.ID, &date, &entry.Headline, &entry.Short, &entry.Story)
+		if err != nil {
+			return nil, err
+		}
+
+		entry.Date, err = date.ToTime(timeFormat)
+		if err != nil {
+			return nil, err
+		}
+
+		entries = append(entries, entry)
+	}
+
+	return entries, nil
 }
 
 //////////////////

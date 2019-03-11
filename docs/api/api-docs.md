@@ -292,6 +292,44 @@ Response contains a `type` value of the logins which must be interpreted as foll
 }
 ```
 
+### Get News Ticker
+
+> GET /api/newsticker
+
+#### Parameters
+> Parameters must be passed by *(URL encoded)* URL parameters.
+
+| Name | Type | Description |
+|------|------|-------------|
+| *`time`* | `string` | [RFC 3339](https://tools.ietf.org/html/rfc3339) encoded timestamp after which newsticker entries are collected |
+
+#### Response
+
+```
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+```
+```json
+{
+  "data": [
+    {
+      "id": 49,
+      "date": "2019-02-11T00:00:00Z",
+      "headline": "wichtige infos",
+      "short": "lorem ipsum",
+      "story": ""
+    },
+    {
+      "id": 24,
+      "date": "2019-02-08T00:00:00Z",
+      "headline": "noch mehr infos",
+      "short": "lorem ipsum",
+      "story": "lorem ipsum"
+    }
+  ]
+}
+```
+
 ### Get User Settings
 
 > GET /api/settings

@@ -207,6 +207,40 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// GET /api/newsticker
+func (s *Server) handlerAPIGetNewsTicker(w http.ResponseWriter, r *http.Request) {
+	if !s.limiter.Check("getNewsTicker", w, r) {
+		return
+	}
+
+	ident := s.reqAuth.Check(w, r)
+	if ident == "" {
+		return
+	}
+
+	_t := r.URL.Query().Get("time")
+
+	var t time.Time
+	var ok bool
+	if _t == "" {
+		t = time.Now().AddDate(0, -1, 0)
+	} else {
+		if t, ok = parseTimeRFC3339(w, _t, true); !ok {
+			return
+		}
+	}
+
+	entries, err := s.db.GetNewsTicker(t)
+	if err != nil {
+		s.handlerAPIInternalError(w, r, err)
+		return
+	}
+
+	jsonResponse(w, http.StatusOK, map[string]interface{}{
+		"data": entries,
+	})
+}
+
 // GET /api/settings
 func (s *Server) handleAPIGetUserSettings(w http.ResponseWriter, r *http.Request) {
 	if !s.limiter.Check("getUserSettings", w, r) {

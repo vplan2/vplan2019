@@ -51,6 +51,16 @@ type VPlanEntry struct {
 	Resposible string `json:"responsible"`
 }
 
+// TickerEntry contains the informations of
+// a Newsticker entry database structure
+type TickerEntry struct {
+	ID       int       `json:"id"`
+	Date     time.Time `json:"date"`
+	Headline string    `json:"headline"`
+	Short    string    `json:"short"`
+	Story    string    `json:"story"`
+}
+
 // Login contains the data of a login
 // log database structure
 type Login struct {
@@ -133,6 +143,14 @@ type Driver interface {
 	// GetVPlans collects VPlans and VPlanEntries filtered by the
 	// passed Timestamp (all after time) and Class name.
 	GetVPlans(class string, timestamp time.Time) ([]*VPlan, error)
+
+	////////////////
+	// NEWSTICKER //
+	////////////////
+
+	// GetNewsTicker collects news ticker entries after the
+	// specified timestamp
+	GetNewsTicker(timestamp time.Time) ([]*TickerEntry, error)
 
 	//////////////////
 	// USER SETTNGS //
