@@ -20,6 +20,8 @@ logging:
 webServer:
   # Address and port the server will be exposed to
   addr: :443
+
+  tvuser: tv
   # Login session options
   sessions:
     # The default time (in seconds) until a

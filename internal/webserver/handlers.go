@@ -46,9 +46,19 @@ type authTokenResposeData struct {
 func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
 	file := mux.Vars(r)["file"]
 	if _, err := s.reqAuth.Authorize(r); err != nil {
-		http.ServeFile(w, r, s.config.StaticFiles+"/login.html")
+		w.Header().Set("Location", "/login")
+		w.WriteHeader(http.StatusTemporaryRedirect)
 	} else {
 		http.ServeFile(w, r, s.config.StaticFiles+"/"+file)
+	}
+}
+
+func (s *Server) handlerFELogin(w http.ResponseWriter, r *http.Request) {
+	if _, err := s.reqAuth.Authorize(r); err != nil {
+		http.ServeFile(w, r, s.config.StaticFiles+"/login/index.html")
+	} else {
+		w.Header().Set("Location", "/")
+		w.WriteHeader(http.StatusTemporaryRedirect)
 	}
 }
 
@@ -105,9 +115,13 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		var session *sessions.Session
 		session, _ = s.store.Get(r, auth.MainSessionName)
 		session.Values["ident"] = authData.Ident
-		if reqData.Session > 1 {
+
+		if uname == s.config.TVUser {
+			session.Options.MaxAge = 3153600000 // == 100 years
+		} else if reqData.Session > 1 {
 			session.Options.MaxAge = s.config.Sessions.RememberMaxAge
 		}
+
 		err := session.Save(r, w)
 		if err != nil {
 			s.handlerAPIInternalError(w, r, err)

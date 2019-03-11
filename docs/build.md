@@ -2,10 +2,12 @@
 
 ## Requirements
 
-- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [go compiler toolchain](https://golang.org/doc/install)
-- [gcc](https://gcc.gnu.org/)
-- [dep](https://github.com/golang/dep)
+- [dep](https://github.com/golang/dep)  
+  *Dependency management system for go*
+- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)  
+  *For cloning the repository and necessary for go get*
+- [go compiler toolchain](https://golang.org/doc/install)  
+  *goang compiler and other tools for go develoment*
 
 If you are on windows, you can install the [TDM-GCC](http://tdm-gcc.tdragon.net/download) toolchain, which includes gcc and make. Also, you should install [gitbash](https://gitforwindows.org/) and use it for executing bash scripts and the Makefile.
 

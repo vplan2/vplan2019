@@ -1,5 +1,6 @@
 logging:
   level: 5
+
 providers:
   authorization:
     base:       dc=zekro,dc=de
@@ -15,6 +16,7 @@ providers:
     user:       vplan2
 webServer:
   addr:         :8080
+  tvuser:       mustermax
   sessions:
     defaultMaxAge: 3600
     encryptionSecret: "test123"

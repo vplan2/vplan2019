@@ -33,6 +33,7 @@ type Config struct {
 	Addr     string          `json:"addr"`
 	Sessions *ConfigSessions `json:"sessions"`
 	TLS      *ConfigTLS      `json:"tls"`
+	TVUser   string          `json:"tvuser"`
 
 	StaticFiles string `json:",omitempty"`
 }
@@ -160,6 +161,8 @@ func (s *Server) initializeHnalders() {
 
 	// ---------------------------
 	// FRONTEND
+
+	s.router.HandleFunc(`/login`, s.handlerFELogin)
 
 	// GET /:FILENAME
 	// Matches the root path ('/'), all pathes not passing a file name

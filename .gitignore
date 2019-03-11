@@ -29,3 +29,5 @@ bin/*
 
 release/*
 web/public/*
+
+.gopath/*
