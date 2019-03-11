@@ -1,9 +1,9 @@
 title = "vPlan"
 
-description = "VertretungsPlan"
+description = "A book theme"
 
 # The URL the site will be built for
-base_url = "https://zekro.de:8080/"
+base_url = "/"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -20,3 +20,11 @@ build_search_index = true
 
 title = "vPlan-Docs"
 book_number_chapters = true
+icon = "http://mosscap.bplaced.net/projects/assets/images/icons/Warning.svg"
+icon_alt_text = "Some Icon"
+
+# Enable/disable usage of test data
+api_use_test_data = false
+
+fqdn = "https://zekro.de:8080"
+author = "industrieschule.de"

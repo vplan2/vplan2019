@@ -1,9 +1,6 @@
 {% extends "index.html" %}
 {% import "post_macros.html" as post_macros %}
 {% block title %}{{ page.title }}{% endblock title %}
-{% block links %}
-	<link type="text/css" rel="stylesheet" href="{{ get_url(path="vplan.css") | safe }}"/>
-{% endblock links %}
 {% block content %}
 {% include "navigation.html" %}
 	<main class="container" itemscope itemtype="http://schema.org/BlogPosting">
@@ -16,7 +13,32 @@
 		</div>
 		<footer>{% if page.author %}
 			<p class="muted">Published by {{ page.author }}</p>{% endif %}
+			{% if config.extra.author %}Published by {{ config.extra.author }}{% endif %}
+			<!--
+				{% if page.taxonomies.categories %}
+					{% set category = page.taxonomies.categories[0] %}
+					in <a href="{{ get_taxonomy_url(kind="categories", name=category) | safe }}">{{ category }}</a>
+				{% endif %}
+				{% if page.taxonomies.tags %}
+					and tagged
+					{% for tag in page.taxonomies.tags %}
+						<a href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}">{{ tag }}</a>
+						{% if page.taxonomies.tags | length > 1 %}
+							{% if loop.index != page.taxonomies.tags | length %}
+								{% if loop.index == page.taxonomies.tags | length - 1 %}
+									and
+								{% else %}
+									,
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			-->
 		</footer>
 	</main>
 {% include "footer.html" %}
 {% endblock content %}
+{% block contentscript %}
+{% include "logins-script.html" %}
+{% endblock contentscript %}

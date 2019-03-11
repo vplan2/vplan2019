@@ -3,21 +3,18 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-	<meta http-equiv="Access-Control-Allow-Origin" content="https://zekro.de:8080/"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 	<title>{% block title %}Index{% endblock title %} - vPlan</title>
 	<!-- https://www.w3.org/TR/preload/#server-push-http-2 -->
 	<link rel="preload" as="style" href="{{ get_url(path="style/bootstrap.css") | safe }}"/>
-	<!--
 	<link rel="preload" as="worker" href="{{ get_url(path="scripts/sw.js") | safe }}"/>
-	<link rel="preload" as="fetch" href=":8080/api/vplan" crossorigin/>
-	-->
+	<link rel="preload" as="fetch" href="{{ get_url(path="api/") | safe }}"/>
 
 	<!-- Bootstrap CSS -->
 	<link type="text/css" rel="stylesheet" href="{{ get_url(path="style/bootstrap.css") | safe }}"/> <!-- integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" -->
 	<!-- Custom CSS for this site -->
-{% block links %}
-	<link type="text/css" rel="stylesheet" href="{{ get_url(path="style/signin.css") | safe }}"/>
+{% block links %}{% if page.extra.stylesheet %}
+	<link type="text/css" rel="stylesheet" href="{{ get_url(path=page.extra.stylesheet) | safe }}"/>{% endif %}
 {% endblock links %}
 	<link rel="stylesheet" type="text/css" href="https://code.cdn.mozilla.net/fonts/fira.css"/>
 	<style type="text/css">
@@ -34,63 +31,71 @@
 		font-size: 3.5rem;
 	}
 }
+.message {
+	margin: 0 auto;
+}
+#message {
+	margin: 0 auto;
+	transition: .5s;
+	top: -10em;
+}
+#message:empty {
+}
 	</style>{% block style %}{% endblock style %}
 	<script type="application/javascript" src="{{ get_url(path="scripts/main.js") | safe }}"></script>
 </head>
 <body>
+	<div class="form-signin message">
+		<div class="alert alert-danger rounded-0 form-signin" id="message"></div>
+	</div>
 	<noscript>
-	<div class="alert alert-danger rounded-0 clearfix" role="alert">
+	<div class="alert alert-danger rounded-0 clearfix message" role="alert">
 		Um den vollen Funktionsumfang dieser Webseite zu erfahren, benötigen Sie JavaScript. Hier finden Sie die <a href="https://www.enable-javascript.com/de/">Anleitung wie Sie JavaScript in Ihrem Browser einschalten</a>.
 	</div>
 	</noscript>
 {% block content %}
-	<main class="container text-center">
-		<form class="form-signin" id="login">
-			<img class="mb-4" src="http://mosscap.bplaced.net/projects/assets/images/icons/Warning.svg" alt="" width="72" height="72">
-			<h1 class="h3 mb-3 font-weight-normal">Bitte melden sie sich an</h1>
-			<label for="inputEmail" class="sr-only">Email</label>
-			<input type="email" id="inputEmail" class="form-control" placeholder="Benutzer" required="" autofocus=""/>
-			<label for="inputPassword" class="sr-only">Passwort</label>
-			<input type="password" id="inputPassword" class="form-control" placeholder="Passwort" required=""/>
-			<div class="checkbox mb-3 custom-control custom-checkbox">
-				<input type="checkbox" class="custom-control-input" id="lock" value="remember-me">
-				<label class="custom-control-label" for="lock">angemeldet bleiben</label>
+{% include "navigation.html" %}
+	<main class="container" itemscope itemtype="http://schema.org/BlogPosting">
+		<header class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+			<h1 itemprop="headline">vPlan</h1>
+			<span class="muted"></span>
+		</header>
+		<div itemprop="articleBody">
+			<div class="order-md-2 row">
+				<div class="mb-3 col">
+					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day0">Heute</span></h2>
+					<ul class="list-group mb-3" id="day0e">
+					</ul>
+				</div>
+				<div class="mb-3 col">
+					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day1">Morgen</span></h2>
+					<ul class="list-group mb-3" id="day1e">
+					</ul>
+				</div>
+				<div class="mb-3 col">
+					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day2">Übermorgen</span></h2>
+					<ul class="list-group mb-3" id="day2e">
+					</ul>
+				</div>
+				<div class="mb-3 col" id="news">
+					<div class="alert alert-secondary" role="alert">
+					</div>
+					<div class="alert alert-secondary" role="alert">
+					</div>
+					<div class="alert alert-secondary" role="alert">
+					</div>
+				</div>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
-			<p class="mt-5 mb-3 text-muted">© 2019</p>
-		</form>
+		</div>
+		<footer>
+		</footer>
 	</main>
+{% include "footer.html" %}
 {% endblock content %}
 {% block contentscript %}
-	<script type="application/javascript">
-var form = _("login");
-form.onsubmit = function (e) {
-	// stop the regular form submission
-	e.preventDefault();
-
-	// collect the form data while iterating over the inputs
-	var data = {};
-	for (var i = 0, ii = form.length; i < ii; ++i) {
-		var input = form[i];
-		if (input.name) {
-			data[input.name] = input.value;
-		}
-	}
-
-	// construct an HTTP request
-	var xhr = new XMLHttpRequest();
-	xhr.open(form.method, form.action, true);
-	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-
-	// send the collected data as JSON
-	xhr.send(JSON.stringify(data));
-
-	xhr.onloadend = function () {
-		// done
-	};
-};
-	</script>
-{% endblock contentscript %}
+{% include "vplan-script.html" %}
+{% endblock contentscript %}{% if page.extra.script %}
+	<script type="application/javascript" src="{{ get_url(path=page.extra.script) | safe }}"></script>{% endif %}
 	<!-- jQuery first, then Popper.js, then Bootstrap JS 
 	<script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

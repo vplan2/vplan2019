@@ -30,7 +30,7 @@ function ajaxObj(meth, url) {
 		x = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	x.open(meth, url, true);
-	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	x.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	return x;
 }
 function ajaxReturn(x) {

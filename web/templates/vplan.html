@@ -1,9 +1,6 @@
 {% extends "index.html" %}
 {% import "post_macros.html" as post_macros %}
 {% block title %}{{ page.title }}{% endblock title %}
-{% block links %}
-	<link type="text/css" rel="stylesheet" href="{{ get_url(path="style/vplan.css") | safe }}"/>
-{% endblock links %}
 {% block content %}
 {% include "navigation.html" %}
 	<main class="container" itemscope itemtype="http://schema.org/BlogPosting">
@@ -21,55 +18,5 @@
 {% include "footer.html" %}
 {% endblock content %}
 {% block contentscript %}
-	<script type="application/javascript">
-function creteNode(id, entry) {
-	var list_item = document.createElement("li");
-	list_item.setAttribute('class', 'list-group-item d-flex justify-content-between lh-condensed');
-
-	var desc = document.createElement("div");
-	var head = document.createElement("h6");
-	head.setAttribute('class', 'my-0');
-	head.textContent = entry.class;
-	desc.appendChild(head);
-	var tiny = document.createElement("small");
-	tiny.textContent = entry.time + ' - ' + entry.responsible;
-	desc.appendChild(tiny);
-	list_item.appendChild(desc);
-
-	var span = document.createElement("span");
-	span.setAttribute('class', 'text-muted');
-	span.textContent = entry.messures;
-	list_item.appendChild(span);
-
-	//list_item.innerHTML = entry.class + ' ' + entry.lesson + '<br/>' + entry.notes + ' - ' + entry.responsible;
-	_(id).appendChild(list_item);
-}
-
-getJson('GET', '{{ get_url(path="vplan-test.json") | safe }}' /*url*/, '' /*args*/, function() {
-	console.log(this);
-	if(this.data != undefined) {
-		var months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
-		var days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Sonnabend"];
-		var selectedDate = new Date(this.data[0].date_for);
-		var dateFormat = this.data[0].date_for.split('-');
-		_("day0").innerHTML = dateFormat[2].split('T')[0] + '. ' + months[selectedDate.getMonth()];
-		_("day0c").innerHTML = days[selectedDate.getDay()];
-		(this.data[0].entries == null) ? console.log(this.data[0].entries) : this.data[0].entries.forEach( function(entry) { creteNode("day0e", entry); });
-		var selectedDate = new Date(this.data[1].date_for);
-		var dateFormat = this.data[1].date_for.split('-');
-		_("day1").innerHTML = dateFormat[2].split('T')[0] + '. ' + months[selectedDate.getMonth()];
-		_("day1c").innerHTML = days[selectedDate.getDay()];
-		(this.data[1].entries == null) ? console.log(this.data[1].entries) : this.data[1].entries.forEach( function(entry) { creteNode("day1e", entry); });
-		var selectedDate = new Date(this.data[2].date_for);
-		var dateFormat = this.data[2].date_for.split('-');
-		_("day2").innerHTML = dateFormat[2].split('T')[0] + '. ' + months[selectedDate.getMonth()];
-		_("day2c").innerHTML = days[selectedDate.getDay()];
-		(this.data[2].entries == null) ? console.log(this.data[2].entries) : this.data[2].entries.forEach( function(entry) { creteNode("day2e", entry); });
-	} else if(this.error != undefined) {
-		console.log(this.error.code)
-	} else {
-		
-	}
-});
-	</script>
+{% include "vplan-script.html" %}
 {% endblock contentscript %}

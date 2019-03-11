@@ -33,14 +33,14 @@ insert_anchor_links = "right"
 
 ## 2019-02-22 Konzepterarbeitung
 
-- Backend mit Rest-API (JSON) auf Server von Ringo
+- Backend mit REST-API (JSON) auf Server von Ringo
 - Frontend mit ServiceWorker auf Server von Richard
   - CSS-Anpassungen für bootstrap, reveal.js und mdBook/Gutenberg (für letzteres kann bootstrap verwendet werden)
 
 
 ## 2019-03-02 Aufgabenverteilung
 
-- Backend mit Rest-API (JSON) und ServerPush
+- Backend mit REST-API (JSON) und ServerPush
 -> Ringo
 - Frontend mit ServiceWorker
 -> Richard

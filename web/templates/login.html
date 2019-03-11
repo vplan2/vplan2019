@@ -1,0 +1,61 @@
+{% extends "index.html" %}
+{% import "post_macros.html" as post_macros %}
+{% block title %}{{ page.title }}{% endblock title %}
+{% block content %}
+	<main class="container text-center">
+		<form class="form-signin" id="login" method="POST" action="{{ get_url(path="api/authenticate/") | safe }}">
+			<img class="mb-4" src="http://mosscap.bplaced.net/projects/assets/images/icons/Warning.svg" alt="{{ config.extra.icon_alt_text }}" width="72" height="72" />
+			<h1 class="h3 mb-3 font-weight-normal">Bitte melden sie sich an</h1>
+			<label for="inputUsername" class="sr-only">Benutzer</label>
+			<input type="text" id="inputUsername" class="form-control" name="username" placeholder="Benutzer" required="" autofocus="" />
+			<label for="inputPassword" class="sr-only">Passwort</label>
+			<input type="password" id="inputPassword" class="form-control" name="password" placeholder="Passwort" required="" />
+			<div class="checkbox mb-3 custom-control custom-checkbox">
+				<input type="checkbox" class="custom-control-input" id="lock" name="session" value="1" />
+				<label class="custom-control-label" for="lock">angemeldet bleiben</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
+			<p class="mt-5 mb-3 text-muted">© 2019</p>
+		</form>
+	</main>
+	<script type="application/javascript">
+var form = _("login");
+form.onsubmit = function (e) {
+	// stop the regular form submission
+	e.preventDefault();
+
+	// collect the form data while iterating over the inputs
+	var data = {};
+	for (var i = 0, ii = form.length; i < ii; ++i) {
+		var input = form[i];
+		if (input.type == 'checkbox') {
+			data[input.name] = input.checked? 2 : 1;
+		} else if (input.name) {
+			data[input.name] = input.value;
+		}
+	}
+
+	// Adding group tag to authenticate
+	// request when using debug LDAP server
+	if (_DEBUG_GROUP) {
+		data.group = _DEBUG_GROUP;
+	}
+
+	console.log(JSON.stringify(data));
+
+	getJson(form.method, {% if config.extra.api_use_test_data %} '{{ get_url(path="authenticate-test.json") | safe }}' {% else %} form.action + '/' + _('inputUsername').value {% endif %}, JSON.stringify(data), function() {
+		console.log(this);
+		if(this.ident != undefined && this.ctx.cn == _('inputUsername').value) {
+			// window.location.reload(true);
+			window.location = '/';
+		} else {
+			_('message').role = 'alert';
+			_('message').innerHTML = 'Some Error';
+			_('message').style.top = '0px';
+		}
+	});
+};
+	</script>
+{% endblock content %}
+{% block contentscript %}
+{% endblock contentscript %}

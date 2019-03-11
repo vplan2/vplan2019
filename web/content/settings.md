@@ -3,6 +3,9 @@ title = "Settings"
 description = ""
 template = "blog.html"
 date = 2017-04-01T10:00:00
+
+[extra]
+# script = "scripts/logins.js"
 +++
 
 <div class="mb-3">
@@ -16,4 +19,9 @@ date = 2017-04-01T10:00:00
 	</div>
 	<label for="theme">Class</label>
 	<input type="text" class="form-control" id="theme" placeholder="ITF17B" list="classes" />
+</div>
+<div class="mb-3">
+	<h4 class="d-flex justify-content-between align-items-center mb-3">Anmeldungen</h4>
+	<ul class="list-group mb-3" id="logins">
+	</ul>
 </div>
