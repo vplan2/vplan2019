@@ -65,7 +65,7 @@ type TickerEntry struct {
 // log database structure
 type Login struct {
 	Ident     string    `json:"ident"`
-	Timestamp time.Time `json:"timestamp"`
+	Timestamp time.Time `json:"time"`
 	Type      LoginType `json:"type"`
 	Useragent string    `json:"useragent"`
 	IPAddress string    `json:"ipaddress"`

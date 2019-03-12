@@ -20,7 +20,9 @@ logging:
 webServer:
   # Address and port the server will be exposed to
   addr: :443
-
+  # The TV user describes a users login name which will
+  # always get a session token with an expire time of 100
+  # years which should be used for the TV view
   tvuser: tv
   # Login session options
   sessions:
