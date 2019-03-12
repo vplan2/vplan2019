@@ -1,0 +1,8 @@
+{% extends "blog.html" %}
+{% import "post_macros.html" as post_macros %}
+{% block title %}{{ page.title }}{% endblock title %}
+{% block contentscript %}
+	<script type="application/javascript">
+getLoginsData('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="logins-test.json") | safe }}' {% else %} '{{ get_url(path="api/logins") | safe }}' {% endif %}, '');
+	</script>
+{% endblock contentscript %}

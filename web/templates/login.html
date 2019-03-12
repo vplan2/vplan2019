@@ -35,12 +35,6 @@ form.onsubmit = function (e) {
 		}
 	}
 
-	// Adding group tag to authenticate
-	// request when using debug LDAP server
-	if (_DEBUG_GROUP) {
-		data.group = _DEBUG_GROUP;
-	}
-
 	console.log(JSON.stringify(data));
 
 	getJson(form.method, {% if config.extra.api_use_test_data %} '{{ get_url(path="authenticate-test.json") | safe }}' {% else %} form.action + '/' + _('inputUsername').value {% endif %}, JSON.stringify(data), function() {

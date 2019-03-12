@@ -40,6 +40,11 @@
 	top: -10em;
 }
 #message:empty {
+	display: none;
+}
+.col {
+	min-width: 320px;
+	max-width: 100% !important;
 }
 	</style>{% block style %}{% endblock style %}
 	<script type="application/javascript" src="{{ get_url(path="scripts/main.js") | safe }}"></script>
@@ -61,7 +66,7 @@
 			<span class="muted"></span>
 		</header>
 		<div itemprop="articleBody">
-			<div class="order-md-2 row">
+			<div class="order-md-3 row">
 				<div class="mb-3 col">
 					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day0">Heute</span></h2>
 					<ul class="list-group mb-3" id="day0e">
@@ -91,11 +96,15 @@
 		</footer>
 	</main>
 {% include "footer.html" %}
-{% endblock content %}
-{% block contentscript %}
-{% include "vplan-script.html" %}
-{% endblock contentscript %}{% if page.extra.script %}
+{% endblock content %}{% if page.extra.script %}
 	<script type="application/javascript" src="{{ get_url(path=page.extra.script) | safe }}"></script>{% endif %}
+{% block contentscript %}
+	<script type="application/javascript" src="{{ get_url(path="scripts/vplan.js") | safe }}"></script>
+	<script type="application/javascript">
+getDataForVplan('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}' {% endif %}, '');
+getDataForNews('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %}, '');
+	</script>
+{% endblock contentscript %}
 	<!-- jQuery first, then Popper.js, then Bootstrap JS 
 	<script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

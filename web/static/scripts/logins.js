@@ -1,4 +1,4 @@
-	<script type="application/javascript">
+// 'use strict';
 var months = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 var days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Sonnabend"];
 
@@ -30,14 +30,15 @@ function createLoginEntry(id, entry) {
 	_(id).appendChild(list_item);
 }
 
-getJson('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="logins-test.json") | safe }}' {% else %} '{{ get_url(path="api/logins") | safe }}' {% endif %}, '' /*args*/, function() {
-	console.log(this);
-	if(this.data != undefined) {
-		this.data.forEach( function(entry) { createLoginEntry("logins", entry); })
-	} else if(this.error != undefined) {
-		console.log(this.error.code)
-	} else {
-		// TODO
-	}
-});
-	</script>
+function getLoginsData(method, url, args) {
+	getJson(method, url, args, function() {
+		console.log(this);
+		if(this.data != undefined) {
+			this.data.forEach( function(entry) { createLoginEntry("logins", entry); })
+		} else if(this.error != undefined) {
+			console.log(this.error.code)
+		} else {
+			// TODO
+		}
+	});
+}
