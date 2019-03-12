@@ -117,7 +117,7 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 		session.Values["ident"] = authData.Ident
 
 		if uname == s.config.TVUser {
-			session.Options.MaxAge = 3153600000 // == 100 years
+			session.Options.MaxAge = 157680000 // == 5 years
 		} else if reqData.Session > 1 {
 			session.Options.MaxAge = s.config.Sessions.RememberMaxAge
 		}

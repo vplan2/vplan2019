@@ -35,10 +35,14 @@ form.onsubmit = function (e) {
 		}
 	}
 
-	console.log(JSON.stringify(data));
+{% if config.extra.use_test_ldap %}
+	data.group = "user";
+{% endif %}
+
+	// console.log(JSON.stringify(data));
 
 	getJson(form.method, {% if config.extra.api_use_test_data %} '{{ get_url(path="authenticate-test.json") | safe }}' {% else %} form.action + '/' + _('inputUsername').value {% endif %}, JSON.stringify(data), function() {
-		console.log(this);
+		// console.log(this);
 		if(this.ident != undefined && this.ctx.cn == _('inputUsername').value) {
 			// window.location.reload(true);
 			window.location = '/';

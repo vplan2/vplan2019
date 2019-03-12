@@ -9,7 +9,6 @@ providers:
     attributes: cn, ou, givename, ln
     usessl:     false
   database:
-    file:       main.db.sqlite3
     database:   vplan2
     host:       zekro.de
     password:   acPOzHA8xmGq8Bah

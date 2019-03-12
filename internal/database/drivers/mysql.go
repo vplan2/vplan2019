@@ -457,7 +457,7 @@ func (s *MySQL) SetUserSetting(ident string, updateSetting *database.UserSetting
 	}
 
 	if updateSetting.Class == "_RESET_" {
-		settings.Theme = ""
+		settings.Class = ""
 	} else if updateSetting.Class != "" {
 		settings.Class = updateSetting.Class
 	}
