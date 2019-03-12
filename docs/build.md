@@ -8,8 +8,10 @@
   *For cloning the repository and necessary for go get*
 - [go compiler toolchain](https://golang.org/doc/install)  
   *goang compiler and other tools for go develoment*
+- [GNU make](https://www.gnu.org/software/make/)  
+  *Tool supporting building, release and testing*
 
-If you are on windows, you can install the [TDM-GCC](http://tdm-gcc.tdragon.net/download) toolchain, which includes gcc and make. Also, you should install [gitbash](https://gitforwindows.org/) and use it for executing bash scripts and the Makefile.
+Important to notice is, that scripts and the Makefile are created to be executed on Unix-like systems. If you are using Windows, cross-compile the binary by using WSL or by using [git-bash](https://gitforwindows.org/).
 
 
 ## Compiling
@@ -21,10 +23,10 @@ There are different options for compiling the binaries:
 
 Just use the `Makefile` in the root of the cloned repository:
 ```
-$ make
+$ make release
 ```
 
-Then, you will have the compiled binary file in the root directory of the repository.
+Now, the binary will be compiled as same as the frontend web files and they will be placed under a new generated directory named `./release`.
 
 
 ### Bash script

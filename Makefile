@@ -24,7 +24,7 @@ COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
 .PHONY: _make deps cleanup _finish run lint offline release \
-	frontend cloc help
+	frontend cloc help runn
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -37,7 +37,7 @@ $(WDIR):
 
 $(BIN):
 	@echo [ INFO ] building binary '$(BIN)'...
-	(env GOPATH=$(GOPATH) ${ARGS} $(GO) build -v -o $@ -ldflags "\
+	(env GOPATH=$(GOPATH) $(GO) build -v -o $@ -ldflags "\
 		-X $(PACKAGE)/internal/ldflags.AppVersion=$(TAG) \
 		-X $(PACKAGE)/internal/ldflags.AppCommit=$(COMMIT) \
 		-X $(PACKAGE)/internal/ldflags.GoVersion=$(GOVERS) \
@@ -50,10 +50,12 @@ frontend:
 	cd $(CURDIR)/web && \
 		$(ZOLA) build
 
-release: $(WDIR) deps frontend $(BIN) cleanup
+release: cleanup $(WDIR) deps frontend $(BIN) cleanup
 	@echo [ INFO ] Creating release...
 	mkdir $(CURDIR)/release
 	mv -f $(BIN) $(CURDIR)/release
+	[ "$(GOOS)" = "windows" ] && \
+		mv $(CURDIR)/release/$(BINNAME) $(CURDIR)/release/$(BINNAME).exe || true
 	cp -f -R $(CURDIR)/web/public $(CURDIR)/release/web
 
 deps:
@@ -63,8 +65,10 @@ deps:
 
 cleanup:
 	@echo [ INFO ] cleaning up...
-	rm -r -f $(GOPATH)
-	rm -r -f ./release
+	[ -d $(GOPATH) ] && rm -r -f $(GOPATH) || true
+	[ -d ./release ] && rm -r -f ./release || true
+	[ -d ./web/public ] && rm -r -f ./web/public || true
+	
 
 _finish:
 	@echo ------------------------------------------------------------------------------
@@ -79,6 +83,8 @@ run:
 		$(ZOLA) build; \
 	}
 	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/config.yml -web $(CURDIR)/web/public ${ARGS})
+
+runn: cleanup run
 
 lint:
 	$(GOLINT) ./... | $(GREP) -v vendor

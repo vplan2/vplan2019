@@ -81,6 +81,9 @@ All time formats of request data and response data must be formatted and interpr
 - [Get VPlans](#get-vplans)  
   `GET /api/vplan`
 
+- [Get News Ticker](#get-news-ticker)  
+  `GET /api/newsticker`
+
 - [Get User Settings](#get-user-settings)  
   `GET /api/settings`
 - [Set User Settings](#set-user-settings)  
@@ -191,21 +194,21 @@ Response contains a `type` value of the logins which must be interpreted as foll
   "data": [
     {
       "ident": "cn=mustermax,dc=example,dc=de",
-      "timestamp": "2019-03-07T08:40:44Z",
+      "time": "2019-03-07T08:40:44Z",
       "type": 0,
       "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0",
       "ipaddress": "123.45.67.89:53321"
     },
     {
       "ident": "cn=mustermax,dc=example,dc=de",
-      "timestamp": "2019-03-07T10:04:16Z",
+      "time": "2019-03-07T10:04:16Z",
       "type": 0,
       "useragent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
       "ipaddress": "13.37.69.111:54168"
     },
     {
       "ident": "cn=mustermax,dc=example,dc=de",
-      "timestamp": "2019-03-07T11:14:35Z",
+      "time": "2019-03-07T11:14:35Z",
       "type": 1,
       "useragent": "MyCustomWebApplicationUsingTokenSystem",
       "ipaddress": "13.37.69.111:54168"
