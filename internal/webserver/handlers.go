@@ -210,6 +210,17 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if class == "" {
+		uSettings, ok, err := s.db.GetUserSettings(ident)
+		if err != nil {
+			s.handlerAPIInternalError(w, r, err)
+			return
+		}
+		if ok {
+			class = uSettings.Class
+		}
+	}
+
 	vplans, err := s.db.GetVPlans(class, t)
 	if err != nil {
 		s.handlerAPIInternalError(w, r, err)

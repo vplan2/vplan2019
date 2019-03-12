@@ -25,6 +25,3 @@ icon_alt_text = "Some Icon"
 
 # Enable/disable usage of test data
 api_use_test_data = false
-
-fqdn = "http://localhost:8080"
-author = "industrieschule.de"

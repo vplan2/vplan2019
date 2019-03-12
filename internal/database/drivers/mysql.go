@@ -456,13 +456,13 @@ func (s *MySQL) SetUserSetting(ident string, updateSetting *database.UserSetting
 		return err
 	}
 
-	if updateSetting.Class == "reset" {
+	if updateSetting.Class == "_RESET_" {
 		settings.Theme = ""
 	} else if updateSetting.Class != "" {
 		settings.Class = updateSetting.Class
 	}
 
-	if updateSetting.Theme == "reset" {
+	if updateSetting.Theme == "_RESET_" {
 		settings.Theme = ""
 	} else if updateSetting.Theme != "" {
 		settings.Theme = updateSetting.Theme

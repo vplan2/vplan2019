@@ -371,8 +371,8 @@ Response contains a `type` value of the logins which must be interpreted as foll
 
 | Name | Type | Description |
 |------|------|-------------|
-| *`class`* | `string` | Users class name (`reset` to reset value) |
-| *`theme`* | `string` | UI theme (`reset` to reset value) |
+| *`class`* | `string` | Users class name (`_RESET_` to reset value) |
+| *`theme`* | `string` | UI theme (`_RESET_` to reset value) |
 
 #### Response
 
