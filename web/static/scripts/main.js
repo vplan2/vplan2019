@@ -3,6 +3,7 @@
  * @author mosscap
  * @version 4.0a
  */
+'use strict';
 function _(id) {
 	return document.getElementById(id);
 }
@@ -46,7 +47,7 @@ function getJson(type, url, args, callback) {
 				console.log(ajax.responseText);
 				callback.call(JSON.parse(ajax.responseText));
 			} else {
-				callback.call(JSON.parse('{"error": {"code": 425, "message": "Too Early"}}'));
+			//	callback.call(JSON.parse('{"error": {"code": 425, "message": "Too Early"}}'));
 			}
 		}
 		ajax.send(args);

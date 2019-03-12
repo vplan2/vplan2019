@@ -11,7 +11,7 @@ function initToggleMenu() {
 function debounce(func, wait) {
 	var timeout;
 
-	return function () {
+	return function() {
 		var context = this;
 		var args = arguments;
 		clearTimeout(timeout);

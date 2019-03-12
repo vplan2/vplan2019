@@ -1,7 +1,66 @@
 {% extends "blog.html" %}
 {% import "post_macros.html" as post_macros %}
 {% block title %}{{ page.title }}{% endblock title %}
+{# block content #}
+{# endblock content #}
 {% block contentscript %}
+	<script type="application/javascript">
+'use strict';
+function getSettings(method, url, args) {
+	getJson(method, url, args, function() {
+		console.log(this);
+		if(this.ident != undefined) {
+			_('theme').value = this.theme;
+			_('class').value = this.class;
+			_('edited').value = this.edited;
+		} else if(this.error != undefined) {
+			_('message').role = 'alert';
+			_('message').setAttribute('class', 'alert alert-error');
+			_('message').innerHTML = this.error.code + ' ' + this.error.message;
+			_('message').style.top = '0px';
+		} else {
+			_('message').role = 'alert';
+			_('message').setAttribute('class', 'alert alert-error');
+			_('message').innerHTML = 'Some unkown error occurred';
+			_('message').style.top = '0px';
+		}
+	});
+}
+// function setSettings(method, url, args) {
+var form = _('settings');
+form.onsubmit = function (e) {
+	// stop the regular form submission
+	e.preventDefault();
+
+	// collect the form data while iterating over the inputs
+	var data = {};
+	for (var i = 0, ii = form.length; i < ii; ++i) {
+		var input = form[i];
+		if (input.name && !input.disabled) {
+			data[input.name] = input.value;
+		}
+	}
+
+	console.log(JSON.stringify(data));
+
+	getJson(form.method, {% if config.extra.api_use_test_data %} '{{ get_url(path="settings-test.json") | safe }}' {% else %} '{{ get_url(path="api/settings") | safe }}' {% endif %}, JSON.stringify(data), function() {
+		console.log(this);
+		if(this.error == undefined) {
+			// window.location.reload(true);
+			getSettings('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="settings-test.json") | safe }}' {% else %} '{{ get_url(path="api/settings") | safe }}' {% endif %}, '');
+		} else {
+			_('message').role = 'alert';
+			_('message').setAttribute('class', 'alert alert-error');
+			_('message').innerHTML = 'Some unkown error occurred';
+			_('message').style.top = '0px';
+		}
+	});
+};
+//}
+
+getSettings('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="settings-test.json") | safe }}' {% else %} '{{ get_url(path="api/settings") | safe }}' {% endif %}, '');
+// setSettings('POST', {% if config.extra.api_use_test_data %} '{{ get_url(path="settings-test.json") | safe }}' {% else %} '{{ get_url(path="api/settings") | safe }}' {% endif %}, JSON.stringify(data));
+	</script>
 	<script type="application/javascript">
 getLoginsData('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="logins-test.json") | safe }}' {% else %} '{{ get_url(path="api/logins") | safe }}' {% endif %}, '');
 	</script>

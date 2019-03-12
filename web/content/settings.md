@@ -1,5 +1,5 @@
 +++
-title = "Settings"
+title = "Einstellungen"
 description = ""
 template = "settings.html"
 date = 2019-03-11T10:00:00
@@ -9,16 +9,21 @@ script = "scripts/logins.js"
 +++
 
 <div class="mb-3">
-	<div class="custom-control custom-radio">
-		<input id="dark-theme" name="theme" type="radio" class="custom-control-input" checked="checked">
-		<label class="custom-control-label" for="dark-theme">Dark-Theme</label>
-	</div>
-	<div class="custom-control custom-radio">
-		<input id="light-theme" name="theme" type="radio" class="custom-control-input">
-		<label class="custom-control-label" for="light-theme">Light-Theme</label>
-	</div>
-	<label for="theme">Class</label>
-	<input type="text" class="form-control" id="theme" placeholder="ITF17B" list="classes" />
+	<form class="form-signin" id="settings" method="POST" action="{{ get_url(path="api/authenticate/") | safe }}">
+		<label for="class">Klasse</label>
+		<input type="text" class="form-control" id="class" name="class" placeholder="ITF17B"/>
+		<label for="theme">Theme</label>
+		<input type="text" class="form-control" id="theme" name="theme" placeholder="dark|light" list="themes" />
+		<datalist id="themes">
+			<option value="dark">dark</option>
+			<option value="light">light</option>
+			<!-- … -->
+		</datalist>
+		<label for="edited">Editiert</label>
+		<input type="text" class="form-control" id="edited" placeholder="datetime as defined in rfc 3339" disabled />
+		<label for="submit">Senden</label>
+		<input class="btn btn-lg btn-primary btn-block" type="submit" value="Speichern" id="submit"/>
+	</form>
 </div>
 <div class="mb-3">
 	<h4 class="d-flex justify-content-between align-items-center mb-3">Anmeldungen</h4>
