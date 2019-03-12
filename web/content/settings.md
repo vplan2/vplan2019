@@ -1,11 +1,11 @@
 +++
 title = "Settings"
 description = ""
-template = "blog.html"
-date = 2017-04-01T10:00:00
+template = "settings.html"
+date = 2019-03-11T10:00:00
 
 [extra]
-# script = "scripts/logins.js"
+script = "scripts/logins.js"
 +++
 
 <div class="mb-3">

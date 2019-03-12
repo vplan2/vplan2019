@@ -19,8 +19,8 @@
 			</h2>
 			<span class="muted">{{ self::meta(page=page) }}</span>
 		</header>{% if page.summary %}
-			<div itemprop="summary">{{ page.summary | safe }}
-				<nav class="readmore"><a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a></nav>
-			</div>{% endif %}
+		<div itemprop="summary">{{ page.summary | safe }}
+			<nav class="readmore"><a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a></nav>
+		</div>{% endif %}
 	</article>
 {% endmacro page_in_list %}

@@ -6,6 +6,7 @@ date = 2019-03-04T12:00:00
 
 [extra]
 stylesheet = "style/vplan.css"
+script = "scripts/vplan.js"
 +++
 
 <div class="order-md-2 row">
