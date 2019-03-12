@@ -295,7 +295,7 @@ Response contains a `type` value of the logins which must be interpreted as foll
       "block": "B",
       "header": "Dienstag, den 05.03. 2019\r\nabwesend: ",
       "footer": "",
-      "entries": null
+      "entries": []
     }
   ]
 }

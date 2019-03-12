@@ -7,7 +7,6 @@
 | [ghodss/yaml](https://github.com/ghodss/yaml) | [MIT](https://github.com/ghodss/yaml/blob/master/LICENSE) |
 | [gorilla/mux](https://github.com/gorilla/mux) | [BSD-3-Clause](https://github.com/gorilla/mux/blob/master/LICENSE) |
 | [gorilla/sessions](https://github.com/gorilla/sessions) | [BSD-3-Clause](https://github.com/gorilla/sessions/blob/master/LICENSE) |
-| [michaeljs1990/sqlitestore](https://github.com/michaeljs1990/sqlitestore) | [MIT](https://github.com/michaeljs1990/sqlitestore/blob/master/LICENSE) |
 | [op/go-logging](https://github.com/op/go-logging) | [BSD-3-Clause](https://github.com/op/go-logging/blob/master/LICENSE) |
 | [zekroTJA/timedmap](https://github.com/zekroTJA/timedmap) | [MIT](https://github.com/zekroTJA/timedmap/blob/master/LICENCE) |
 | [golang/time](https://github.com/golang/time/) | [LICENCE](https://github.com/golang/time/blob/master/LICENSE) |
@@ -19,3 +18,8 @@
 | Dependency | Licence |
 |------------|---------|
 | [bootstrap](https://github.com/twbs/bootstrap) | [MIT](https://github.com/twbs/bootstrap/blob/master/LICENSE) |
+
+---
+
+© 2019 Justin Trommler, Richard Heidenreich, Ringo Hoffmann  
+Covered by MIT Licence.

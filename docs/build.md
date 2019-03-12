@@ -82,3 +82,8 @@ author = "industrieschule.de"
    ```
 
 7. After that, you can try testing your binary by running `vplan2_server` in the release directory.
+
+---
+
+© 2019 Justin Trommler, Richard Heidenreich, Ringo Hoffmann  
+Covered by MIT Licence.

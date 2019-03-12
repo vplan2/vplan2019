@@ -26,3 +26,8 @@ Generelle Definition und Beschreibung von im Produkt und Projekt verwendeten Beg
 
 - **ident**  
   Identifikator, welcher ein-eindeutig einem Nutzer zuordbar ist.
+
+---
+
+© 2019 Justin Trommler, Richard Heidenreich, Ringo Hoffmann  
+Covered by MIT Licence.

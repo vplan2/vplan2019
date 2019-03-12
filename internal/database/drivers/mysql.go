@@ -130,7 +130,7 @@ func (s *MySQL) Setup() error {
 		"`footer` text NOT NULL," +
 		"`published` tinyint(1) NOT NULL," +
 		"`deleted` int(1) NOT NULL DEFAULT '0'," +
-		" CONSTRAINT `fk_vplan_details_vplan` FOREIGN KEY (`vplan_id`) REFERENCES `vplan` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION );")
+		"CONSTRAINT `fk_vplan_details_vplan` FOREIGN KEY (`vplan_id`) REFERENCES `vplan` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION );")
 	m.Append(err)
 
 	// TABLE `vplan_details`
