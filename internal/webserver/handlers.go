@@ -2,6 +2,7 @@ package webserver
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/zekroTJA/vplan2019/internal/database"
@@ -195,9 +196,21 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var err error
+
 	reqQuery := r.URL.Query()
 
 	class := reqQuery.Get("class")
+	_ignoreSettings := reqQuery.Get("ignoreSettings")
+	ignoreSettings := 0
+	if _ignoreSettings != "" {
+		ignoreSettings, err = strconv.Atoi(_ignoreSettings)
+		if err != nil {
+			s.handlerAPIBadRequestError(w, r, "invalid format for ignoreSettings: must be a number")
+			return
+		}
+	}
+
 	_t := reqQuery.Get("time")
 
 	var t time.Time
@@ -210,7 +223,7 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if class == "" {
+	if class == "" && ignoreSettings <= 0 {
 		uSettings, ok, err := s.db.GetUserSettings(ident)
 		if err != nil {
 			s.handlerAPIInternalError(w, r, err)

@@ -224,10 +224,14 @@ Response contains a `type` value of the logins which must be interpreted as foll
 #### Parameters
 > Parameters must be passed by *(URL encoded)* URL parameters.
 
+> ATTENTION:  
+> If a user setting for `class` was set, parameter `class` is not passed and `ignoreSettings` is <= `0` or not passed, the set value for the user setting `class` will be used to filter result elements.
+
 | Name | Type | Description |
 |------|------|-------------|
 | *`time`* | `string` | [RFC 3339](https://tools.ietf.org/html/rfc3339) encoded timestamp after which VPlans are requested |
-| *`class`* | `string` | Name of the class of which the VPlan entries will be filtered |
+| *`class`* | `string` | Name of the class of which the VPlan entries will be filtered - this overrides the class filter in user settings |
+| *`ignoreSettings`* | `number` | If this value is set >= 1, user settings for class filter will be ignored also if `class` is not passed |
 
 #### Response
 
