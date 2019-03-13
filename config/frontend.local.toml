@@ -20,7 +20,7 @@ build_search_index = true
 
 title = "vPlan-Docs"
 book_number_chapters = true
-icon = "media/logo/256x256.png"
+icon = "/media/logo/256x256.png"
 icon_alt_text = "Some Icon"
 
 # Enable/disable usage of test data

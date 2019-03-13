@@ -12,7 +12,11 @@ function checkOverflow(element, buffer) {
     return (rect.bottom + buffer >= window.innerHeight);
 }
 
+<<<<<<< HEAD
 function createVplanEntryTVView(id, entry) {
+=======
+function createVplanEntryTVVIew(id, entry) {
+>>>>>>> 5b8693b... added tv view auto scroll for entries
 	var list_item = document.createElement("li");
 	list_item.setAttribute('class', 'list-group-item d-flex justify-content-between lh-condensed');
 
@@ -85,21 +89,33 @@ function getDataForVplanTVView(method, url, args) {
 			// COLUMN DAY 1
 			_("day0e").innerHTML = '';
 			(this.data[0].header != '') ? createVplanEntryHeader('day0e', this.data[0].header) : console.log('header field is empty');
+<<<<<<< HEAD
 			(this.data[0].entries == null) ? console.log(this.data[0].entries) : this.data[0].entries.forEach( function(entry) { createVplanEntryTVView("day0e", entry); });
+=======
+			(this.data[0].entries == null) ? console.log(this.data[0].entries) : this.data[0].entries.forEach( function(entry) { createVplanEntryTVVIew("day0e", entry); });
+>>>>>>> 5b8693b... added tv view auto scroll for entries
 			(this.data[0].footer != '') ? createVplanEntryHeader('day0e', this.data[0].footer) : console.log('footer field is empty');
 			_("day1").innerHTML = formatDate(this.data[1].date_for);
 
 			// COLUMN DAY 2
 			_("day1e").innerHTML = '';
 			(this.data[1].header != '') ? createVplanEntryHeader('day1e', this.data[1].header) : console.log('header field is empty');
+<<<<<<< HEAD
 			(this.data[1].entries == null) ? console.log(this.data[1].entries) : this.data[1].entries.forEach( function(entry) { createVplanEntryTVView("day1e", entry); });
+=======
+			(this.data[1].entries == null) ? console.log(this.data[1].entries) : this.data[1].entries.forEach( function(entry) { createVplanEntryTVVIew("day1e", entry); });
+>>>>>>> 5b8693b... added tv view auto scroll for entries
 			(this.data[1].footer != '') ? createVplanEntryHeader('day1e', this.data[1].footer) : console.log('footer field is empty');
 			_("day2").innerHTML = formatDate(this.data[2].date_for);
 
 			// COLUMN DAY 3
 			_("day2e").innerHTML = '';
 			(this.data[2].header != '') ? createVplanEntryHeader('day2e', this.data[2].header) : console.log('header field is empty');
+<<<<<<< HEAD
 			(this.data[2].entries == null) ? console.log(this.data[2].entries) : this.data[2].entries.forEach( function(entry) { createVplanEntryTVView("day2e", entry); });
+=======
+			(this.data[2].entries == null) ? console.log(this.data[2].entries) : this.data[2].entries.forEach( function(entry) { createVplanEntryTVVIew("day2e", entry); });
+>>>>>>> 5b8693b... added tv view auto scroll for entries
 			(this.data[2].footer != '') ? createVplanEntryHeader('day2e', this.data[2].footer) : console.log('footer field is empty');
 
             let timer = setInterval(function() {
