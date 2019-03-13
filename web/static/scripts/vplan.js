@@ -46,7 +46,7 @@ function createVplanEntryHeader(id, entry) {
 	return list_item;
 }
 
-function getDataForVplan(method, url, args) {
+function getDataForVplan(method, url, args, cb) {
 	getJson(method, url, args, function() {
 		// console.log(this);
 		if(this.data != undefined) {
@@ -77,8 +77,10 @@ function getDataForVplan(method, url, args) {
 		} else {
 			// TODO
 		}
+
+		if (cb) cb.call();
 	});
-	setTimeout(function() {getDataForVplan(method, url, args, tvview);}, 20000);
+	setTimeout(function() {getDataForVplan(method, url, args);}, 20000);
 }
 
 function createNewsEntry(id, entry) {

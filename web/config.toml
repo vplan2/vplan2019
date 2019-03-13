@@ -23,6 +23,8 @@ book_number_chapters = true
 icon = "/media/logo/256x256.png"
 icon_alt_text = "Some Icon"
 
+link_api_docs = "https://github.com/zekroTJA/vplan2019/blob/master/docs/api/api-docs.md"
+
 # Enable/disable usage of test data
 api_use_test_data = true
 use_test_ldap = true
