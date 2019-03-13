@@ -4,18 +4,18 @@
 {% block content %}
 	<main class="container text-center">
 		<form class="form-signin" id="login" method="POST" action="{{ get_url(path="api/authenticate/") | safe }}">
-			<img class="mb-4" src="http://mosscap.bplaced.net/projects/assets/images/icons/Warning.svg" alt="{{ config.extra.icon_alt_text }}" width="72" height="72" />
-			<h1 class="h3 mb-3 font-weight-normal">Bitte melden sie sich an</h1>
+			<img class="mb-4" src="{{ config.extra.icon }}" alt="{{ config.extra.icon_alt_text }}" width="100"  height="100" />
+			<!-- <h1 class="h3 mb-3 font-weight-normal">Bitte melden sie sich an</h1> -->
 			<label for="inputUsername" class="sr-only">Benutzer</label>
 			<input type="text" id="inputUsername" class="form-control" name="username" placeholder="Benutzer" required="" autofocus="" />
 			<label for="inputPassword" class="sr-only">Passwort</label>
 			<input type="password" id="inputPassword" class="form-control" name="password" placeholder="Passwort" required="" />
-			<div class="checkbox mb-3 custom-control custom-checkbox">
+			<div class="checkbox my-3 custom-control custom-checkbox">
 				<input type="checkbox" class="custom-control-input" id="lock" name="session" value="1" />
 				<label class="custom-control-label" for="lock">angemeldet bleiben</label>
 			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
-			<p class="mt-5 mb-3 text-muted">© 2019</p>
+			<input class="btn btn-lg btn-primary btn-block mb-5" type="submit" value="Anmelden"/>
+			<p class="text-muted" style="font-size: 12px; line-height: 17px;">© 2019 vPlan2<br/>Justin Trommler, Richard Heidenreich, Ringo Hoffmann<br/>Covered by MIT Licence.</p>
 		</form>
 	</main>
 	<script type="application/javascript">
@@ -36,7 +36,7 @@ form.onsubmit = function (e) {
 	}
 
 {% if config.extra.use_test_ldap %}
-	data.group = "user";
+	data.group = 'user';
 {% endif %}
 
 	// console.log(JSON.stringify(data));

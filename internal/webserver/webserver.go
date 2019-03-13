@@ -176,7 +176,7 @@ func (s *Server) initializeHnalders() {
 	// All other pathes will be interpreted as static file accesses.
 	// If there is no coresponding file to the path requested, an
 	// error 404 will be returned.
-	s.router.Handle("/{stuff:.+}", http.FileServer(http.Dir(s.config.StaticFiles)))
+	s.router.Handle("/{file:.+}", http.FileServer(http.Dir(s.config.StaticFiles)))
 }
 
 // jsonResponse sends a response containing the response code
