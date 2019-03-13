@@ -24,6 +24,6 @@ icon = "/media/logo/256x256.png"
 icon_alt_text = "Some Icon"
 
 # Enable/disable usage of test data
-api_use_test_data = false
+api_use_test_data = true
 use_test_ldap = true
 use_test_vplan_date = "2019-01-06T00:00:00Z"

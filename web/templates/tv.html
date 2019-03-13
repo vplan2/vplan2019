@@ -38,14 +38,9 @@ header > div {
 {% endblock content %}
 {% block contentscript %}
 	<script type="application/javascript">
-<<<<<<< HEAD
 let vplanAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}{% if config.extra.use_test_vplan_date != "" %}?time={{config.extra.use_test_vplan_date}}{% endif %}' {% endif %};
 let newstickerAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %};
 getDataForVplanTVView('GET', vplanAPIURL, '');
 getDataForNews('GET', newstickerAPIURL, '');
-=======
-getDataForVplanTVView('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}' {% endif %}, '');
-getDataForNews('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %}, '');
->>>>>>> 5b8693b... added tv view auto scroll for entries
 	</script>
 {% endblock contentscript %}
