@@ -58,6 +58,12 @@ release: cleanup $(WDIR) deps frontend $(BIN) cleanup
 		mv $(CURDIR)/release/$(BINNAME) $(CURDIR)/release/$(BINNAME).exe || true
 	cp -f -R $(CURDIR)/web/public $(CURDIR)/release/web
 
+ferun: cleanup
+	@echo [ INFO ] serving local frontend files...
+	cp $(CURDIR)/config/frontend.local.toml $(CURDIR)/web/config.toml
+	cd $(CURDIR)/web && \
+		$(ZOLA) serve
+
 deps:
 	@echo [ INFO ] getting dependencies...	
 	cd $(WDIR) && \
@@ -84,7 +90,7 @@ run:
 	}
 	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/config.yml -web $(CURDIR)/web/public ${ARGS})
 
-runn: cleanup run
+crun: cleanup run
 
 lint:
 	$(GOLINT) ./... | $(GREP) -v vendor
@@ -101,7 +107,8 @@ help:
 	@echo "  frontend : compile frontend files to ./web/public"
 	@echo "  release  : comple backend and frontend files to ./release"
 	@echo "  deps     : pulling dependencies from internet to ./vendor"
-	@echo "  cleanup  : delete ./release and ./.gopath"
+	@echo "  cleanup  : delete ./release, ./.gopath and ./web/public"
+	@echo "  crun     : runs cleanup before run"
 	@echo "  run      : compile frontend file if not existent and go run backend"
 	@echo "  lint     : go lint backend"
 	@echo "  cloc     : count lines of code"

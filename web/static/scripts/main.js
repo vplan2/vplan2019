@@ -25,6 +25,7 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
 	}
 }
 function ajaxObj(meth, url) {
+	let x;
 	if(window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
 		x = new XMLHttpRequest();
 	} else { // code for IE6, IE5
@@ -44,7 +45,7 @@ function getJson(type, url, args, callback) {
 		var ajax = ajaxObj(type, url);
 		ajax.onreadystatechange = function() {
 			if(ajaxReturn(ajax) == true) {
-				console.log(ajax.responseText);
+				// console.log(ajax.responseText);
 				callback.call(JSON.parse(ajax.responseText));
 			} else {
 			//	callback.call(JSON.parse('{"error": {"code": 425, "message": "Too Early"}}'));
