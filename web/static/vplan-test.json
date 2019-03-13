@@ -5,53 +5,53 @@
       "date_edit": "2019-02-15T10:09:12Z",
       "date_for": "2019-03-04T00:00:00Z",
       "block": "B",
-      "header": "Montag, den 04.03.2019\r\nabwesend: Hr. Wendig",
-      "footer": "ITF17B Projekt",
+      "header": "Montag, den 04.03.2019\r\nabwesend: Hr. W",
+      "footer": "ABC123B Projekt",
       "entries": [
         {
           "id": 26776,
           "vplan_id": 1408,
-          "class": "KM16B",
+          "class": "OP23E",
           "time": "1./2. ",
-          "messures": "Gr. Wendig Ausfall LFEK",
-          "responsible": "Hr. Wendig"
+          "messures": "Ausfall ESEW",
+          "responsible": "Hr. A"
         },
         {
           "id": 26778,
           "vplan_id": 1408,
-          "class": "KM16B",
+          "class": "UB32C",
           "time": "3./4.",
           "messures": "ganze Klasse LFFBZ in H1",
-          "responsible": "Hr. John"
+          "responsible": "Hr. P"
         },
         {
           "id": 26779,
           "vplan_id": 1408,
-          "class": "KM18B2",
+          "class": "LU14C",
           "time": "5. ",
           "messures": "verlegt auf 11.03.  6.",
-          "responsible": "Hr. Wendig"
+          "responsible": "Hr. F"
         },
         {
           "id": 26780,
           "vplan_id": 1408,
-          "class": "EIB17B",
+          "class": "IDA17A",
           "time": "1./2. ",
-          "messures": "im Raum 025/212",
-          "responsible": "Fr. Guthe"
+          "messures": "im Raum 331/312",
+          "responsible": "Fr. R"
         },
         {
           "id": 26781,
           "vplan_id": 1408,
-          "class": "ITF17B",
+          "class": "ITC18X",
           "time": "1./2.",
-          "messures": "Startsitzung Projekt in 203",
-          "responsible": "Fr. Köhler, Hr. Müller, Peter"
+          "messures": "Startsitzung Projekt in 331",
+          "responsible": "Fr. T, Hr. A"
         },
         {
           "id": 26782,
           "vplan_id": 1408,
-          "class": "ITF17B",
+          "class": "UP78A",
           "time": "3./4.",
           "messures": "Projekt in 203/222/224",
           "responsible": "Hr. Ciborra"
@@ -59,42 +59,26 @@
         {
           "id": 26783,
           "vplan_id": 1408,
-          "class": "ITF17B",
+          "class": "ABT18C",
           "time": "5./6.",
           "messures": "Projekt in 203/222/224",
-          "responsible": "Fr. Köhler"
+          "responsible": "Fr. L"
         },
         {
           "id": 26784,
           "vplan_id": 1408,
-          "class": "ITF17B",
+          "class": "ABT18C",
           "time": "7./8.",
           "messures": "Projekt in 203/222/224",
-          "responsible": "Hr. Müller"
+          "responsible": "Hr. Y"
         },
         {
           "id": 26785,
           "vplan_id": 1408,
-          "class": "ITS16B",
+          "class": "ABT18C",
           "time": "7.",
           "messures": "Gr. Si im Raum 200/221",
-          "responsible": "Hr. Ciborra"
-        },
-        {
-          "id": 26786,
-          "vplan_id": 1408,
-          "class": "ITF18B",
-          "time": "5./6.",
-          "messures": "im Raum 209/215",
-          "responsible": "Hr. Ciborra"
-        },
-        {
-          "id": 26787,
-          "vplan_id": 1408,
-          "class": "EBT16B",
-          "time": "7./8.",
-          "messures": "im Raum 115/219",
-          "responsible": "Hr. Dr. Bärthel"
+          "responsible": "Hr. X"
         }
       ]
     },
@@ -103,96 +87,48 @@
       "date_edit": "2019-02-26T10:47:13Z",
       "date_for": "2019-03-05T00:00:00Z",
       "block": "B",
-      "header": "Dienstag, den 05.03. 2019\r\nabwesend: ",
+      "header": "Dienstag, den 05.03. 2019\r\nabwesend: Fr. C, Hr. X",
       "footer": "",
       "entries": [
         {
           "id": 26776,
           "vplan_id": 1408,
-          "class": "KM16B",
+          "class": "AF87C",
           "time": "1./2. ",
           "messures": "Gr. Wendig Ausfall LFEK",
-          "responsible": "Hr. Wendig"
-        },
-        {
-          "id": 26778,
-          "vplan_id": 1408,
-          "class": "KM16B",
-          "time": "3./4.",
-          "messures": "ganze Klasse LFFBZ in H1",
-          "responsible": "Hr. John"
+          "responsible": "Hr. W"
         },
         {
           "id": 26779,
           "vplan_id": 1408,
-          "class": "KM18B2",
+          "class": "UL78X",
           "time": "5. ",
           "messures": "verlegt auf 11.03.  6.",
-          "responsible": "Hr. Wendig"
+          "responsible": "Hr. M"
         },
         {
           "id": 26780,
           "vplan_id": 1408,
-          "class": "EIB17B",
+          "class": "ALF78S",
           "time": "1./2. ",
           "messures": "im Raum 025/212",
-          "responsible": "Fr. Guthe"
-        },
-        {
-          "id": 26781,
-          "vplan_id": 1408,
-          "class": "ITF17B",
-          "time": "1./2.",
-          "messures": "Startsitzung Projekt in 203",
-          "responsible": "Fr. Köhler, Hr. Müller, Peter"
-        },
-        {
-          "id": 26782,
-          "vplan_id": 1408,
-          "class": "ITF17B",
-          "time": "3./4.",
-          "messures": "Projekt in 203/222/224",
-          "responsible": "Hr. Ciborra"
+          "responsible": "Fr. K"
         },
         {
           "id": 26783,
           "vplan_id": 1408,
-          "class": "ITF17B",
+          "class": "ABS48S",
           "time": "5./6.",
           "messures": "Projekt in 203/222/224",
-          "responsible": "Fr. Köhler"
+          "responsible": "Fr. S"
         },
         {
           "id": 26784,
           "vplan_id": 1408,
-          "class": "ITF17B",
+          "class": "XYZ78A",
           "time": "7./8.",
           "messures": "Projekt in 203/222/224",
-          "responsible": "Hr. Müller"
-        },
-        {
-          "id": 26785,
-          "vplan_id": 1408,
-          "class": "ITS16B",
-          "time": "7.",
-          "messures": "Gr. Si im Raum 200/221",
-          "responsible": "Hr. Ciborra"
-        },
-        {
-          "id": 26786,
-          "vplan_id": 1408,
-          "class": "ITF18B",
-          "time": "5./6.",
-          "messures": "im Raum 209/215",
-          "responsible": "Hr. Ciborra"
-        },
-        {
-          "id": 26787,
-          "vplan_id": 1408,
-          "class": "EBT16B",
-          "time": "7./8.",
-          "messures": "im Raum 115/219",
-          "responsible": "Hr. Dr. Bärthel"
+          "responsible": "Hr. V"
         }
       ]
     },
@@ -202,23 +138,23 @@
       "date_for": "2019-03-06T00:00:00Z",
       "block": "A",
       "header": "",
-      "footer": "",
+      "footer": "Nachschreibetermin in Z. 423",
       "entries": [
         {
-          "id": 26808,
-          "vplan_id": 1412,
-          "class": " ",
-          "time": " ",
-          "messures": " ",
-          "responsible": " "
+          "id": 26786,
+          "vplan_id": 1408,
+          "class": "ARF19C",
+          "time": "5./6.",
+          "messures": "im Raum 209/215",
+          "responsible": "Hr. D"
         },
         {
-          "id": 26809,
-          "vplan_id": 1412,
-          "class": " ",
-          "time": " ",
-          "messures": " ",
-          "responsible": " "
+          "id": 26787,
+          "vplan_id": 1408,
+          "class": "UFB78A",
+          "time": "7./8.",
+          "messures": "im Raum 115/219",
+          "responsible": "Hr. U"
         }
       ]
     },
