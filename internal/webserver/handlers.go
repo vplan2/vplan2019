@@ -62,6 +62,15 @@ func (s *Server) handlerFELogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// func (s *Server) handlerFileServer(w http.ResponseWriter, r *http.Request) {
+// 	// http.FileServer(http.Dir(s.config.StaticFiles))
+// 	file := mux.Vars(r)["file"]
+
+// 	os.Stat(file)
+
+// 	http.ServeFile(w, r)
+// }
+
 /////////
 // API //
 /////////

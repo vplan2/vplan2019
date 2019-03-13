@@ -46,7 +46,10 @@ function getJson(type, url, args, callback) {
 		ajax.onreadystatechange = function() {
 			if(ajaxReturn(ajax) == true) {
 				// console.log(ajax.responseText);
-				callback.call(JSON.parse(ajax.responseText));
+				let data = {};
+				if (ajax.responseText)
+					data = JSON.parse(ajax.responseText);
+				callback.call(data);
 			} else {
 			//	callback.call(JSON.parse('{"error": {"code": 425, "message": "Too Early"}}'));
 			}

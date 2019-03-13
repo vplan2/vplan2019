@@ -84,7 +84,7 @@ _finish:
 run:
 	@echo [ INFO ] Debug running...
 	[ -d $(CURDIR)/web/public ] || { \
-		cp $(CURDIR)/config/frontend.toml $(CURDIR)/web/config.toml && \
+		cp $(CURDIR)/config/frontend.debug.toml $(CURDIR)/web/config.toml && \
 		cd $(CURDIR)/web && \
 		$(ZOLA) build; \
 	}

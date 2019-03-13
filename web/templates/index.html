@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 	<title>{% block title %}Index{% endblock title %} - vPlan</title>
 	<!-- https://www.w3.org/TR/preload/#server-push-http-2 -->
+	<link rel="shortcut icon" type="image/png" href="{{ get_url(path="media/favicon.png") | safe }}"/>
 	<link rel="preload" as="style" href="{{ get_url(path="style/bootstrap.css") | safe }}"/>
 	<link rel="preload" as="worker" href="{{ get_url(path="scripts/sw.js") | safe }}"/>
 	<link rel="preload" as="fetch" href="{{ get_url(path="api/") | safe }}"/>
@@ -102,8 +103,10 @@
 {% block contentscript %}
 	<script type="application/javascript" src="{{ get_url(path="scripts/vplan.js") | safe }}"></script>
 	<script type="application/javascript">
-getDataForVplan('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}' {% endif %}, '');
-getDataForNews('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %}, '');
+let vplanAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}{% if config.extra.use_test_vplan_date != "" %}?time={{config.extra.use_test_vplan_date}}{% endif %}' {% endif %};
+let newstickerAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %};
+getDataForVplan('GET', vplanAPIURL, '');
+getDataForNews('GET', newstickerAPIURL, '');
 	</script>
 {% endblock contentscript %}
 	<!-- jQuery first, then Popper.js, then Bootstrap JS 
