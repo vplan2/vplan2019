@@ -2,7 +2,9 @@ package webserver
 
 import (
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/zekroTJA/vplan2019/internal/database"
@@ -45,11 +47,24 @@ type authTokenResposeData struct {
 ////////////////////
 
 func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
+	const indexPage = "/index.html"
+
 	file := mux.Vars(r)["file"]
 	if _, err := s.reqAuth.Authorize(r); err != nil {
 		w.Header().Set("Location", "/login")
 		w.WriteHeader(http.StatusTemporaryRedirect)
 	} else {
+
+		filepath := s.config.StaticFiles + "/" + file
+		if !strings.HasSuffix(filepath, indexPage) {
+			filepath += indexPage
+		}
+
+		if _, err = os.Stat(filepath); os.IsNotExist(err) {
+			s.handlerErrorNotFound(w, r)
+			return
+		}
+
 		http.ServeFile(w, r, s.config.StaticFiles+"/"+file)
 	}
 }
@@ -62,15 +77,6 @@ func (s *Server) handlerFELogin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusTemporaryRedirect)
 	}
 }
-
-// func (s *Server) handlerFileServer(w http.ResponseWriter, r *http.Request) {
-// 	// http.FileServer(http.Dir(s.config.StaticFiles))
-// 	file := mux.Vars(r)["file"]
-
-// 	os.Stat(file)
-
-// 	http.ServeFile(w, r)
-// }
 
 /////////
 // API //
@@ -380,6 +386,10 @@ func parseTimeRFC3339(w http.ResponseWriter, rawString string, mustNotBeEmpty bo
 ////////////////////
 // ERROR HANDLERS //
 ////////////////////
+
+func (s *Server) handlerErrorNotFound(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, s.config.StaticFiles+"/404.html")
+}
 
 func (s *Server) handlerAPIInternalError(w http.ResponseWriter, r *http.Request, err error) {
 	jsonResponse(w, http.StatusInternalServerError, apiError(http.StatusInternalServerError, err.Error()))
