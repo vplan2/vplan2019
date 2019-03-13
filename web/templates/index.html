@@ -119,19 +119,12 @@
 {% block contentscript %}
 	<script type="application/javascript" src="{{ get_url(path="scripts/vplan.js") | safe }}"></script>
 	<script type="application/javascript">
-<<<<<<< HEAD
-let vplanURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}{% if config.extra.use_test_vplan_date != "" %}?time={{config.extra.use_test_vplan_date}}{% endif %}' {% endif %};
-let newsURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %};
-getDataForVplan('GET', vplanURL, '');
-getDataForNews('GET', newsURL, '');
-=======
 let vplanAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}{% if config.extra.use_test_vplan_date != "" %}?time={{config.extra.use_test_vplan_date}}{% endif %}' {% endif %};
 let newstickerAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %};
 getDataForVplan('GET', vplanAPIURL, '', function() {
 	_('loading_banner').style.cssText = 'display: none !important';
 });
 getDataForNews('GET', newstickerAPIURL, '');
->>>>>>> dev-zekro-fe
 	</script>
 {% endblock contentscript %}
 	<!-- jQuery first, then Popper.js, then Bootstrap JS 
