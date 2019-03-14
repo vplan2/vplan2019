@@ -36,8 +36,8 @@ form.onsubmit = function (e) {
 	var data = {};
 	for (var i = 0, ii = form.length; i < ii; ++i) {
 		var input = form[i];
-		if (input.name && !input.disabled) {
-			data[input.name] = input.value;
+		if (input.name && !input.disabled && !input.readonly) {
+			data[input.name] = (input.value.length == 0)? '_RESET_' : input.value;
 		}
 	}
 
