@@ -1,9 +1,10 @@
 'use strict';
 
-const refreshTime = 10000;
+const refreshTime = 2000;
 
-var tvViewItems = [];
+var tvViewItems = {};
 var hasSwapped = false;
+var finished = {};
 
 function checkOverflow(element, buffer) {
     let rect = element.getBoundingClientRect();
@@ -33,44 +34,55 @@ function createVplanEntryTVView(id, entry) {
 
     _(id).appendChild(list_item);
     
+    if (!tvViewItems[id]) {
+        tvViewItems[id] = [];
+    }
+
     if (checkOverflow(list_item, 75)) {
         list_item.style.cssText = 'display: none !important';
-        tvViewItems.push({ i: list_item, v: false });
+        tvViewItems[id].push({ i: list_item, v: false });
     } else {
-        tvViewItems.push({ i: list_item, v: true });
+        tvViewItems[id].push({ i: list_item, v: true });
     }
 
 	return list_item;
 }
 
 function shuffleItems(cb) {
-    let nonVisible = [];
-    let visible = [];
 
-    tvViewItems.forEach(function(item) {
-        if (item.v) visible.push(item);
-        else nonVisible.push(item);
+    Object.keys(tvViewItems).forEach(function(id) {
+        let nonVisible = [];
+        let visible = [];
+
+        for (let i = 0; i < tvViewItems[id].length; i++) {
+            let item = tvViewItems[id][i];
+            if (item.v) visible.push(item);
+            else nonVisible.push(item);
+        }
+    
+        if (nonVisible.length > 0) {
+            for (let i = 0; i < visible.length; i++) {
+                let item = visible[i];
+                item.i.style.cssText = 'display: none !important';
+                tvViewItems[id].splice(tvViewItems[id].indexOf(item), 1);
+            }
+            nonVisible.forEach(function(item) {
+                item.i.style.cssText = 'display: flex !important';
+                if (checkOverflow(item.i, 75)) {
+                    item.i.style.cssText = 'display: none !important';
+                    return;
+                }
+                item.v = true;
+            });
+            hasSwapped = true;
+            return;
+        }
+
+        finished[id] = true;
     });
 
-    if (nonVisible.length > 0) {
-        for (let i = 0; i < visible.length; i++) {
-            let item = visible[i];
-            item.i.style.cssText = 'display: none !important';
-            tvViewItems.splice(tvViewItems.indexOf(item), 1);
-        }
-        nonVisible.forEach(function(item) {
-            item.i.style.cssText = 'display: flex !important';
-            if (checkOverflow(item.i, 75)) {
-                item.i.style.cssText = 'display: none !important';
-                return;
-            }
-            item.v = true;
-        });
-        hasSwapped = true;
-        return;
-    }
-
-    if (hasSwapped && cb) {
+    if (hasSwapped && cb && Object.keys(finished).length >= Object.keys(tvViewItems).length) {
+        finished = {};
         hasSwapped = false;
         cb();
     }

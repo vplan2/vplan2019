@@ -109,7 +109,7 @@
         {
           "id": 26776,
           "vplan_id": 1408,
-          "class": "KM16B",
+          "class": "GF12S",
           "time": "1./2. ",
           "messures": "Gr. Wendig Ausfall LFEK",
           "responsible": "Hr. Wendig"
@@ -117,7 +117,7 @@
         {
           "id": 26778,
           "vplan_id": 1408,
-          "class": "KM16B",
+          "class": "LK34S",
           "time": "3./4.",
           "messures": "ganze Klasse LFFBZ in H1",
           "responsible": "Hr. John"
@@ -125,7 +125,7 @@
         {
           "id": 26779,
           "vplan_id": 1408,
-          "class": "KM18B2",
+          "class": "WE12D",
           "time": "5. ",
           "messures": "verlegt auf 11.03.  6.",
           "responsible": "Hr. Wendig"
@@ -161,64 +161,6 @@
           "time": "5./6.",
           "messures": "Projekt in 203/222/224",
           "responsible": "Fr. Köhler"
-        },
-        {
-          "id": 26784,
-          "vplan_id": 1408,
-          "class": "ITF17B",
-          "time": "7./8.",
-          "messures": "Projekt in 203/222/224",
-          "responsible": "Hr. Müller"
-        },
-        {
-          "id": 26785,
-          "vplan_id": 1408,
-          "class": "ITS16B",
-          "time": "7.",
-          "messures": "Gr. Si im Raum 200/221",
-          "responsible": "Hr. Ciborra"
-        },
-        {
-          "id": 26786,
-          "vplan_id": 1408,
-          "class": "ITF18B",
-          "time": "5./6.",
-          "messures": "im Raum 209/215",
-          "responsible": "Hr. Ciborra"
-        },
-        {
-          "id": 26787,
-          "vplan_id": 1408,
-          "class": "EBT16B",
-          "time": "7./8.",
-          "messures": "im Raum 115/219",
-          "responsible": "Hr. Dr. Bärthel"
-        }
-      ]
-    },
-    {
-      "id": 1412,
-      "date_edit": "2019-03-01T12:38:51Z",
-      "date_for": "2019-03-06T00:00:00Z",
-      "block": "A",
-      "header": "",
-      "footer": "",
-      "entries": [
-        {
-          "id": 26808,
-          "vplan_id": 1412,
-          "class": " ",
-          "time": " ",
-          "messures": " ",
-          "responsible": " "
-        },
-        {
-          "id": 26809,
-          "vplan_id": 1412,
-          "class": " ",
-          "time": " ",
-          "messures": " ",
-          "responsible": " "
         }
       ]
     },
