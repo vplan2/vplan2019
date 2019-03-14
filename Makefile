@@ -24,7 +24,7 @@ COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
 .PHONY: _make deps cleanup _finish run lint offline release \
-	frontend cloc help runn
+	frontend cloc help crun release-vps
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -50,6 +50,12 @@ frontend:
 	cd $(CURDIR)/web && \
 		$(ZOLA) build
 
+frontend-vps:
+	@echo [ INFO ] building frontend...
+	cp $(CURDIR)/config/frontend.debug.toml $(CURDIR)/web/config.toml
+	cd $(CURDIR)/web && \
+		$(ZOLA) build
+
 release: cleanup $(WDIR) deps frontend $(BIN) cleanup
 	@echo [ INFO ] Creating release...
 	mkdir $(CURDIR)/release
@@ -57,6 +63,8 @@ release: cleanup $(WDIR) deps frontend $(BIN) cleanup
 	[ "$(GOOS)" = "windows" ] && \
 		mv $(CURDIR)/release/$(BINNAME) $(CURDIR)/release/$(BINNAME).exe || true
 	cp -f -R $(CURDIR)/web/public $(CURDIR)/release/web
+
+release-vps: cleanup $(WDIR) deps frontend-vps $(BIN) cleanup release
 
 ferun: cleanup
 	@echo [ INFO ] serving local frontend files...

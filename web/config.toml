@@ -20,12 +20,12 @@ build_search_index = true
 
 title = "vPlan-Docs"
 book_number_chapters = true
-icon = "/media/logo/256x256.png"
+icon = "media/logo/256x256.png"
 icon_alt_text = "Some Icon"
 
 link_api_docs = "https://github.com/zekroTJA/vplan2019/blob/master/docs/api/api-docs.md"
 
 # Enable/disable usage of test data
 api_use_test_data = false
-use_test_ldap = true
-use_test_vplan_date = "2019-01-06T00:00:00Z"
+use_test_ldap = false
+use_test_vplan_date = ""

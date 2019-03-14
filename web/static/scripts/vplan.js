@@ -101,14 +101,15 @@ function createNewsEntry(id, entry) {
 
 function getDataForNews(method, url, args) {
 	getJson(method, url, args, function() {
-		// console.log(this);
-		if(this.data != undefined) {
+		console.log(this);
+		if(this.data != undefined && this.data.length > 0) {
 			_("news").innerHTML = '';
+			_("news").style.cssText = '';
 			this.data.forEach( function(entry) { createNewsEntry("news", entry); });
 		} else if(this.error != undefined) {
 			console.log(this.error.code)
 		} else {
-			// TODO
+			_("news").style.cssText = 'display: none !important';
 		}
 	});
 	setTimeout(function() {getDataForNews(method, url, args);}, 20000);
