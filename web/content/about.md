@@ -60,5 +60,5 @@ Below, you can find the documents for how to build and install the backend and f
 
 ---
 
-© 2019 Justin Trommler, Richard Heidenreich, Ringo Hoffmann  
+© 2019 Justin Trommler, Richard Heidenreich, Ringo Hoffmann
 Covered by MIT Licence.
