@@ -93,15 +93,34 @@
         {
           "id": 26776,
           "vplan_id": 1408,
+<<<<<<< HEAD
           "class": "AF87C",
           "time": "1./2. ",
           "messures": "Gr. Wendig Ausfall LFEK",
           "responsible": "Hr. W"
+=======
+          "class": "GF12S",
+          "time": "1./2. ",
+          "messures": "Gr. Wendig Ausfall LFEK",
+          "responsible": "Hr. Wendig"
+        },
+        {
+          "id": 26778,
+          "vplan_id": 1408,
+          "class": "LK34S",
+          "time": "3./4.",
+          "messures": "ganze Klasse LFFBZ in H1",
+          "responsible": "Hr. John"
+>>>>>>> dev-zekro-fe
         },
         {
           "id": 26779,
           "vplan_id": 1408,
+<<<<<<< HEAD
           "class": "UL78X",
+=======
+          "class": "WE12D",
+>>>>>>> dev-zekro-fe
           "time": "5. ",
           "messures": "verlegt auf 11.03.  6.",
           "responsible": "Hr. M"
@@ -120,41 +139,7 @@
           "class": "ABS48S",
           "time": "5./6.",
           "messures": "Projekt in 203/222/224",
-          "responsible": "Fr. S"
-        },
-        {
-          "id": 26784,
-          "vplan_id": 1408,
-          "class": "XYZ78A",
-          "time": "7./8.",
-          "messures": "Projekt in 203/222/224",
-          "responsible": "Hr. V"
-        }
-      ]
-    },
-    {
-      "id": 1412,
-      "date_edit": "2019-03-01T12:38:51Z",
-      "date_for": "2019-03-06T00:00:00Z",
-      "block": "A",
-      "header": "",
-      "footer": "Nachschreibetermin in Z. 423",
-      "entries": [
-        {
-          "id": 26786,
-          "vplan_id": 1408,
-          "class": "ARF19C",
-          "time": "5./6.",
-          "messures": "im Raum 209/215",
-          "responsible": "Hr. D"
-        },
-        {
-          "id": 26787,
-          "vplan_id": 1408,
-          "class": "UFB78A",
-          "time": "7./8.",
-          "messures": "im Raum 115/219",
-          "responsible": "Hr. U"
+          "responsible": "Fr. Köhler"
         }
       ]
     },
