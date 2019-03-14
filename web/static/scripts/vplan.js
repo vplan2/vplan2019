@@ -11,7 +11,7 @@ function formatDate(date) {
 
 function createVplanEntry(id, entry) {
 	var list_item = document.createElement("li");
-	list_item.setAttribute('class', 'list-group-item d-flex justify-content-center lh-condensed');
+	list_item.setAttribute('class', 'list-group-item d-flex justify-content-between lh-condensed');
 
 	var desc = document.createElement("div");
 	var head = document.createElement("h6");
