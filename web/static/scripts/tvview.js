@@ -1,6 +1,6 @@
 'use strict';
 
-const refreshTime = 2000;
+const refreshTime = 10000;
 
 var tvViewItems = {};
 var hasSwapped = false;
@@ -28,7 +28,7 @@ function createVplanEntryTVView(id, entry) {
 	list_item.appendChild(desc);
 
 	var span = document.createElement("span");
-	span.setAttribute('class', 'text-muted');
+	span.setAttribute('class', 'text-muted text-right');
 	span.textContent = entry.time + ' - ' + entry.responsible;
 	list_item.appendChild(span);
 

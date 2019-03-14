@@ -11,7 +11,7 @@ function formatDate(date) {
 
 function createVplanEntry(id, entry) {
 	var list_item = document.createElement("li");
-	list_item.setAttribute('class', 'list-group-item d-flex justify-content-between lh-condensed');
+	list_item.setAttribute('class', 'list-group-item d-flex justify-content-center lh-condensed');
 
 	var desc = document.createElement("div");
 	var head = document.createElement("h6");
@@ -24,7 +24,7 @@ function createVplanEntry(id, entry) {
 	list_item.appendChild(desc);
 
 	var span = document.createElement("span");
-	span.setAttribute('class', 'text-muted');
+	span.setAttribute('class', 'text-muted text-right');
 	span.textContent = entry.time + ' - ' + entry.responsible;
 	list_item.appendChild(span);
 
