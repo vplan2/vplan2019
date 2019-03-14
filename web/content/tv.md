@@ -1,5 +1,5 @@
 +++
-title = "vPlan TV-View"
+title = "Vertretungsplan"
 description = ""
 template = "tv.html"
 date = 2019-03-04T12:00:00

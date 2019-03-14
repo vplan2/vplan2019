@@ -1,5 +1,4 @@
 {% extends "blog.html" %}
-{% import "post_macros.html" as post_macros %}
 {% block title %}{{ page.title }}{% endblock title %}
 {% block style %}
 	<style type="text/css">
@@ -7,33 +6,51 @@ main {
 	margin: 1.25rem /* 2vh 2vw */;
 }
 header {
-	margin-bottom: 3vh;
-	min-height: 20vh;
+	margin-bottom: 1em;
 	background-image: url({{ get_url(path="media/head_new.jpg") | safe }});
 	background-size: cover;
 	color: aliceblue;
 	font-weight: bold;
 }
 header > div {
-	background-color: rgba(0, 0, 0, 0.5);
-	padding: 1em 1em 2em;
+	background: rgba(0, 0, 0, 0.5);
+	background: radial-gradient(ellipse at center, rgba(0,0,0,0.65) 20%,rgba(0,0,0,0.4) 44%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	padding: .5em;
+}
+.list-group:empty {
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+.list-group:not(:empty) {
+	opacity: 1;
+}
+.list-group-item {
+	left: 0px;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+.list-group-item.hidden {
+	height: 0 !important;
+	left: 60px;
+	opacity: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
 }
 	</style>
 {% endblock style %}
 {% block content %}
 	<main class="" itemscope itemtype="http://schema.org/BlogPosting">
-		<header class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center rounded-lg">
+		<header class="px-3 py-3 mx-auto text-center rounded-lg">
 			<div>
 				<h1 itemprop="headline">{{ page.title }}</h1>
-				<span class="muted">{{ post_macros::meta(page=page) }}</span>
+				<span class="muted" id="lastUpdated"></span>
 			</div>
 		</header>
 		<div itemprop="articleBody">
 		{{ page.content | safe }}
 		</div>
-		<footer>{% if page.author %}
-			<p class="muted">Published by {{ page.author }}</p>{% endif %}
-		</footer>
 	</main>
 {% endblock content %}
 {% block contentscript %}

@@ -4,7 +4,7 @@
 {% block content %}
 	<main class="container text-center">
 		<form class="form-signin" id="login" method="POST" action="{{ get_url(path="api/authenticate/") | safe }}">
-			<img class="mb-4" src="http://mosscap.bplaced.net/projects/assets/images/icons/Warning.svg" alt="{{ config.extra.icon_alt_text }}" width="72" height="72" />
+			<img class="mb-4" src="{{ config.extra.icon }}" alt="{{ config.extra.icon_alt_text }}" width="72" height="72" />
 			<h1 class="h3 mb-3 font-weight-normal">Bitte melden sie sich an</h1>
 			<label for="inputUsername" class="sr-only">Benutzer</label>
 			<input type="text" id="inputUsername" class="form-control" name="username" placeholder="Benutzer" required="" autofocus="" />

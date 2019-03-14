@@ -197,32 +197,6 @@
       ]
     },
     {
-      "id": 1412,
-      "date_edit": "2019-03-01T12:38:51Z",
-      "date_for": "2019-03-06T00:00:00Z",
-      "block": "A",
-      "header": "",
-      "footer": "",
-      "entries": [
-        {
-          "id": 26808,
-          "vplan_id": 1412,
-          "class": " ",
-          "time": " ",
-          "messures": " ",
-          "responsible": " "
-        },
-        {
-          "id": 26809,
-          "vplan_id": 1412,
-          "class": " ",
-          "time": " ",
-          "messures": " ",
-          "responsible": " "
-        }
-      ]
-    },
-    {
       "id": 1397,
       "date_edit": "2019-01-18T09:17:47Z",
       "date_for": "2019-03-08T00:00:00Z",
