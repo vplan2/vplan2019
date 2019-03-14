@@ -64,7 +64,13 @@ release: cleanup $(WDIR) deps frontend $(BIN) cleanup
 		mv $(CURDIR)/release/$(BINNAME) $(CURDIR)/release/$(BINNAME).exe || true
 	cp -f -R $(CURDIR)/web/public $(CURDIR)/release/web
 
-release-vps: cleanup $(WDIR) deps frontend-vps $(BIN) cleanup release
+release-vps: cleanup $(WDIR) deps frontend-vps $(BIN) cleanup
+	@echo [ INFO ] Creating release...
+	mkdir $(CURDIR)/release
+	mv -f $(BIN) $(CURDIR)/release
+	[ "$(GOOS)" = "windows" ] && \
+		mv $(CURDIR)/release/$(BINNAME) $(CURDIR)/release/$(BINNAME).exe || true
+	cp -f -R $(CURDIR)/web/public $(CURDIR)/release/web
 
 ferun: cleanup
 	@echo [ INFO ] serving local frontend files...
@@ -80,7 +86,6 @@ deps:
 cleanup:
 	@echo [ INFO ] cleaning up...
 	[ -d $(GOPATH) ] && rm -r -f $(GOPATH) || true
-	[ -d ./release ] && rm -r -f ./release || true
 	[ -d ./web/public ] && rm -r -f ./web/public || true
 	
 
