@@ -1,6 +1,9 @@
 +++
 title = "Zola Doc"
 weight = 1
+
+template = "docs-section.html"
+page_template = "docs-page.html"
 +++
 
 Pages and sections are actually very similar.

@@ -3,6 +3,9 @@ title = "Frontend"
 weight = 4
 sort_by = "weight"
 insert_anchor_links = "right"
+
+template = "docs-section.html"
+page_template = "docs-page.html"
 +++
 
 ## System:

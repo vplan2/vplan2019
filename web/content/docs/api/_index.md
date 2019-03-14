@@ -3,6 +3,9 @@ title = "(REST)-API"
 weight = 2
 sort_by = "weight"
 insert_anchor_links = "right"
+
+template = "docs-section.html"
+page_template = "docs-page.html"
 +++
 
 <!-- TODO: create API overview -->
