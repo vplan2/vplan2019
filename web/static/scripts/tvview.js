@@ -12,11 +12,7 @@ function checkOverflow(element, buffer) {
     return (rect.bottom + buffer >= window.innerHeight);
 }
 
-<<<<<<< HEAD
 function createVplanEntryTVView(id, entry) {
-=======
-function createVplanEntryTVVIew(id, entry) {
->>>>>>> 5b8693b... added tv view auto scroll for entries
 	var list_item = document.createElement("li");
 	list_item.setAttribute('class', 'list-group-item d-flex justify-content-between lh-condensed');
 

@@ -99,7 +99,7 @@ cloc:
 	@echo [ INFO ] counting lines of code...
 	$(CLOC) \
 		--exclude-dir=vendor,docs,public \
-		--exclude-lang=JSON,Markdown,YAML,XML,TOML ./
+		--exclude-lang=JSON,Markdown,YAML,XML,TOML,Sass ./
 
 help:
 	@echo "Available recipes:"
