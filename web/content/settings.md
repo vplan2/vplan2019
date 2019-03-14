@@ -18,11 +18,13 @@ script = "scripts/logins.js"
 			<option value="ITF17C">ITF17C</option>
 			<!-- … -->
 		</datalist>
+		<!--
 		<label for="theme">Theme</label>
 		<select class="form-control" id="theme" name="theme">
 			<option value="dark">dark</option>
-			<option value="light">light</option>
+			<option value="light" selected>light</option>
 		</select>
+		-->
 		<label for="edited">Editiert</label>
 		<input type="text" class="form-control" id="edited" placeholder="datetime as defined in rfc 3339" readonly/>
 		<label for="submit">Senden</label>
