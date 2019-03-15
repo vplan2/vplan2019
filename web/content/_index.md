@@ -1,5 +1,5 @@
 +++
-title = "Some Sample Code"
+title = "Index"
 description = ""
 template = "index.html"
 date = 2017-04-01T10:00:00

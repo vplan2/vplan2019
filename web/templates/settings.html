@@ -15,12 +15,12 @@ function getSettings(method, url, args) {
 			_('edited').value = this.edited;
 		} else if(this.error != undefined) {
 			_('message').role = 'alert';
-			_('message').setAttribute('class', 'alert alert-error');
+			_('message').setAttribute('class', 'alert alert-error border-0');
 			_('message').innerHTML = this.error.code + ' ' + this.error.message;
 			_('message').style.top = '0px';
 		} else {
 			_('message').role = 'alert';
-			_('message').setAttribute('class', 'alert alert-error');
+			_('message').setAttribute('class', 'alert alert-error border-0');
 			_('message').innerHTML = 'Some unkown error occurred';
 			_('message').style.top = '0px';
 		}
@@ -48,13 +48,16 @@ form.onsubmit = function (e) {
 		if(this.error == undefined) {
 			// window.location.reload(true);
 			_('message').role = 'alert';
-			_('message').setAttribute('class', 'alert alert-success');
+			_('message').setAttribute('class', 'alert alert-success border-0');
 			_('message').innerHTML = 'Einstellungen wurden gespeichert.';
 			_('message').style.top = '0px';
+			setTimeout(function() {
+				_('message').innerHTML = '';
+			}, 6000);
 			getSettings('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="settings-test.json") | safe }}' {% else %} '{{ get_url(path="api/settings") | safe }}' {% endif %}, '');
 		} else {
 			_('message').role = 'alert';
-			_('message').setAttribute('class', 'alert alert-error');
+			_('message').setAttribute('class', 'alert alert-error border-0');
 			_('message').innerHTML = 'Some unkown error occurred';
 			_('message').style.top = '0px';
 		}
