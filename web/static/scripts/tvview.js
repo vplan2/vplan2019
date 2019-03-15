@@ -32,60 +32,60 @@ function createVplanEntryTVView(id, entry) {
 	span.textContent = entry.time + ' - ' + entry.responsible;
 	list_item.appendChild(span);
 
-    _(id).appendChild(list_item);
-    
-    if (!tvViewItems[id]) {
-        tvViewItems[id] = [];
-    }
+	_(id).appendChild(list_item);
 
-    if (checkOverflow(list_item, 75)) {
-        list_item.style.cssText = 'display: none !important';
-        tvViewItems[id].push({ i: list_item, v: false });
-    } else {
-        tvViewItems[id].push({ i: list_item, v: true });
-    }
+	if (!tvViewItems[id]) {
+		tvViewItems[id] = [];
+	}
+
+	if (checkOverflow(list_item, 75)) {
+		list_item.classList.add('hidden');
+		tvViewItems[id].push({ i: list_item, v: false });
+	} else {
+		tvViewItems[id].push({ i: list_item, v: true });
+	}
 
 	return list_item;
 }
 
 function shuffleItems(cb) {
 
-    Object.keys(tvViewItems).forEach(function(id) {
-        let nonVisible = [];
-        let visible = [];
+	Object.keys(tvViewItems).forEach(function(id) {
+		let nonVisible = [];
+		let visible = [];
 
-        for (let i = 0; i < tvViewItems[id].length; i++) {
-            let item = tvViewItems[id][i];
-            if (item.v) visible.push(item);
-            else nonVisible.push(item);
-        }
-    
-        if (nonVisible.length > 0) {
-            for (let i = 0; i < visible.length; i++) {
-                let item = visible[i];
-                item.i.style.cssText = 'display: none !important';
-                tvViewItems[id].splice(tvViewItems[id].indexOf(item), 1);
-            }
-            nonVisible.forEach(function(item) {
-                item.i.style.cssText = 'display: flex !important';
-                if (checkOverflow(item.i, 75)) {
-                    item.i.style.cssText = 'display: none !important';
-                    return;
-                }
-                item.v = true;
-            });
-            hasSwapped = true;
-            return;
-        }
+		for (let i = 0; i < tvViewItems[id].length; i++) {
+			let item = tvViewItems[id][i];
+			if (item.v) visible.push(item);
+			else nonVisible.push(item);
+		}
 
-        finished[id] = true;
-    });
+		if (nonVisible.length > 0) {
+			for (let i = 0; i < visible.length; i++) {
+				let item = visible[i];
+				item.i.classList.add('hidden');
+				tvViewItems[id].splice(tvViewItems[id].indexOf(item), 1);
+			}
+			nonVisible.forEach(function(item) {
+				item.i.classList.remove('hidden');
+				if (checkOverflow(item.i, 75)) {
+					item.i.classList.add('hidden');
+					return;
+				}
+				item.v = true;
+			});
+			hasSwapped = true;
+			return;
+		}
 
-    if (hasSwapped && cb && Object.keys(finished).length >= Object.keys(tvViewItems).length) {
-        finished = {};
-        hasSwapped = false;
-        cb();
-    }
+		finished[id] = true;
+	});
+
+	if (hasSwapped && cb && Object.keys(finished).length >= Object.keys(tvViewItems).length) {
+		finished = {};
+		hasSwapped = false;
+		cb();
+	}
 }
 
 function getDataForVplanTVView(method, url, args) {

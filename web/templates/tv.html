@@ -18,30 +18,10 @@ header > div {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 	padding: .5em;
 }
-.list-group:empty {
-	opacity: 0;
-	transition: opacity 0.3s ease;
-}
-.list-group:not(:empty) {
-	opacity: 1;
-}
-.list-group-item {
-	left: 0px;
-	opacity: 1;
-	transition: opacity 0.3s ease;
-}
-.list-group-item.hidden {
-	height: 0 !important;
-	left: 60px;
-	opacity: 0;
-	padding: 0;
-	border: 0;
-	overflow: hidden;
-}
 	</style>
 {% endblock style %}
 {% block content %}
-	<main class="" itemscope itemtype="http://schema.org/BlogPosting">
+	<main class="mb-0" itemscope itemtype="http://schema.org/BlogPosting">
 		<header class="px-3 py-3 mx-auto text-center rounded-lg">
 			<div>
 				<h1 itemprop="headline">{{ page.title }}</h1>

@@ -3,11 +3,11 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
 
 	<title>{% block title %}{{ config.title }} - {{ config.extra.title }}{% endblock title %}</title>{% block js %}{% endblock js %}
-	<link type="text/css" rel="stylesheet" href="{{ get_url(path="style/bootstrap.css") | safe }}"/> <!-- integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" -->
-	{% block css %}<link rel="stylesheet" type="text/css" href="{{ get_url(path="style/book.css") | safe }}"/>{% endblock css %}
+	<link type="text/css" rel="stylesheet" href="{{ get_url(path="style/bootstrap.css") | safe }}"/> <!-- integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" -->{% block css %}
+	<link rel="stylesheet" type="text/css" href="{{ get_url(path="style/book.css") | safe }}"/>{% endblock css %}
 	{% block extra_head %}<style type="text/css">
 .active {
 	color: red !important;
@@ -86,7 +86,7 @@
 {% block js_body %}
 	{% if config.build_search_index %}<script type="application/javascript" src="{{ get_url(path="elasticlunr.min.js") | safe }}"></script>
 	<script type="application/javascript" src="{{ get_url(path="search_index.en.js") | safe }}"></script>{% endif %}
-	<script type="application/javascript" src="{{ get_url(path="script/book.js") | safe }}"></script>
+	<script type="application/javascript" src="{{ get_url(path="scripts/book.js") | safe }}"></script>
 {% endblock js_body %}
 </body>
 </html>

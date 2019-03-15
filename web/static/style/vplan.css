@@ -1,21 +1,28 @@
 html {
 	font-size: 14px;
 }
-
 @media (min-width: 768px) {
 	html {
 		font-size: 16px;
 	}
 }
-
-.container {
-	max-width: 960px;
+.list-group:empty {
+	opacity: 0;
+	transition: opacity 0.3s ease;
 }
-
-.pricing-header {
-	max-width: 700px;
+.list-group:not(:empty) {
+	opacity: 1;
 }
-
-.card-deck .card {
-	min-width: 220px;
+.list-group-item {
+	left: 0px;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+.list-group-item.hidden {
+	height: 0 !important;
+	left: 60px;
+	opacity: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
 }
