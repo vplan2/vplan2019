@@ -24,7 +24,7 @@ function createVplanEntry(id, entry) {
 	list_item.appendChild(desc);
 
 	var span = document.createElement("span");
-	span.setAttribute('class', 'text-muted');
+	span.setAttribute('class', 'text-muted text-right');
 	span.textContent = entry.time + ' - ' + entry.responsible;
 	list_item.appendChild(span);
 
@@ -50,23 +50,22 @@ function getDataForVplan(method, url, args, cb) {
 	getJson(method, url, args, function() {
 		// console.log(this);
 		if(this.data != undefined) {
-			_("day0").innerHTML = formatDate(this.data[0].date_for);
-
 			// COLUMN DAY 1
+			_("day0").innerHTML = formatDate(this.data[0].date_for);
 			_("day0e").innerHTML = '';
 			(this.data[0].header != '') ? createVplanEntryHeader('day0e', this.data[0].header) : console.log('header field is empty');
 			(this.data[0].entries == null) ? console.log(this.data[0].entries) : this.data[0].entries.forEach( function(entry) { createVplanEntry("day0e", entry); });
 			(this.data[0].footer != '') ? createVplanEntryHeader('day0e', this.data[0].footer) : console.log('footer field is empty');
-			_("day1").innerHTML = formatDate(this.data[1].date_for);
 
 			// COLUMN DAY 2
+			_("day1").innerHTML = formatDate(this.data[1].date_for);
 			_("day1e").innerHTML = '';
 			(this.data[1].header != '') ? createVplanEntryHeader('day1e', this.data[1].header) : console.log('header field is empty');
 			(this.data[1].entries == null) ? console.log(this.data[1].entries) : this.data[1].entries.forEach( function(entry) { createVplanEntry("day1e", entry); });
 			(this.data[1].footer != '') ? createVplanEntryHeader('day1e', this.data[1].footer) : console.log('footer field is empty');
-			_("day2").innerHTML = formatDate(this.data[2].date_for);
 
 			// COLUMN DAY 3
+			_("day2").innerHTML = formatDate(this.data[2].date_for);
 			_("day2e").innerHTML = '';
 			(this.data[2].header != '') ? createVplanEntryHeader('day2e', this.data[2].header) : console.log('header field is empty');
 			(this.data[2].entries == null) ? console.log(this.data[2].entries) : this.data[2].entries.forEach( function(entry) { createVplanEntry("day2e", entry); });
@@ -102,14 +101,15 @@ function createNewsEntry(id, entry) {
 
 function getDataForNews(method, url, args) {
 	getJson(method, url, args, function() {
-		// console.log(this);
-		if(this.data != undefined) {
+		console.log(this);
+		if(this.data != undefined && this.data.length > 0) {
 			_("news").innerHTML = '';
+			_("news").style.cssText = '';
 			this.data.forEach( function(entry) { createNewsEntry("news", entry); });
 		} else if(this.error != undefined) {
 			console.log(this.error.code)
 		} else {
-			// TODO
+			_("news").style.cssText = 'display: none !important';
 		}
 	});
 	setTimeout(function() {getDataForNews(method, url, args);}, 20000);

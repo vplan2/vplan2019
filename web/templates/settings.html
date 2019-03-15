@@ -36,8 +36,8 @@ form.onsubmit = function (e) {
 	var data = {};
 	for (var i = 0, ii = form.length; i < ii; ++i) {
 		var input = form[i];
-		if (input.name && !input.disabled) {
-			data[input.name] = input.value;
+		if (input.name && !input.disabled && !input.readonly) {
+			data[input.name] = (input.value.length == 0)? '_RESET_' : input.value;
 		}
 	}
 
@@ -47,6 +47,10 @@ form.onsubmit = function (e) {
 		console.log(this);
 		if(this.error == undefined) {
 			// window.location.reload(true);
+			_('message').role = 'alert';
+			_('message').setAttribute('class', 'alert alert-success');
+			_('message').innerHTML = 'Einstellungen wurden gespeichert.';
+			_('message').style.top = '0px';
 			getSettings('GET', {% if config.extra.api_use_test_data %} '{{ get_url(path="settings-test.json") | safe }}' {% else %} '{{ get_url(path="api/settings") | safe }}' {% endif %}, '');
 		} else {
 			_('message').role = 'alert';

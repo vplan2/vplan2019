@@ -1,16 +1,16 @@
 'use strict';
 
-const refreshTime = 2000;
+const refreshTime = 10000;
 
 var tvViewItems = {};
 var hasSwapped = false;
 var finished = {};
 
 function checkOverflow(element, buffer) {
-    let rect = element.getBoundingClientRect();
-    if (!rect)
-        return false;
-    return (rect.bottom + buffer >= window.innerHeight);
+	let rect = element.getBoundingClientRect();
+	if (!rect)
+		return false;
+	return (rect.bottom + buffer >= window.innerHeight);
 }
 
 function createVplanEntryTVView(id, entry) {
@@ -28,7 +28,7 @@ function createVplanEntryTVView(id, entry) {
 	list_item.appendChild(desc);
 
 	var span = document.createElement("span");
-	span.setAttribute('class', 'text-muted');
+	span.setAttribute('class', 'text-muted text-right');
 	span.textContent = entry.time + ' - ' + entry.responsible;
 	list_item.appendChild(span);
 
@@ -92,34 +92,33 @@ function getDataForVplanTVView(method, url, args) {
 	getJson(method, url, args, function() {
 		// console.log(this);
 		if(this.data != undefined) {
-			_("day0").innerHTML = formatDate(this.data[0].date_for);
-
 			// COLUMN DAY 1
+			_("day0").innerHTML = formatDate(this.data[0].date_for);
 			_("day0e").innerHTML = '';
 			(this.data[0].header != '') ? createVplanEntryHeader('day0e', this.data[0].header) : console.log('header field is empty');
 			(this.data[0].entries == null) ? console.log(this.data[0].entries) : this.data[0].entries.forEach( function(entry) { createVplanEntryTVView("day0e", entry); });
 			(this.data[0].footer != '') ? createVplanEntryHeader('day0e', this.data[0].footer) : console.log('footer field is empty');
-			_("day1").innerHTML = formatDate(this.data[1].date_for);
 
 			// COLUMN DAY 2
+			_("day1").innerHTML = formatDate(this.data[1].date_for);
 			_("day1e").innerHTML = '';
 			(this.data[1].header != '') ? createVplanEntryHeader('day1e', this.data[1].header) : console.log('header field is empty');
 			(this.data[1].entries == null) ? console.log(this.data[1].entries) : this.data[1].entries.forEach( function(entry) { createVplanEntryTVView("day1e", entry); });
 			(this.data[1].footer != '') ? createVplanEntryHeader('day1e', this.data[1].footer) : console.log('footer field is empty');
-			_("day2").innerHTML = formatDate(this.data[2].date_for);
 
 			// COLUMN DAY 3
+			_("day2").innerHTML = formatDate(this.data[2].date_for);
 			_("day2e").innerHTML = '';
 			(this.data[2].header != '') ? createVplanEntryHeader('day2e', this.data[2].header) : console.log('header field is empty');
 			(this.data[2].entries == null) ? console.log(this.data[2].entries) : this.data[2].entries.forEach( function(entry) { createVplanEntryTVView("day2e", entry); });
 			(this.data[2].footer != '') ? createVplanEntryHeader('day2e', this.data[2].footer) : console.log('footer field is empty');
 
-            let timer = setInterval(function() {
-                shuffleItems(function() {
-                    getDataForVplanTVView(method, url, args);
-                    clearInterval(timer);
-                });
-            }, refreshTime);
+			let timer = setInterval(function() {
+				shuffleItems(function() {
+					getDataForVplanTVView(method, url, args);
+					clearInterval(timer);
+				});
+			}, refreshTime);
 
 		} else if(this.error != undefined) {
 			console.log(this.error.code)
