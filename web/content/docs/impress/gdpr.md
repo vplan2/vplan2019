@@ -18,10 +18,14 @@ Datenschutzgrundverordnung (DSGVO).
 
 ### Verantwortlicher
 
-<span class="tsmcontroller">Vorname, Nachname  
-Platz der Opfer des Faschismus 1  
-09001 Chemnitz, Deutschland  
-bsz.c1@industrieschule.de</span>
+<span class="tsmcontroller">
+Berufliches Schulzentrum für Technik I<br/>
+Industrieschule Chemnitz<br/>
+Postanschrift: Park der Opfer des Faschismus 1, 09111 Chemnitz<br/>
+Telefon: 0371 488-2600<br/>
+Fax: 0371 488-2699<br/>
+E-Mail: bsz.c1@industrieschule.de
+</span>
 
 ### Arten der verarbeiteten Daten
 
