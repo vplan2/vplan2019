@@ -1,31 +1,32 @@
-title = "vPlan"
-
-description = "A book theme"
-
-# The URL the site will be built for
-base_url = "/"
-
-# Whether to automatically compile all Sass files in the sass directory
-compile_sass = true
-
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = true
-
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
+### DO NOT CHANGE THIS VALUES ###
+title               = "vPlan"   #
+base_url            = "/"       #
+compile_sass        = true      #
+highlight_code      = true      #
+build_search_index  = true      #
+#################################
 
 [extra]
-# Put all your custom variables here
-
-title = "vPlan-Docs"
+# Docs title
+title = "vPlan2 Docs"
+# Enable numbers on docs characters
 book_number_chapters = true
+# Location of the icon showed in avbar, 
+# footer, login and logout screen
 icon = "/media/logo/256x256.png"
+# Icon hover / alt text
 icon_alt_text = "Some Icon"
 
+# Link to the API documentation
 link_api_docs = "https://github.com/zekroTJA/vplan2019/blob/master/docs/api/api-docs.md"
 
-# Enable/disable usage of test data
+############# DEBUG VARISABLES ##############
+# Use static json files instead of boddies
+# of HTTP requests
 api_use_test_data = false
+# Enable some tweaks using the testing
+# LDAP server
 use_test_ldap = true
+# Custom timestamp from which data will be
+# polled. Set this to "" to use today state.
 use_test_vplan_date = "2019-01-06T00:00:00Z"
