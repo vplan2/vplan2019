@@ -20,15 +20,15 @@ import (
 
 var (
 	flagConfig     = flag.String("c", "config.yml", "location of the config file")
-	flagWebStatics = flag.String("web", "./", "location of the static web files ('web' folder)")
+	flagWebStatics = flag.String("web", "./web", "location of the static web files")
 	flagVersion    = flag.Bool("v", false, "display version and build information")
 )
 
 func main() {
 	flags()
 
-	database := new(dbDrivers.SQLite)
-	authProvider := new(authDrivers.DebugAuthProvider)
+	database := new(dbDrivers.MySQL)
+	authProvider := new(authDrivers.LDAPAuthProvider)
 
 	//////////////////
 	// LOGGER SETUP //
@@ -49,6 +49,7 @@ func main() {
 		return yaml.Marshal(v)
 	}
 	// try to laod existing config
+	logger.Info("loading config...")
 	cfg, err := config.Open(*flagConfig, unmarshalFunc)
 	// If it was a file not found error, try to create a new config file
 	if os.IsNotExist(err) {
@@ -76,6 +77,7 @@ func main() {
 	// DATABASE SETUP //
 	////////////////////
 
+	logger.Info("connecting to database...")
 	err = database.Connect(cfg.Providers.Database)
 	if err != nil {
 		logger.Fatal("Failed connecting to database: ", err)
@@ -90,6 +92,7 @@ func main() {
 	// AUTH PROVIDER //
 	///////////////////
 
+	logger.Info("connecting to auth provider...")
 	err = authProvider.Connect(cfg.Providers.Authorization)
 	if err != nil {
 		logger.Fatal("Failed connecting to auth provider: ", err)
@@ -101,7 +104,7 @@ func main() {
 
 	// output web server starting info and warn if web server was
 	// started in non TLS mode
-	logger.Info("Starting web server on %s...", cfg.WebServer.Addr)
+	logger.Info("starting web server on %s...", cfg.WebServer.Addr)
 	if cfg.WebServer.TLS == nil {
 		logger.Warning("ATTENTION: THE WEB SERVER IS NOT RUNNING IN TLS MODE")
 	}
@@ -125,7 +128,7 @@ func flags() {
 	flag.Parse()
 	if *flagVersion {
 		fmt.Printf("vplan2019 server application\n"+
-			"© 2019 Richard Heidenreich & Ringo Hoffmann\n"+
+			"© 2019 Richard Heidenreich, Ringo Hoffmann & Justin Trommler\n"+
 			"version:    %s\n"+
 			"commit:     %s\n"+
 			"built with: %s\n",

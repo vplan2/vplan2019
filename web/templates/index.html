@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+	<title>{% block title %}Index{% endblock title %} - vPlan</title>
+	<!-- https://www.w3.org/TR/preload/#server-push-http-2 -->
+	<link rel="shortcut icon" type="image/png" href="{{ get_url(path="media/favicon.png") | safe }}"/>
+	<link rel="preload" as="style" href="{{ get_url(path="style/bootstrap.css") | safe }}"/>
+	<link rel="preload" as="worker" href="{{ get_url(path="scripts/sw.js") | safe }}"/>
+	<link rel="preload" as="fetch" href="{{ get_url(path="api/") | safe }}"/>
+
+	<!-- Bootstrap CSS -->
+	<link type="text/css" rel="stylesheet" href="{{ get_url(path="style/bootstrap.css") | safe }}"/> <!-- integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" -->
+	<!-- Custom CSS for this site -->
+{% block links %}{% if page.extra.stylesheet %}
+	<link type="text/css" rel="stylesheet" href="{{ get_url(path=page.extra.stylesheet) | safe }}"/>{% endif %}
+{% endblock links %}
+	<link rel="stylesheet" type="text/css" href="https://code.cdn.mozilla.net/fonts/fira.css"/>
+	<style type="text/css">
+img {
+	max-width: 100%;
+}
+.bd-placeholder-img {
+	font-size: 1.125rem;
+	text-anchor: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+@media (min-width: 768px) {
+	.bd-placeholder-img-lg {
+		font-size: 3.5rem;
+	}
+}
+.message {
+	margin: 0 auto;
+}
+#message {
+	margin: 0 auto;
+	transition: .5s;
+	top: -10em;
+}
+#message:empty {
+	display: none;
+}
+img {
+    max-width: 100%;
+}
+.col {
+	min-width: 240px;
+	max-width: 100% !important;
+}
+.loading-circle {
+	border: 4px solid #cfcfcf;
+	border-top: 4px solid #0097fc;
+	border-radius: 50%;
+	width: 36px;
+	height: 36px;
+	animation: spin 1s cubic-bezier(.76,.18,.27,.89) infinite;
+}
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+	</style>{% block style %}{% endblock style %}
+	<script type="application/javascript" src="{{ get_url(path="scripts/tvview.js") | safe }}"></script>
+	<script type="application/javascript" src="{{ get_url(path="scripts/main.js") | safe }}"></script>
+</head>
+<body>
+	<div class="form-signin message">
+		<div class="alert alert-danger rounded-0 form-signin" id="message"></div>
+	</div>
+	<noscript>
+	<div class="alert alert-danger rounded-0 clearfix message" role="alert">
+		Um den vollen Funktionsumfang dieser Webseite zu erfahren, benötigen Sie JavaScript. Hier finden Sie die <a href="https://www.enable-javascript.com/de/">Anleitung wie Sie JavaScript in Ihrem Browser einschalten</a>.
+	</div>
+	</noscript>
+{% block content %}
+{% include "navigation.html" %}
+	<main class="container" itemscope itemtype="http://schema.org/BlogPosting">
+		<header class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+			<h1 itemprop="headline">vPlan</h1>
+			<span class="muted"></span>
+		</header>
+		<div id="loading_banner" class="d-flex my-5 mx-auto justify-content-center">
+			<div class="loading-circle mr-3 mt-1"></div>
+			<h2 class="mb-4">Lade daten...</h2>
+		</div>
+		<div itemprop="articleBody">
+			<div class="order-md-3 row">
+				<div class="mb-3 col">
+					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day0">Heute</span></h2>
+					<ul class="list-group mb-3" id="day0e">
+					</ul>
+				</div>
+				<div class="mb-3 col">
+					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day1">Morgen</span></h2>
+					<ul class="list-group mb-3" id="day1e">
+					</ul>
+				</div>
+				<div class="mb-3 col">
+					<h2 class="d-flex justify-content-between align-items-center mb-3"><span class="text-muted" id="day2">Übermorgen</span></h2>
+					<ul class="list-group mb-3" id="day2e">
+					</ul>
+				</div>
+				<div class="mb-3 col" id="news">
+					<div class="alert alert-secondary" role="alert">
+					</div>
+					<div class="alert alert-secondary" role="alert">
+					</div>
+					<div class="alert alert-secondary" role="alert">
+					</div>
+				</div>
+			</div>
+		</div>
+		<footer>
+		</footer>
+	</main>
+{% include "footer.html" %}
+{% endblock content %}{% if page.extra.script %}
+	<script type="application/javascript" src="{{ get_url(path=page.extra.script) | safe }}"></script>{% endif %}
+{% block contentscript %}
+	<script type="application/javascript" src="{{ get_url(path="scripts/vplan.js") | safe }}"></script>
+	<script type="application/javascript">
+let vplanAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="vplan-test.json") | safe }}' {% else %} '{{ get_url(path="api/vplan") | safe }}{% if config.extra.use_test_vplan_date != "" %}?time={{config.extra.use_test_vplan_date}}{% endif %}' {% endif %};
+let newstickerAPIURL = {% if config.extra.api_use_test_data %} '{{ get_url(path="newsticker-test.json") | safe }}' {% else %} '{{ get_url(path="api/newsticker") | safe }}' {% endif %};
+getDataForVplan('GET', vplanAPIURL, '', function() {
+	_('loading_banner').style.cssText = 'display: none !important';
+});
+getDataForNews('GET', newstickerAPIURL, '');
+	</script>
+{% endblock contentscript %}
+	<!-- jQuery first, then Popper.js, then Bootstrap JS 
+	<script type="application/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script type="application/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	-->
+</body>
+</html>

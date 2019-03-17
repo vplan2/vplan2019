@@ -33,6 +33,7 @@ type Config struct {
 	Addr     string          `json:"addr"`
 	Sessions *ConfigSessions `json:"sessions"`
 	TLS      *ConfigTLS      `json:"tls"`
+	TVUser   string          `json:"tvuser"`
 
 	StaticFiles string `json:",omitempty"`
 }
@@ -40,6 +41,7 @@ type Config struct {
 // ConfigTLS contains the cert file path
 // and the key file path for TLS configuration
 type ConfigTLS struct {
+	UseSSL   bool   `json:"usessl"`
 	CertFile string `json:"certFile"`
 	KeyFile  string `json:"keyFile"`
 }
@@ -102,7 +104,7 @@ func StartBlocking(server *Server, config *Config, db database.Driver, sessionSt
 
 	server.initializeHnalders()
 
-	if config.TLS == nil {
+	if config.TLS == nil || !config.TLS.UseSSL {
 		return server.server.ListenAndServe()
 	}
 	return server.server.ListenAndServeTLS(config.TLS.CertFile, config.TLS.KeyFile)
@@ -125,17 +127,56 @@ func (s *Server) addHandler(path string, ident string, handler func(w http.Respo
 // endpoints and their handlers
 func (s *Server) initializeHnalders() {
 
-	// FRONTEND
-	s.router.HandleFunc("/", s.handlerMainPage).Methods("GET")
+	// NOTICE:
+	// Each route over another overwrites the access area of
+	// of the path of the route below.
 
+	// ---------------------------
 	// API
+
+	// POST /api/authenticate/:USERNAME
 	s.addHandler("/api/authenticate/{username}", "authenticate",
 		s.handlerAPIAuthenticate, 0.2, 3, "POST")
+
+	// POST /api/logout
+	s.addHandler("/api/logout", "logout", s.handlerAPILogout, 1, 3, "POST")
+
+	// GET /api/logins
+	s.addHandler("/api/logins", "getLogins", s.handlerAPIGetLogins, 1, 3, "GET")
+
+	// GET /api/vplan
+	s.addHandler("/api/vplan", "getVPlan", s.handlerAPIGetVPlan, 0.2, 3, "GET")
+
+	// GET /api/newsticker
+	s.addHandler("/api/newsticker", "getNewsTicker", s.handlerAPIGetNewsTicker, 0.2, 3, "GET")
+
+	// GET /api/settings
+	s.addHandler("/api/settings", "getUserSettings", s.handleAPIGetUserSettings, 1, 3, "GET")
+
+	// POST /api/settings
+	s.addHandler("/api/settings", "setUserSettings", s.handleAPISetUserSettings, 0.5, 5, "POST")
+
+	// POST /api/test
 	s.addHandler("/api/test", "test", s.handlerAPITest, 1, 1, "POST")
 
-	// Serve static files from './web/static'
-	s.router.PathPrefix("/static").Handler(
-		http.StripPrefix("/static", http.FileServer(http.Dir(s.config.StaticFiles+"/web/static"))))
+	// ---------------------------
+	// FRONTEND
+
+	s.router.HandleFunc(`/login`, s.handlerFELogin)
+
+	// GET /:FILENAME
+	// Matches the root path ('/'), all pathes not passing a file name
+	// at the end (e.g.: '/vplan') and all paths ending with '.html'
+	// or '.xhtml' (e.g.: 'vplan/index.html').
+	s.router.HandleFunc(`/{file:$|[\w+\/]+|[\w\/]+.x?html$}`, s.handlerFEMainRoot)
+
+	// ---------------------------
+	// STATIC FRONTEND FILES
+
+	// All other pathes will be interpreted as static file accesses.
+	// If there is no coresponding file to the path requested, an
+	// error 404 will be returned.
+	s.router.Handle("/{file:.+}", http.FileServer(http.Dir(s.config.StaticFiles)))
 }
 
 // jsonResponse sends a response containing the response code

@@ -1,11 +1,26 @@
 package auth
 
 import (
+	"errors"
 	"net/http"
+
+	"github.com/zekroTJA/vplan2019/internal/logger"
 
 	"github.com/gorilla/sessions"
 
 	"github.com/zekroTJA/vplan2019/internal/database"
+)
+
+const (
+	// MainSessionName describes the name of the cookie
+	// of login sessions used for general authorization
+	MainSessionName = "session_main"
+)
+
+var (
+	// ErrUnauthorized defines an error when an authorization
+	// failed because of wrong credentials
+	ErrUnauthorized = errors.New("unauthorized")
 )
 
 // RequestAuthManager contains functionalities to check if
@@ -42,17 +57,13 @@ func NewRequestAuthManager(db database.Driver, tokenManager *TokenManager, sessi
 	}
 }
 
-// Check returns the ident of the user, if the request was authorized.
-// First, this function will look for the 'Authorization' header containing a
-// token value, which will be checked against the database entries.
-// If there was no matching token found, the function will check for a valid
-// session cookie to authorize.
-// If both methods are failing, an empty string will be returned without an error
-// and the disallowHandler will be called.
-// If an unexpected error occures at any point, the function will also return an
-// empty string and will call the errorHandler passing the error object.
-func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) string {
-
+// Authorize checks the request for an 'Authorization' header passing
+// an API token to authenticate against the server. If there was no token
+// passed or if the token was invalid, the request will be checked for a
+// valid session cookie containing a token which will be used to authenticate
+// against the server. If the authorization succeeds, the Ident will be
+// returned. Else, an error will be passed with an empty Indent string.
+func (ram *RequestAuthManager) Authorize(r *http.Request) (string, error) {
 	//-------------------------------------
 	// CHECKING AUTHORIZATION HEADER TOKEN
 
@@ -61,33 +72,49 @@ func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) str
 	if token != "" {
 		ident, err := ram.tokenManager.Check(token)
 		if err != nil {
-			ram.errorHandler(w, r, err)
-			return ""
+			return "", err
 		}
 
 		if ident != "" {
-			return ident
+			return ident, nil
 		}
 	}
 
 	//----------------------
 	// CHECK SESSION COOKIE
 
-	session, err := ram.sessionStore.Get(r, "main")
+	session, err := ram.sessionStore.Get(r, MainSessionName)
 	if err != nil {
-		ram.errorHandler(w, r, err)
-		return ""
+		return "", err
 	}
 
 	if session.IsNew {
-		ram.disallowHandler(w, r)
-		return ""
+		return "", ErrUnauthorized
 	}
 
 	ident, ok := session.Values["ident"].(string)
 
 	if !ok || ident == "" {
+		return "", ErrUnauthorized
+	}
+
+	return ident, nil
+}
+
+// Check authorizes the request by executing the 'Authorize' function returning
+// the users Ident. If the authorization failes, an empty string will be returned
+// and an error message will be respondet to the client.
+func (ram *RequestAuthManager) Check(w http.ResponseWriter, r *http.Request) string {
+	ident, err := ram.Authorize(r)
+
+	if err == ErrUnauthorized {
+		logger.Debug("session login error: %s", err.Error())
 		ram.disallowHandler(w, r)
+		return ""
+	}
+
+	if err != nil {
+		ram.errorHandler(w, r, err)
 		return ""
 	}
 

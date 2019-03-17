@@ -1,0 +1,10 @@
+	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+		<img class="mt-1 mr-2" src="{{ config.extra.icon }}" alt="{{ config.extra.icon_alt_text }}" width="30" height="30" />
+		<h5 class="my-0 mr-md-auto font-weight-normal">vPlan 2.0</h5>
+		<nav class="my-2 my-md-0 mr-md-3">
+			<a class="p-2 text-dark" href="/">Vertretungsplan</a>
+			<a class="p-2 text-dark" href="{{ get_url(path="about") | safe }}">Über</a>
+			<a class="p-2 text-dark" href="{{ get_url(path="settings") | safe }}">Einstellungen</a>
+		</nav>
+		<a class="btn btn-outline-primary" href="{{ get_url(path="logout") | safe }}">Abmeldung</a>
+	</div>

@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+{% import "post_macros.html" as post_macros %}
+{% block title %}{{ config.title }}{% endblock title %}
+{% block style %}
+	<style type="text/css">
+body {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	min-height: 70vh;
+	padding: 40px 48px;
+	align-items: center;
+	justify-content: center;
+}
+
+#gopher {
+	position: fixed;
+	bottom: 0;
+}
+
+@media all and (max-width: 420px) {
+	#gopher {
+		display: none;
+	}
+}
+
+	</style>
+{% endblock style %}
+{% block content %}
+	<main class="container">
+		<header class="head title">
+			<h1>404 - Not Found</h1>
+		</header>
+		<p>
+			You're seeing this page because we couldn't find any content to display.
+		</p>
+		<div class="text-right">
+			<a href="/" class="btn btn-primary" >Go back to home</a>
+		</div>
+		<div id="gopher">
+			<img src="{{ get_url(path="/media/gopher.png") | safe }}" />
+		</div>
+	</main>
+{% endblock content %}

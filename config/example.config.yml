@@ -20,6 +20,10 @@ logging:
 webServer:
   # Address and port the server will be exposed to
   addr: :443
+  # The TV user describes a users login name which will
+  # always get a session token with an expire time of 100
+  # years which should be used for the TV view
+  tvuser: tv
   # Login session options
   sessions:
     # The default time (in seconds) until a
@@ -40,3 +44,85 @@ webServer:
     certFile: /etc/cert/example.net.cert
     # Location of the key file
     keyFile:  /etc/cert/example.net.key
+
+
+# Log level
+# For more information, go see here:
+# https://github.com/op/go-logging/blob/master/level.go#L20
+logging:
+  level: 4
+
+# Settings for authorization 
+# and database drivers
+providers:
+  # Settings for the LDAP authorization
+  # provider
+  authorization:
+    # host URL of the LDAP server
+    host:       ldap.example.com
+    # Port on which the LDAP server
+    # is exposed on
+    port:       389
+    # Base DN which must be provided
+    # on authorization
+    base:       dc=example,dc=com
+    # Users attributes which are returned
+    # on successfull authorization
+    attributes: cn, ou, giveName
+    # Wether using client side SSL or not
+    usessl:     false
+    # If 'usessl' = true, define here the
+    # location of your SSL cert file
+    certfile:   /etc/certs/*.example.de.cer
+    # If 'usessl' = true, define here the
+    # location of your SSL key file
+    keyfile:    /etc/certs/*.example.de.key
+  # Settings for the MySQL database
+  # provider
+  database:
+    # Host of the database server
+    host:     localhost
+    # User which should be used 
+    # for database access
+    user:     vplan2
+    # Password of the user which
+    # should be used for db access
+    password: ""
+    # Name of the database which 
+    # should be used
+    database: vplan2
+
+# Web server configuration
+webServer:
+  # The address + port the web server will
+  # be exposed to seperated by ':'.
+  # ATTENTION: If you are using port 80 or
+  # 443, you must start the server in sudo
+  # mode or with elevated user rights on
+  # windows!
+  addr: :443
+  # Settings for the login sessions
+  sessions:
+    # The default time (in seconds) until a
+    # session expires
+    defaultMaxAge:    3600
+    # The time (in seconds) until a session
+    # expires which was set as 'remind me'
+    # on login
+    rememberMaxAge:   2592000
+    # The secret which will be used for encrypting
+    # and decrypting stored session values
+    # ATTENTION: On chaning this, all current sessions
+    # will become invalid and will expire!
+    encryptionSecret: fbOVIIk_BuZ_GWhdP4nYU7dzFDc427Ph3teRLlsqUtNmFqstgECDaOlhZNm2bqaZ
+  # TLS configuration
+  tls:
+    # Wether using TLS server encryption
+    # or not
+    usetls:   true
+    # If 'usessl' = true, define here the
+    # location of your SSL cert file
+    certFile: /etc/certs/*.example.de.cer
+    # If 'usessl' = true, define here the
+    # location of your SSL key file
+    keyFile:  /etc/certs/*.example.de.key
