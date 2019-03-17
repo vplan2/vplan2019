@@ -1,9 +1,6 @@
 +++
 title = "GDPR / DSGVO"
 weight = 3
-
-template = "docs-section.html"
-page_template = "docs-page.html"
 +++
 
 Diese Datenschutzerklärung klärt Sie über die Art, den Umfang und Zweck

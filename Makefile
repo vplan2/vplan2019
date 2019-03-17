@@ -101,7 +101,7 @@ run:
 		cd $(CURDIR)/web && \
 		$(ZOLA) build; \
 	}
-	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/config.yml -web $(CURDIR)/web/public ${ARGS})
+	(env GOPATH=$(CURDIR)/../../../.. $(GO) run -v ./cmd/server -c $(CURDIR)/config/private.config.yml -web $(CURDIR)/web/public ${ARGS})
 
 crun: cleanup run
 
