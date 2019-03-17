@@ -13,9 +13,12 @@ providers:
     host:       zekro.de
     password:   acPOzHA8xmGq8Bah
     user:       vplan2
+<<<<<<< HEAD
     # host:       localhost
     # password:   Yuk1_N0n4k4!
     # user:       admin
+=======
+>>>>>>> ebd4279... fixed mysql table creation and cleaned up dependencies and docs
 webServer:
   addr:         :8080
   tvuser:       mustermax

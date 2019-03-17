@@ -31,3 +31,5 @@ release/*
 web/public/*
 
 .gopath/*
+
+private.*
