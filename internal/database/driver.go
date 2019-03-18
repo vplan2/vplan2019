@@ -134,7 +134,7 @@ type Driver interface {
 	// InsertLogin inserts logiin infrmation to login table
 	InsertLogin(loginType LoginType, ident, useragent, ipaddress string) error
 
-	GetLogins(ident string, afterTimestamp time.Time) ([]*Login, error)
+	GetLogins(ident string, afterTimestamp time.Time, limit int) ([]*Login, error)
 
 	////////////
 	// VPLANS //

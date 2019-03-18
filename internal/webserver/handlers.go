@@ -183,13 +183,26 @@ func (s *Server) handlerAPIGetLogins(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_t := r.URL.Query().Get("time")
+	urlQuery := r.URL.Query()
+
+	_t := urlQuery.Get("time")
 	t, ok := parseTimeRFC3339(w, _t, false)
 	if !ok {
 		return
 	}
 
-	logins, err := s.db.GetLogins(ident, t)
+	limit := 20
+	_limit := urlQuery.Get("limit")
+	if _limit != "" {
+		var err error
+		limit, err = strconv.Atoi(_limit)
+		if err != nil {
+			s.handlerAPIBadRequestError(w, r, "limit must be a valid number")
+			return
+		}
+	}
+
+	logins, err := s.db.GetLogins(ident, t, limit)
 	if err != nil {
 		s.handlerAPIInternalError(w, r, err)
 		return

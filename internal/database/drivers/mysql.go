@@ -86,7 +86,8 @@ func (s *MySQL) setupPrepStatements() error {
 		"INSERT INTO logins (ident, type, useragent, ipaddress) VALUES (?, ?, ?, ?)")
 	s.stmts.getLogins = s.prepareStatement(m,
 		"SELECT ident, timestamp, type, useragent, ipaddress FROM logins WHERE "+
-			"ident = ? AND timestamp >= ?")
+			"ident = ? AND timestamp >= ? "+
+			"ORDER BY timestamp DESC LIMIT ?")
 
 	s.stmts.selectVPlans = s.prepareStatement(m,
 		"SELECT id, date_edit, date_for, block, header, footer FROM vplan WHERE "+
@@ -300,8 +301,8 @@ func (s *MySQL) InsertLogin(loginType database.LoginType, ident, useragent, ipad
 
 // GetLogins returns a list of entries from the login log filtered by Ident of a user and
 // after the time passed
-func (s *MySQL) GetLogins(ident string, afterTimestamp time.Time) ([]*database.Login, error) {
-	rows, err := s.stmts.getLogins.Query(ident, afterTimestamp)
+func (s *MySQL) GetLogins(ident string, afterTimestamp time.Time, limit int) ([]*database.Login, error) {
+	rows, err := s.stmts.getLogins.Query(ident, afterTimestamp, limit)
 	if err != nil {
 		return nil, err
 	}
