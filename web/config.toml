@@ -23,10 +23,10 @@ link_api_docs = "https://github.com/zekroTJA/vplan2019/blob/master/docs/api/api-
 ############# DEBUG VARISABLES ##############
 # Use static json files instead of boddies
 # of HTTP requests
-api_use_test_data = false
+api_use_test_data = true
 # Enable some tweaks using the testing
 # LDAP server
-use_test_ldap = false
+use_test_ldap = true
 # Custom timestamp from which data will be
 # polled. Set this to "" to use today state.
-use_test_vplan_date = ""
+use_test_vplan_date = "2019-01-06T00:00:00Z"

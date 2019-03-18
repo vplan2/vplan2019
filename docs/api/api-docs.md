@@ -172,9 +172,12 @@ If `session` value is larger than `0`
 #### Parameters
 > Parameters must be passed by *(URL encoded)* URL parameters.
 
+> Response values are sorted descending by `timestamp`.
+
 | Name | Type | Description |
 |------|------|-------------|
 | *`time`* | `string` | [RFC 3339](https://tools.ietf.org/html/rfc3339) encoded timestamp after which logins are requested |
+| *`limit`* | `int` | Number of response entries. Default value is `20`, if not defined. |
 
 #### Response
 
