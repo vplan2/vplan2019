@@ -14,6 +14,8 @@
 
 In scope of our project work, we have created a rework of our substitution plan system of our school. We have focused our targets to improve display style, handling and responsiveness. Also, we wanted to create this project to be run completely stand-alone with a connection to a MySQL server as database and an authentication server which is accessable via LDAP.
 
+Because of the limited time (2 weeks) of our project phase, we were only able to implement a part of our traget features. [Below](#ideas), you can find a list with ideas, which features are planned.
+
 ---
 
 # Screenshots
@@ -40,6 +42,14 @@ For the REST API, database and authentication server access, we have decided to 
 ## Dependencies
 
 [**Here**](docs/dependencies.md) you can find a detailed list of dependencies and their licences we have used in this project.
+
+---
+
+# Ideas
+
+- [ ] Dark Theme
+- [ ] Better way to display much data on the TV view
+- [ ] Creation of substitution plans inside the envoirement
 
 ---
 
