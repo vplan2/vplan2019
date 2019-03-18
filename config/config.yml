@@ -13,9 +13,6 @@ providers:
     host:       zekro.de
     password:   acPOzHA8xmGq8Bah
     user:       vplan2
-    # host:       localhost
-    # password:   Yuk1_N0n4k4!
-    # user:       admin
 webServer:
   addr:         :8080
   tvuser:       mustermax

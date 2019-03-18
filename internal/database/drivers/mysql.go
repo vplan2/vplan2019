@@ -122,20 +122,20 @@ func (s *MySQL) Setup() error {
 
 	// TABLE `vplan`
 	_, err := s.db.Exec("CREATE TABLE IF NOT EXISTS `vplan` (" +
-		"`id` int(11) NOT NULL," +
+		"`id` int(11) NOT NULL AUTO_INCREMENT," +
 		"`date_edit` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," +
 		"`date_for` datetime NOT NULL," +
 		"`block` char(1) NOT NULL," +
 		"`header` text NOT NULL," +
 		"`footer` text NOT NULL," +
 		"`published` tinyint(1) NOT NULL," +
-		"`deleted` int(1) NOT NULL DEFAULT '0' );")
-	// "CONSTRAINT `fk_vplan_details_vplan` FOREIGN KEY (`vplan_id`) REFERENCES `vplan` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION );")
+		"`deleted` int(1) NOT NULL DEFAULT '0'," +
+		"PRIMARY KEY (`id`) );")
 	m.Append(err)
 
 	// TABLE `vplan_details`
 	_, err = s.db.Exec("CREATE TABLE IF NOT EXISTS `vplan_details` (" +
-		"`id` int(11) NOT NULL," +
+		"`id` int(11) NOT NULL AUTO_INCREMENT," +
 		"`vplan_id` int(11) NOT NULL," +
 		"`class` varchar(45) NOT NULL," +
 		"`time` varchar(45) NOT NULL," +
@@ -145,7 +145,10 @@ func (s *MySQL) Setup() error {
 		"`geteilt` int(1) NOT NULL," +
 		"`notiz` varchar(45) NOT NULL," +
 		"`deleted` int(1) NOT NULL DEFAULT '0'," +
-		"`selected` int(1) NOT NULL DEFAULT '0' );")
+		"`selected` int(1) NOT NULL DEFAULT '0'," +
+		"PRIMARY KEY (`id`)," +
+		"KEY `fk_vplan_details_vplan` (`vplan_id`)," +
+		"CONSTRAINT `fk_vplan_details_vplan` FOREIGN KEY (`vplan_id`) REFERENCES `vplan` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION );")
 	m.Append(err)
 
 	// TABLE `content`
