@@ -1,3 +1,4 @@
+# BUILD TOOLS COMMANDS / LOCATION
 GO		= go
 DEP		= dep
 GIT     = git
@@ -24,7 +25,7 @@ COMMIT	= $(shell $(GIT) rev-parse HEAD)
 GOVERS  = $(shell $(GO) version | sed -e 's/ /_/g')
 
 .PHONY: _make deps cleanup _finish run lint offline release \
-	frontend cloc help crun release-vps
+	frontend frontend-vps cloc help crun release-vps
 
 _make: $(WDIR) deps $(BIN) cleanup _finish
 
@@ -116,12 +117,13 @@ cloc:
 
 help:
 	@echo "Available recipes:"
-	@echo "  offline  : creates binaries witout pulling deps from the internet and using vendor instead"
-	@echo "  frontend : compile frontend files to ./web/public"
-	@echo "  release  : comple backend and frontend files to ./release"
-	@echo "  deps     : pulling dependencies from internet to ./vendor"
-	@echo "  cleanup  : delete ./release, ./.gopath and ./web/public"
-	@echo "  crun     : runs cleanup before run"
-	@echo "  run      : compile frontend file if not existent and go run backend"
-	@echo "  lint     : go lint backend"
-	@echo "  cloc     : count lines of code"
+	@echo "  *default* : created binary of backend server"
+	@echo "  cleanup   : delete ./release, ./.gopath and ./web/public"
+	@echo "  cloc      : count lines of code"
+	@echo "  crun      : runs cleanup before run"
+	@echo "  deps      : pulling dependencies from internet to ./vendor"
+	@echo "  frontend  : compile frontend files to ./web/public"
+	@echo "  lint      : go lint backend"
+	@echo "  offline   : creates binaries witout pulling deps from the internet and using vendor instead"
+	@echo "  release   : comple backend and frontend files to ./release"
+	@echo "  run       : compile frontend file if not existent and go run backend"

@@ -26,7 +26,7 @@ link_api_docs = "https://github.com/zekroTJA/vplan2019/blob/master/docs/api/api-
 api_use_test_data = false
 # Enable some tweaks using the testing
 # LDAP server
-use_test_ldap = true
+use_test_ldap = false
 # Custom timestamp from which data will be
 # polled. Set this to "" to use today state.
-use_test_vplan_date = "2019-01-06T00:00:00Z"
+use_test_vplan_date = ""
