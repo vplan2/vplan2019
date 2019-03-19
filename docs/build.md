@@ -53,9 +53,6 @@ By defining the envoirement variables `GOOS` and `GOARCH`, you can specify for w
    $ cd ./web
    $ zola -c ../config/frontend.release.toml build
    $ cd ..
-
-fqdn = "https://zekro.de:8080"
-author = "industrieschule.de"
    ```
 
 4. Before starting to build the backend files, you need to define some variables which will be passed to the binary via go compiler's ldflags:  
