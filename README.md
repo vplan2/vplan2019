@@ -37,7 +37,8 @@ We have used [`zola`](https://github.com/getzola/zola) as site generator and tem
 
 ## Back End
 
-For the REST API, database and authentication server access, we have decided to use the language [`Go`](https://golang.org/). Because of it's omtimization for web applications, the easy to maintain structure, the ability to cross-compile easy to deploy self-containing binaries and the variety of standard libraries *(`net/http` or `database/sql` for example)* and community driven open source packages *(like the gorilla web toolkit)*.
+For the REST API, database and authentication server access, we have decided to use the language [`Go`](https://golang.org/). Because of it's omtimization for web applications, the easy to maintain structure, the ability to cross-compile, the easy to deploy self-containing binaries and the variety of standard libraries *(`net/http` or `database/sql` for example)* and community driven open source packages *(like the gorilla web toolkit)*, Go was the perfect choise for our back end.  
+It was also in discussion to use Rust as backend technology because of it's safety and stability, but we decided against because we had way more experience with Go and so we were not be able to estimate the time we would need to create the back end functionalities in Rust.
 
 ## Dependencies
 
@@ -48,6 +49,7 @@ For the REST API, database and authentication server access, we have decided to 
 # Ideas
 
 - [ ] Dark Theme
+- [ ] Photon Themes Design instead of standard bootstrap design
 - [ ] Better way to display much data on the TV view
 - [ ] Creation of substitution plans inside the envoirement
 
