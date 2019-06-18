@@ -1,11 +1,12 @@
 # BUILD TOOLS COMMANDS / LOCATION
-GO		= go
-DEP		= dep
+GO      = go
+DEP     = dep
 GIT     = git
 GOLINT  = golint
 GREP    = grep
 ZOLA    = zola
 CLOC    = cloc
+DOCKER  = docker
 
 PACKAGE	= github.com/zekroTJA/vplan2019
 GOPATH	= $(CURDIR)/.gopath
@@ -13,6 +14,8 @@ WDIR	= $(GOPATH)/src/$(PACKAGE)
 
 BINNAME	= vplan2019_server
 BINLOC	= $(CURDIR)
+
+DTAG    = zekro/vplan2019:testing
 
 ifeq ($(OS),Windows_NT)
 	EXTENSION = .exe
@@ -114,6 +117,17 @@ cloc:
 	$(CLOC) \
 		--exclude-dir=vendor,docs,public \
 		--exclude-lang=JSON,Markdown,YAML,XML,TOML,Sass ./
+
+docker-build:
+	docker build . -t $(DTAG)
+
+docker-run:
+	docker run \
+            -p 8080:8080 \
+            -v $(CURDIR)/testing/config:/etc/vplan/config \
+            -v $(CURDIR)/testing/certs:/etc/vplan/certs \
+            -d \
+            $(DTAG)
 
 help:
 	@echo "Available recipes:"

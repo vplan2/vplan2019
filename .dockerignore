@@ -1,0 +1,9 @@
+.circleci
+.github
+docs
+vendor
+CONTRIBUTORS
+*.lock
+node_modules
+*.md
+public

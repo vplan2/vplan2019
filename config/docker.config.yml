@@ -1,0 +1,46 @@
+logging:
+  level: 4
+
+providers:
+
+  authorization:
+    attributes: cn, ou, giveName
+    base: dc=example,dc=com
+    # The pathes to the certs must be /etc/vplan/cert
+    # also if you have mounted this directory somwhere else
+    # to your host system.
+    # If the cert files have different names, feel free to
+    # alter the file names of them.
+    certfile: /etc/vplan/certs/certfile.cer
+    keyfile:  /etc/vplan/certs/keyfile.key
+    host: ldap.example.com
+    port: "389"
+    usessl: "false"
+
+  database:
+    database: vplan2
+    host: localhost
+    password: ""
+    user: vplan2
+
+webServer:
+  # This setting must not be changed because the container
+  # exposes the port 8080.
+  addr: :8080
+
+  sessions:
+    defaultMaxAge: 3600
+    encryptionSecret: ""
+    rememberMaxAge: 2592000
+
+  tls:
+    # The pathes to the certs must be /etc/vplan/cert
+    # also if you have mounted this directory somwhere else
+    # to your host system.
+    # If the cert files have different names, feel free to
+    # alter the file names of them.
+    certFile:   /etc/vplan/certs/certfile.cer
+    keyFile:    /etc/vplan/certs/keyfile.key
+    usessl: false
+
+  tvuser: ""
