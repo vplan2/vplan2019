@@ -33,3 +33,5 @@ web/public/*
 .gopath/*
 
 private.*
+
+vendor
