@@ -5,6 +5,7 @@
         Substitution plan system for schools
     </strong><br><br>
     <a href="https://github.com/zekroTJA/vplan2019/releases"><img height="28" src="https://img.shields.io/github/tag/zekroTJA/vplan2019.svg?style=for-the-badge"/></a>&nbsp;
+    <a href="https://cloud.docker.com/u/zekro/repository/docker/zekro/vplan2019"><img alt="Docker Automated build" src="https://img.shields.io/docker/automated/zekro/vplan2019.svg?color=cyan&logo=docker&logoColor=cyan&style=for-the-badge"></a>
 <br>
 </div>
 
