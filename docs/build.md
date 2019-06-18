@@ -8,6 +8,8 @@
   *For cloning the repository and necessary for go get*
 - [go compiler toolchain](https://golang.org/doc/install)  
   *goang compiler and other tools for go develoment*
+- [zola](https://github.com/getzola/zola)  
+  *Template generator for front end files*
 - [GNU make](https://www.gnu.org/software/make/)  
   *Tool supporting building, release and testing*
 
