@@ -58,6 +58,8 @@ It was also in discussion to use Rust as backend technology because of it's safe
 
 # Setup and Installation
 
+We recommend using Docker to set up the server of vPlan 2. [**Here**](docs/docker.md) you can read the documentation about setting up vPlan 2 with Docker.
+
 Below, you can find the documents for how to build and install the backend and frontend of vPlan2.
 
 - [Building](docs/build.md)
