@@ -40,6 +40,8 @@ services:
       - '/home/vplan/certs:/etc/vplan/certs'
 ```
 
+After the first start of the container, a [pre-generated `config.yml`](https://github.com/zekroTJA/vplan2019/blob/master/config/docker.config.yml) will be generated in `/etc/vplan/config`and the container will stop after. Then, open the config, enter your preferences and restart the container.
+
 ## Self-build the Docker Image
 
 First, you need to clone the repository locally:
