@@ -23,7 +23,7 @@ RUN wget https://github.com/getzola/zola/releases/download/v${ZOLAVERSION}/zola-
     chmod +x ./zola &&\
     mv ./zola /usr/bin/zola
 
-WORKDIR ${GOPATH}/src/github.com/zekroTJA/vplan2019
+WORKDIR ${GOPATH}/src/github.com/vplan2/vplan2019
 
 ADD . .
 
@@ -37,7 +37,7 @@ RUN dos2unix ./scripts/*.sh &&\
 
 RUN dep ensure -v
 
-ENV LDFLAGS="github.com/zekroTJA/vplan2019/internal/ldflags"
+ENV LDFLAGS="github.com/vplan2/vplan2019/internal/ldflags"
 
 RUN go build -v -o /var/vplan/server \
         -ldflags "\
