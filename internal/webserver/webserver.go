@@ -10,9 +10,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/zekroTJA/vplan2019/internal/database"
+	"github.com/vplan2/vplan2019/internal/database"
 
-	"github.com/zekroTJA/vplan2019/internal/auth"
+	"github.com/vplan2/vplan2019/internal/auth"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"

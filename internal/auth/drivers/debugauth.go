@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/zekroTJA/vplan2019/internal/auth"
+	"github.com/vplan2/vplan2019/internal/auth"
 )
 
 // DebugAuthProvider is an auth provider, which

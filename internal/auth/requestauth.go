@@ -4,11 +4,11 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/zekroTJA/vplan2019/internal/logger"
+	"github.com/vplan2/vplan2019/internal/logger"
 
 	"github.com/gorilla/sessions"
 
-	"github.com/zekroTJA/vplan2019/internal/database"
+	"github.com/vplan2/vplan2019/internal/database"
 )
 
 const (

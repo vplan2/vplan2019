@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/gorilla/sessions"
+	"github.com/vplan2/vplan2019/internal/database"
+	"github.com/vplan2/vplan2019/pkg/multierror"
 	"github.com/zekroTJA/mysqlstore"
-	"github.com/zekroTJA/vplan2019/internal/database"
-	"github.com/zekroTJA/vplan2019/pkg/multierror"
 )
 
 const (

@@ -10,11 +10,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/zekroTJA/vplan2019/internal/logger"
+	"github.com/vplan2/vplan2019/internal/logger"
 
 	"gopkg.in/ldap.v2"
 
-	"github.com/zekroTJA/vplan2019/internal/auth"
+	"github.com/vplan2/vplan2019/internal/auth"
 )
 
 // LDAPOptions contains configration

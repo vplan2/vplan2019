@@ -8,7 +8,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/zekroTJA/vplan2019/internal/database"
+	"github.com/vplan2/vplan2019/internal/database"
 )
 
 // TokenManager is for managing, creating and

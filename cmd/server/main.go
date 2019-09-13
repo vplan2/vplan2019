@@ -6,16 +6,16 @@ import (
 	"os"
 	"strings"
 
-	"github.com/zekroTJA/vplan2019/internal/ldflags"
+	"github.com/vplan2/vplan2019/internal/ldflags"
 
 	"github.com/ghodss/yaml"
 
-	"github.com/zekroTJA/vplan2019/internal/config"
-	"github.com/zekroTJA/vplan2019/internal/logger"
-	"github.com/zekroTJA/vplan2019/internal/webserver"
+	"github.com/vplan2/vplan2019/internal/config"
+	"github.com/vplan2/vplan2019/internal/logger"
+	"github.com/vplan2/vplan2019/internal/webserver"
 
-	authDrivers "github.com/zekroTJA/vplan2019/internal/auth/drivers"
-	dbDrivers "github.com/zekroTJA/vplan2019/internal/database/drivers"
+	authDrivers "github.com/vplan2/vplan2019/internal/auth/drivers"
+	dbDrivers "github.com/vplan2/vplan2019/internal/database/drivers"
 )
 
 var (

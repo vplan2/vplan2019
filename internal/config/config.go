@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/zekroTJA/vplan2019/internal/webserver"
+	"github.com/vplan2/vplan2019/internal/webserver"
 )
 
 // Config contains the general Server config

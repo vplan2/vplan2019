@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/zekroTJA/vplan2019/internal/database"
+	"github.com/vplan2/vplan2019/internal/database"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	"github.com/zekroTJA/vplan2019/internal/auth"
-	"github.com/zekroTJA/vplan2019/internal/logger"
+	"github.com/vplan2/vplan2019/internal/auth"
+	"github.com/vplan2/vplan2019/internal/logger"
 )
 
 /////////////////
