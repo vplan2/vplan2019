@@ -34,4 +34,7 @@ web/public/*
 
 private.*
 
-vendor
+vendor/
+
+web/node_modules/
+web/dist/

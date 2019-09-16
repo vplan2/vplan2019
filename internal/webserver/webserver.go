@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/vplan2/vplan2019/internal/database"
+	"github.com/vplan2/vplan2019/internal/ldflags"
 
 	"github.com/vplan2/vplan2019/internal/auth"
 
@@ -110,6 +111,23 @@ func StartBlocking(server *Server, config *Config, db database.Driver, sessionSt
 	return server.server.ListenAndServeTLS(config.TLS.CertFile, config.TLS.KeyFile)
 }
 
+func (s *Server) handlerWrapper(ident string, handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if !s.limiter.Check(ident, w, r) {
+			return
+		}
+
+		if ldflags.Release != "TRUE" {
+			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8081")
+			w.Header().Set("Access-Control-Allow-Headers", "authorization, content-type, set-cookie, cookie, server")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, POST, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
+		}
+
+		handler(w, r)
+	}
+}
+
 // addHandler is a help function for adding handlers to the router
 // and for registering the entry for the rate limiter in one function
 //   path         : url path of the route
@@ -119,8 +137,8 @@ func StartBlocking(server *Server, config *Config, db database.Driver, sessionSt
 //   limiterBurst : initial and total size of the token bucket
 //   ...methods   : allowed HTTP methods
 func (s *Server) addHandler(path string, ident string, handler func(w http.ResponseWriter, r *http.Request), limiterRate float64, limiterBurst int, methods ...string) {
-	s.router.HandleFunc(path, handler).Methods(methods...)
 	s.limiter.Register(ident, limiterRate, limiterBurst)
+	s.router.HandleFunc(path, s.handlerWrapper(ident, handler)).Methods(methods...)
 }
 
 // initializeHandlers contains all setup functions for router
@@ -176,7 +194,7 @@ func (s *Server) initializeHnalders() {
 	// All other pathes will be interpreted as static file accesses.
 	// If there is no coresponding file to the path requested, an
 	// error 404 will be returned.
-	s.router.Handle("/{file:.+}", http.FileServer(http.Dir(s.config.StaticFiles)))
+	s.router.Handle("/{file:.+}", http.FileServer(http.Dir("web/dist/web")))
 }
 
 // jsonResponse sends a response containing the response code

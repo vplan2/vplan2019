@@ -71,7 +71,7 @@ func (s *Server) handlerFEMainRoot(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handlerFELogin(w http.ResponseWriter, r *http.Request) {
 	if _, err := s.reqAuth.Authorize(r); err != nil {
-		http.ServeFile(w, r, s.config.StaticFiles+"/login/index.html")
+		http.ServeFile(w, r, "web/dist/web/index.html")
 	} else {
 		w.Header().Set("Location", "/")
 		w.WriteHeader(http.StatusTemporaryRedirect)
@@ -84,10 +84,6 @@ func (s *Server) handlerFELogin(w http.ResponseWriter, r *http.Request) {
 
 // POST /api/authenticate/:USERNAME
 func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("authenticate", w, r) {
-		return
-	}
-
 	urlParams := mux.Vars(r)
 	uname := urlParams["username"]
 
@@ -164,20 +160,12 @@ func (s *Server) handlerAPIAuthenticate(w http.ResponseWriter, r *http.Request) 
 
 // POST /api/logout
 func (s *Server) handlerAPILogout(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("logout", w, r) {
-		return
-	}
-
 	w.Header().Set("Set-Cookie", auth.MainSessionName+"=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT")
 	jsonResponse(w, http.StatusOK, nil)
 }
 
 // GET /api/logins
 func (s *Server) handlerAPIGetLogins(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("getLogins", w, r) {
-		return
-	}
-
 	ident := s.reqAuth.Check(w, r)
 	if ident == "" {
 		return
@@ -215,10 +203,6 @@ func (s *Server) handlerAPIGetLogins(w http.ResponseWriter, r *http.Request) {
 
 // GET /api/vplan
 func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("getVPlan", w, r) {
-		return
-	}
-
 	ident := s.reqAuth.Check(w, r)
 	if ident == "" {
 		return
@@ -275,10 +259,6 @@ func (s *Server) handlerAPIGetVPlan(w http.ResponseWriter, r *http.Request) {
 
 // GET /api/newsticker
 func (s *Server) handlerAPIGetNewsTicker(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("getNewsTicker", w, r) {
-		return
-	}
-
 	ident := s.reqAuth.Check(w, r)
 	if ident == "" {
 		return
@@ -309,10 +289,6 @@ func (s *Server) handlerAPIGetNewsTicker(w http.ResponseWriter, r *http.Request)
 
 // GET /api/settings
 func (s *Server) handleAPIGetUserSettings(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("getUserSettings", w, r) {
-		return
-	}
-
 	ident := s.reqAuth.Check(w, r)
 	if ident == "" {
 		return
@@ -329,10 +305,6 @@ func (s *Server) handleAPIGetUserSettings(w http.ResponseWriter, r *http.Request
 
 // POST /api/settings
 func (s *Server) handleAPISetUserSettings(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("setUserSettings", w, r) {
-		return
-	}
-
 	ident := s.reqAuth.Check(w, r)
 	if ident == "" {
 		return
@@ -357,10 +329,6 @@ func (s *Server) handleAPISetUserSettings(w http.ResponseWriter, r *http.Request
 // POST /api/test
 // Just for testing purposes
 func (s *Server) handlerAPITest(w http.ResponseWriter, r *http.Request) {
-	if !s.limiter.Check("test", w, r) {
-		return
-	}
-
 	ident := s.reqAuth.Check(w, r)
 	if ident == "" {
 		return
