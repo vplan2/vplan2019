@@ -8,7 +8,7 @@
 
 Simply pull them using the following command:
 ```
-# docker pull zekro/vplan2019:latest
+# docker pull vplan2/vplan2019:latest
 ```
 
 ## Running the Image
@@ -22,7 +22,7 @@ To run the image, you need to bind the container port `8080` to a prefered port 
     -v /home/vplan/config:/etc/vplan/config \
     -v /home/vplan/certs:/etc/vplan/certs \
     -d \
-    zekro/vplan2019:latest
+    vplan2/vplan2019:latest
 ```
 
 *II) Using docker-compose:*
@@ -32,7 +32,7 @@ version: '3'
 services:
   # ...
   vplan:
-    image: 'zekro/vplan2019:latest'
+    image: 'vplan2/vplan2019:latest'
     ports:
       - '443:8080'
     volumes:
