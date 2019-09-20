@@ -7,9 +7,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeRouteComponent } from './routes/home/home.route';
 import { LoginRouteComponent } from './routes/login/login.route';
+import { SliderComponent } from './components/slider/slider.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeRouteComponent, LoginRouteComponent],
+  declarations: [
+    AppComponent,
+    HomeRouteComponent,
+    LoginRouteComponent,
+    SliderComponent,
+  ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],
